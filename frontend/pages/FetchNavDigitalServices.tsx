@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Panel from 'nav-frontend-paneler';
 import styled from 'styled-components'
+import HandleAndSetStatusIcon from 'components/HandleAndSetStatusIcon'
 
 import { Bag, Folder, PensionBag, HealthCase, SuccessFilled, ErrorFilled, WarningFilled, Employer, Information, People, Family, Service, Globe } from '@navikt/ds-icons'
 import { Undertittel } from "nav-frontend-typografi";
@@ -179,6 +180,7 @@ function FetchNavDigitalServices() {
                 <PanelSetWidth border key={area.name}>
                     <div>
                         <Undertittel>
+                            <HandleAndSetStatusIcon areaName={area.name} />
                             {handleAndSetNavIcon(area.name)}
                             {" " + area.name}
                         </Undertittel>
@@ -186,7 +188,7 @@ function FetchNavDigitalServices() {
                         <ServicesList>
                             {area.services.map(service => (
                                 <li key={service.name}>
-                                    <section>{service.name}</section><section> {handleAndSetStatusIcon(service.status)}</section>
+                                    <section>{service.name}</section><section>{handleAndSetStatusIcon(service.status)}</section>
                                 </li>
                             ))}
                         </ServicesList>
