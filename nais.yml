@@ -6,9 +6,13 @@ metadata:
   labels:
     team: navdig
 spec:
-  image: {{ image }}
-  port: 3001
-  ingresses:
-      - https://portalserver.labs.nais.io
+  envFrom:
+    - secret: my-secret
+    secureLogs:
+      enabled: true
+    image: {{ image }}
+    port: 3001
+    ingresses:
+      - https://digitalstatus.ekstern.dev.nav.no
   #image: ghcr.io/navikt/myapplication:417dcaa2c839b9da72e0189e2cfdd4e90e9cc6fd
   #       ^--- interpolated from the ${{ env.docker_image }} variable in the action
