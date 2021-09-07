@@ -33,7 +33,7 @@ public class AreaController {
    @GET("/Areas")
    @JsonBody
    public String getAreas() {
-      return System.getenv("my-secret");
+      return System.getenv("key1");
    }
 
    @POST("/Areas")
