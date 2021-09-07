@@ -32,8 +32,8 @@ public class AreaController {
 
    @GET("/Areas")
    @JsonBody
-   public List<AreaDto> getAreas() {
-      return testUtil.getAreaDtos();
+   public String getAreas() {
+      return System.getenv("my-secret");
    }
 
    @POST("/Areas")
