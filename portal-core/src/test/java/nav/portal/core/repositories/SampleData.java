@@ -248,7 +248,7 @@ public class SampleData {
                 .setAggregation_date(LocalDate.now());
     }
 
-    public static OpeningHoursEntity getRandomizedOpeningTime()
+    public static OpeningHoursEntity getRandomizedOpeningTimes()
     {
         ThreadLocalRandom random = ThreadLocalRandom.current();
         LocalTime now1 = LocalTime.of(random.nextInt(0, 23), random.nextInt(0, 59), random.nextInt(0, 59));

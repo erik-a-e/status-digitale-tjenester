@@ -51,7 +51,6 @@ class ServiceRepositoryTest {
       retrievedService.ifPresent(serviceEntity -> Assertions.assertThat(serviceEntity).isEqualTo(service));
    }
 
-
    @Test
    void update() {
       //Arrange

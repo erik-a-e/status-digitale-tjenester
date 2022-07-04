@@ -75,9 +75,7 @@ public class AreaRepository {
         areaServiceTable.where("area_id", areaId).executeDelete();
         areaTable.where("id", areaId).executeDelete();
         return true;
-
     }
-
 
     public void addServiceToArea(UUID areaId, UUID serviceId) {
         areaServiceTable.insert()
@@ -121,9 +119,7 @@ public class AreaRepository {
                     .setField("service_id", services.get(i))
                     .execute();
         }
-
     }
-
 
     public void removeServiceFromAllAreas(UUID serviceId){
         areaServiceTable.where("service_id",serviceId)
@@ -206,10 +202,7 @@ public class AreaRepository {
                 .leftJoin(a2sa.column("sub_area_id"),sa.column("id"))
                 .list(row -> subareasOnArea.add(SubAreaRepository.toSubArea(row.table(sa))));
         return subareasOnArea;
-
     }
-
-
 
     static AreaEntity toArea(DatabaseRow row){
         try {
@@ -226,7 +219,7 @@ public class AreaRepository {
         return new Query(areaTable.query());
     }
 
-    public List<AreaEntity> getAreasContainingService(UUID service_id) {
+        public List<AreaEntity> getAreasContainingService(UUID service_id) {
         DbContextTableAlias areaAlias = areaTable.alias("area");
         DbContextTableAlias a2s = areaServiceTable.alias("a2s");
         return  areaAlias
@@ -235,8 +228,6 @@ public class AreaRepository {
                 .where("a2s.service_id",service_id)
                 .stream(AreaRepository::toArea).collect(Collectors.toList());
     }
-
-
 
     public static class Query {
 

@@ -2,6 +2,8 @@ package nav.portal.core.repositories;
 
 import nav.portal.core.entities.AreaEntity;
 import nav.portal.core.entities.ServiceEntity;
+import nav.portal.core.entities.SubAreaEntity;
+import org.assertj.core.api.AbstractIntegerAssert;
 import org.fluentjdbc.DbContext;
 import org.fluentjdbc.DbContextConnection;
 import org.assertj.core.api.Assertions;
@@ -32,6 +34,7 @@ class AreaRepositoryTest {
     }
 
     private final AreaRepository areaRepository = new AreaRepository(dbContext);
+    private final SubAreaRepository subAreaRepository = new SubAreaRepository(dbContext);
     private final ServiceRepository serviceRepository = new ServiceRepository(dbContext);
 
     @Test
@@ -123,15 +126,15 @@ class AreaRepositoryTest {
         AreaEntity areaToBeDeleted = areas.get(0);
 
         //Act
-        List<AreaEntity> retrievedbeforeDelete = areaRepository.retriveAllShallow();
+        List<AreaEntity> retrievedBeforeDelete = areaRepository.retriveAllShallow();
         boolean isDeleted = areaRepository.deleteArea(areaToBeDeleted.getId());
         List<AreaEntity> retrievedAreasAfterDelete = areaRepository.retriveAllShallow();
-        retrievedbeforeDelete.removeAll(retrievedAreasAfterDelete);
+        retrievedBeforeDelete.removeAll(retrievedAreasAfterDelete);
 
         //Assert
         Assertions.assertThat(isDeleted).isTrue();
-        Assertions.assertThat(retrievedbeforeDelete.size()).isEqualTo(1);
-        Assertions.assertThat(retrievedbeforeDelete.get(0)).isEqualTo(areaToBeDeleted);
+        Assertions.assertThat(retrievedBeforeDelete.size()).isEqualTo(1);
+        Assertions.assertThat(retrievedBeforeDelete.get(0)).isEqualTo(areaToBeDeleted);
     }
 
     @Test
@@ -148,6 +151,65 @@ class AreaRepositoryTest {
        Map.Entry<AreaEntity,List<ServiceEntity>> retrievedArea = areaRepository.retrieveOne(areaId);
        //Assert
        Assertions.assertThat(retrievedArea.getValue()).containsExactly(service);
+    }
+
+    @Test
+    void addSubAreaToArea(){
+        //Arrange
+        AreaEntity area = SampleData.getRandomizedAreaEntity();
+        UUID areaId = areaRepository.save(area);
+        area.setId(areaId);
+        SubAreaEntity subArea = SampleData.getRandomizedSubAreaEntity();
+        UUID subAreaId = subAreaRepository.save(subArea);
+        subArea.setId(subAreaId);
+        //Act
+        areaRepository.addSubAreaToArea(areaId, subAreaId);
+        List<SubAreaEntity>retrievedSubArea = areaRepository.getSubAreasOnArea(areaId);
+        //Assert
+        Assertions.assertThat(retrievedSubArea.get(0).getId()).isEqualTo(subArea.getId());
+    }
+
+    @Test
+    void addServiceToAreas() {
+        //Arrange
+        List<AreaEntity>areas = SampleData.getRandomLengthListOfAreaEntity();
+        areas.forEach(area -> area.setId(areaRepository.save(area)));
+        List<UUID>areaIds = new ArrayList<>();
+        for (AreaEntity area: areas) {
+            areaIds.add(area.getId());
+        }
+        ServiceEntity service = SampleData.getRandomizedServiceEntity();
+        UUID serviceId = serviceRepository.save(service);
+        service.setId(serviceId);
+        //Act
+        areaRepository.addServiceToAreas(areaIds, serviceId);
+        //Assert
+        List<AreaEntity>areasContainingService = areaRepository.getAreasContainingService(serviceId);
+        Assertions.assertThat(areasContainingService.size()).isEqualTo(areas.size());
+        Assertions.assertThat(areasContainingService).containsAll(areas);
+    }
+
+    @Test
+    void setServicesOnArea(){
+        //Arrange
+        List<ServiceEntity>services = SampleData.getRandomLengthNonEmptyListOfServiceEntity();
+
+        List<UUID>serviceIds = new ArrayList<>();
+        for (ServiceEntity service : services)
+        {
+            service.setId(serviceRepository.save(service));
+            serviceIds.add(service.getId());
+        }
+        AreaEntity area = SampleData.getRandomizedAreaEntity();
+        UUID areaId = areaRepository.save(area);
+        area.setId(areaId);
+        //Act
+        areaRepository.setServicesOnArea(areaId, serviceIds);
+        Map.Entry<AreaEntity, List<ServiceEntity>>areaWithListOfServices = areaRepository.retrieveOne(areaId);
+        //Assert
+        Assertions.assertThat(areaWithListOfServices.getValue().size()).isEqualTo(services.size());
+        Assertions.assertThat(areaWithListOfServices.getValue()).containsAll(services);
+        Assertions.assertThat(areaWithListOfServices.getKey()).isEqualTo(area);
     }
 
     @Test
@@ -169,6 +231,48 @@ class AreaRepositoryTest {
         Assertions.assertThat(after.getValue()).isEmpty();
     }
 
+    @Test
+    void removeServiceFromAreas() {
+        //Arrange
+        List<AreaEntity>areas = SampleData.getRandomLengthListOfAreaEntity();
+        areas.forEach(area -> area.setId(areaRepository.save(area)));
+        List<UUID>areaIds = new ArrayList<>();
+        for (AreaEntity area: areas) {
+            areaIds.add(area.getId());
+        }
+        ServiceEntity service = SampleData.getRandomizedServiceEntity();
+        UUID serviceId = serviceRepository.save(service);
+        service.setId(serviceId);
+        areaRepository.addServiceToAreas(areaIds, serviceId);
+        List<AreaEntity>ListOfAreasContainingServiceBefore = areaRepository.getAreasContainingService(serviceId);
+        //Act
+        areaRepository.removeServiceFromAllAreas(serviceId);
+        List<AreaEntity>ListOfAreasContainingServiceAfter = areaRepository.getAreasContainingService(serviceId);
+        //Assert
+        Assertions.assertThat(ListOfAreasContainingServiceBefore).contains((AreaEntity) areas);
+        Assertions.assertThat(ListOfAreasContainingServiceAfter).isEmpty();
+    }
+
+    @Test
+    void getSubAreasOnArea() {
+        //
+        AreaEntity area = SampleData.getRandomizedAreaEntity();
+        UUID areaId = areaRepository.save(area);
+        area.setId(areaId);
+        List<SubAreaEntity>subAreasBefore = SampleData.getRandomLengthNonEmptyListOfSubAreaEntity();
+        subAreasBefore.forEach(subArea -> subArea.setId(subAreaRepository.save(subArea)));
+        List<UUID>subAreaIds = new ArrayList<>();
+        for (SubAreaEntity subArea : subAreasBefore){
+            subAreaIds.add(subArea.getId());
+        }
+        areaRepository.addSubAreaToArea(areaId, subAreaIds);
+        //Act
+        List<SubAreaEntity>subAreasAfter =  areaRepository.getSubAreasOnArea(areaId);
+        //Assert
+        Assertions.assertThat(subAreasAfter).isNotEmpty();
+        Assertions.assertThat(subAreasAfter.size()).isEqualTo(subAreasAfter.size());
+        Assertions.assertThat(subAreasAfter).containsExactly((SubAreaEntity) subAreasBefore);
+    }
 
     @Test
     void retriveAllShallow() {
@@ -176,7 +280,6 @@ class AreaRepositoryTest {
         //Arrange
         List<AreaEntity> areas = SampleData.getRandomLengthListOfAreaEntity();
         areas.forEach(area -> area.setId(areaRepository.save(area)));
-
         //Act
         List<AreaEntity>allAreas = areaRepository.retriveAllShallow();
         //Assert
@@ -202,8 +305,6 @@ class AreaRepositoryTest {
             s.setId(serviceRepository.save(s));
             areaRepository.addServiceToArea(areaId, s.getId());
         });
-
-
         //Act
         Map<AreaEntity, List<ServiceEntity>> retrievedAll = areaRepository.retrieveAll();
         Map.Entry<AreaEntity, List<ServiceEntity>> retrievedArea = areaRepository.retrieveOne(areaId);
@@ -211,5 +312,25 @@ class AreaRepositoryTest {
         //Assert
         Assertions.assertThat(retrievedAll).containsKey(area);
         Assertions.assertThat(retrievedAll).containsValue(retrievedServices);
+    }
+
+    @Test
+    void getAreasContainingService() {
+        //Arrange
+        List<AreaEntity>areas = SampleData.getRandomLengthListOfAreaEntity();
+        areas.forEach(area -> area.setId(areaRepository.save(area)));
+        List<UUID>areaIds = new ArrayList<>();
+        for (AreaEntity area: areas) {
+            areaIds.add(area.getId());
+        }
+        ServiceEntity service = SampleData.getRandomizedServiceEntity();
+        UUID serviceId = serviceRepository.save(service);
+        service.setId(serviceId);
+        areaRepository.addServiceToAreas(areaIds, serviceId);
+        //Act
+        List<AreaEntity>retrievedAreas = areaRepository.getAreasContainingService(serviceId);
+        //Assert
+        Assertions.assertThat(retrievedAreas.size()).isEqualTo(areas.size());
+        Assertions.assertThat(retrievedAreas).containsExactly((AreaEntity) areas);
     }
 }
