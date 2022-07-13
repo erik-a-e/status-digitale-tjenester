@@ -28,7 +28,6 @@ public class ServiceRepository {
         service_openingHoursTable = dbContext.table("service_opening_hours");
     }
 
-
     public void saveOpeningHours(List<OpeningHoursEntity> openingHoursEntities){
             openingHoursEntities.forEach(this::saveOpeningHours);
     }
@@ -43,7 +42,6 @@ public class ServiceRepository {
                 .getId();
 
     }
-
 
     public UUID save(ServiceEntity service) {
         //Sjekk på navn+type kombinasjon
@@ -62,6 +60,7 @@ public class ServiceRepository {
                 .execute()
                 .getId();
     }
+
     public UUID saveMaintenance(MaintenanceEntity maintenanceEntity) {
         return service_maintenanceTable.newSaveBuilderWithUUID("id", maintenanceEntity.getId())
                 .setField("service_id", maintenanceEntity.getServiceId())
@@ -76,8 +75,6 @@ public class ServiceRepository {
         return service_maintenanceTable.where("service_id", serviceId)
                 .list(ServiceRepository::toMaintenanceEntity);
     }
-
-
 
     public void update(ServiceEntity service){
         serviceTable.where("id",service.getId())
@@ -127,8 +124,6 @@ public class ServiceRepository {
         //Sletter både avhengigheter fra tjenesten til andre tjenester
         service_serviceTable.where("service1_id", serviceId).executeDelete();
     }
-
-
 
     public Boolean isOtherServicesDependentOn(UUID id) {
         return service_serviceTable.where("service2_id", id).getCount() > 0;
@@ -187,7 +182,6 @@ public class ServiceRepository {
                 });
         return result;
     }
-
 
     public Map<ServiceEntity, List<ServiceEntity>> retrieveAllComponents() {
         return retrieveAllWithType(ServiceType.KOMPONENT);

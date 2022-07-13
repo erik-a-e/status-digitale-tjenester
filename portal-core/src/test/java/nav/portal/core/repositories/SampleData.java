@@ -248,7 +248,7 @@ public class SampleData {
                 .setAggregation_date(LocalDate.now());
     }
 
-    public static OpeningHoursEntity getRandomizedOpeningTimes()
+    public static OpeningHoursEntity getARandomizedOpeningHoursEntity()
     {
         ThreadLocalRandom random = ThreadLocalRandom.current();
         LocalTime now1 = LocalTime.of(random.nextInt(0, 23), random.nextInt(0, 59), random.nextInt(0, 59));
@@ -260,5 +260,35 @@ public class SampleData {
                 .setOpening_time((time1.compareTo(time2) < 0) ? time1: time2)//Sets opening time to the earliest time
                 .setClosing_time((time1.compareTo(time2) > 0) ? time1: time2);//Sets the closing time to the latest
     }
+
+    public static List<OpeningHoursEntity>getRandomizedOpeningHours()
+    {
+        Random random = new Random();
+        int dayNumber = random.nextInt(7);
+        List<OpeningHoursEntity>openingHoursList = new ArrayList<>();
+        for (int i = 0; i < dayNumber; i++) {
+            ThreadLocalRandom randomTime = ThreadLocalRandom.current();
+            LocalTime now1 = LocalTime.of(randomTime.nextInt(0, 23), randomTime.nextInt(0, 59), randomTime.nextInt(0, 59));
+            LocalTime now2 = LocalTime.of(randomTime.nextInt(0, 23), randomTime.nextInt(0, 59), randomTime.nextInt(0, 59));
+            Time time1 = Time.valueOf(now1);
+            Time time2 = Time.valueOf(now2);
+            openingHoursList.add(new OpeningHoursEntity()
+                    .setDay_of_the_week(dayNumber)
+                    .setOpening_time((time1.compareTo(time2) < 0) ? time1: time2)
+                    .setClosing_time((time1.compareTo(time2) > 0) ? time1: time2));
+        }
+        return openingHoursList;
+    }
+
+    public static MaintenanceEntity  getRandomizedMaintenanceEntity () {
+        ZonedDateTime startTime = ZonedDateTime.now();
+        ZonedDateTime endTime = ZonedDateTime.now();
+        return new MaintenanceEntity ()
+                .setDescription(getRandomFromArray(descriptions))
+                .setStart_time(startTime.plusMinutes(ThreadLocalRandom.current().nextInt(60)))
+                .setEnd_time(endTime.plusDays(1))
+                .setCreated_at(ZonedDateTime.now());
+    }
+
 }
 

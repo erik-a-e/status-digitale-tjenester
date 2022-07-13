@@ -66,7 +66,6 @@ public class AreaRepository {
                 .execute();
     }
 
-
     public boolean deleteArea(UUID areaId){
         if(areaTable.where("id",areaId).singleObject(AreaRepository::toArea).isEmpty()){
             return false;
@@ -161,6 +160,7 @@ public class AreaRepository {
     public List<AreaEntity> retriveAllShallow(){
         return areaTable.orderedBy("name").stream(AreaRepository::toArea).collect(Collectors.toList());
     }
+
     public Map<AreaEntity, List<ServiceEntity>> retrieveAll() {
         DbContextTableAlias areaAlias = areaTable.alias("area");
         DbContextTableAlias a2s = areaServiceTable.alias("a2s");

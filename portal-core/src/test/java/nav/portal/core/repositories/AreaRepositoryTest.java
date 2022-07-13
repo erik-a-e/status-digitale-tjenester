@@ -99,17 +99,17 @@ class AreaRepositoryTest {
     void updateArea() {
         //TODO denne
         //Arrange
-        List<AreaEntity> areas = SampleData.getNonEmptyListOfAreaEntity(2);
-
-        areas.forEach(area -> area.setId(areaRepository.save(area)));
-        AreaEntity areaBeforeUpdate = areas.get(0);
+        AreaEntity area = SampleData.getRandomizedAreaEntity();
+        area.setId(areaRepository.save(area));
+        UUID areaId = area.getId();
+        String areaNameBefore = area.getName();
+        area.setName("A new name");
         //Act
-        areaRepository.updateArea(areas.get(0).setName("WhatArea"));
-        AreaEntity areaAfterUpdate = areas.get(0);
+        areaRepository.updateArea(area);
+        String areaNameAfter = area.getName();
         //Assert
-        Assertions.assertThat(areaBeforeUpdate.getName()).isNotEqualToIgnoringCase(areaAfterUpdate.getName());
-        Assertions.assertThat(areaAfterUpdate.getName()).isEqualTo(areas.get(0).getName());
-    }
+        Assertions.assertThat(areaNameAfter).isNotEqualToIgnoringCase(areaNameBefore);
+     }
 
     @Test
     void deleteArea() {
@@ -249,7 +249,7 @@ class AreaRepositoryTest {
         areaRepository.removeServiceFromAllAreas(serviceId);
         List<AreaEntity>ListOfAreasContainingServiceAfter = areaRepository.getAreasContainingService(serviceId);
         //Assert
-        Assertions.assertThat(ListOfAreasContainingServiceBefore).contains((AreaEntity) areas);
+        Assertions.assertThat(ListOfAreasContainingServiceBefore).containsAll(areas);
         Assertions.assertThat(ListOfAreasContainingServiceAfter).isEmpty();
     }
 
@@ -271,7 +271,7 @@ class AreaRepositoryTest {
         //Assert
         Assertions.assertThat(subAreasAfter).isNotEmpty();
         Assertions.assertThat(subAreasAfter.size()).isEqualTo(subAreasAfter.size());
-        Assertions.assertThat(subAreasAfter).containsExactly((SubAreaEntity) subAreasBefore);
+        Assertions.assertThat(subAreasAfter).containsAll(subAreasBefore);
     }
 
     @Test
@@ -331,6 +331,6 @@ class AreaRepositoryTest {
         List<AreaEntity>retrievedAreas = areaRepository.getAreasContainingService(serviceId);
         //Assert
         Assertions.assertThat(retrievedAreas.size()).isEqualTo(areas.size());
-        Assertions.assertThat(retrievedAreas).containsExactly((AreaEntity) areas);
+        Assertions.assertThat(retrievedAreas).containsAll(areas);
     }
 }

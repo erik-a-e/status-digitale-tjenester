@@ -1,5 +1,7 @@
 package nav.portal.core.repositories;
 
+import nav.portal.core.entities.AreaEntity;
+import nav.portal.core.entities.DailyStatusAggregationForServiceEntity;
 import nav.portal.core.entities.ServiceEntity;
 import nav.portal.core.enums.ServiceType;
 import org.assertj.core.api.Assertions;
@@ -11,10 +13,8 @@ import org.junit.jupiter.api.Test;
 
 import javax.sql.DataSource;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.time.LocalDate;
+import java.util.*;
 
 
 import static org.assertj.core.api.Assertions.fail;
@@ -25,6 +25,7 @@ class ServiceRepositoryTest {
 
    private final DbContext dbContext = new DbContext();
    private DbContextConnection connection;
+   private RecordRepository recordRepository;
 
    @BeforeEach
    void startConnection() {
@@ -118,6 +119,31 @@ class ServiceRepositoryTest {
    }
 
    @Test
+   void resetDependencyFromService() {
+      //Arrange
+      List<ServiceEntity>services = SampleData.getRandomLengthListOfServiceEntity(); //List av Services service1 er avhengig av.
+      ServiceEntity service1 = SampleData.getRandomizedServiceEntityWithNameNotInList(services);
+      List<ServiceEntity>servicesAndService1 = new ArrayList<ServiceEntity>(services);
+      servicesAndService1.add(service1);
+      ServiceEntity service2 = SampleData.getRandomizedServiceEntityWithNameNotInList(servicesAndService1);
+      UUID serviceId1 = serviceRepository.save(service1);
+      UUID serviceId2 = serviceRepository.save(service2);
+      service1.setId(serviceId1);
+      service2.setId(serviceId2);
+      services.forEach(service -> service.setId(serviceRepository.save(service)));
+      serviceRepository.addDependencyToService(serviceId2, serviceId1);
+      serviceRepository.addDependencyToService(service1, services);
+      Map.Entry<ServiceEntity, List<ServiceEntity>>listOfDependantServicesBefore = serviceRepository.retrieveOneWithDependencies(serviceId1);
+      //Act
+      serviceRepository.resetDependenciesOnService(serviceId1);
+      Map.Entry<ServiceEntity, List<ServiceEntity>>listOfDependantServicesAfter = serviceRepository.retrieveOneWithDependencies(serviceId1);
+      //Assert
+      Assertions.assertThat(listOfDependantServicesAfter.getKey()).isEqualTo(service1);
+      Assertions.assertThat(listOfDependantServicesAfter.getValue()).isEmpty();
+      Assertions.assertThat(listOfDependantServicesBefore.getValue()).containsExactlyElementsOf(services);
+   }
+
+   @Test
    void removeAllDependenciesFromService() {
       //Arrange
       List<ServiceEntity> services = SampleData.getNonEmptyListOfServiceEntity(3);
@@ -192,7 +218,7 @@ class ServiceRepositoryTest {
    @Test
    void retriveAll() {
       //Arrange
-      List<ServiceEntity> services = SampleData.getNonEmptyListOfServiceEntity(3);
+      List<ServiceEntity> services = SampleData.getRandomLengthNonEmptyListOfServiceEntity();
       /*for(ServiceEntity service : services){
          service.setId(serviceRepository.save(service));
       }*/
@@ -205,6 +231,91 @@ class ServiceRepositoryTest {
       //Assert
       Assertions.assertThat(allRetrieved.size()).isEqualTo(services.size());
       Assertions.assertThat(allRetrieved.keySet()).containsAll(services);
+   }
+
+   @Test
+   void retrieveAllComponents(){
+      //Arrange
+      ServiceEntity service = SampleData.getRandomizedServiceEntity();
+      service.setType(ServiceType.TJENESTE);
+      service.setId(serviceRepository.save(service));
+      UUID serviceId = service.getId();
+      List<ServiceEntity>listOfComponents = SampleData.getRandomLengthNonEmptyListOfServiceEntity();
+      List<UUID>listOfComponentIds = new ArrayList<>();
+      listOfComponents.forEach(c ->
+      {
+         c.setType(ServiceType.KOMPONENT);
+         c.setId(serviceRepository.save(c));
+         listOfComponentIds.add(c.getId());
+      });
+      listOfComponentIds.forEach(componentId -> serviceRepository.addDependencyToService(serviceId, componentId));
+      //Act
+      Map<ServiceEntity, List<ServiceEntity>>retrievedComponents = serviceRepository.retrieveAllComponents();
+      //Assert
+      Assertions.assertThat(retrievedComponents.keySet()).containsAll(listOfComponents);
+
+   }
+
+   @Test
+   void retrieveAllServices(){
+      //Arrange
+      List<ServiceEntity>services = SampleData.getRandomLengthNonEmptyListOfServiceEntity();
+      services.forEach(s -> s.setId(serviceRepository.save(s)));
+      ServiceEntity service = SampleData.getRandomizedServiceEntityWithNameNotInList(services);
+      service.setType(ServiceType.TJENESTE);
+      service.setId(serviceRepository.save(service));
+      serviceRepository.addDependencyToService(service, services);
+      //Act
+      Map<ServiceEntity, List<ServiceEntity>>retrievedServices = serviceRepository.retrieveAllServices();
+      //Assert
+      Assertions.assertThat(retrievedServices.keySet()).contains(service);
+      Assertions.assertThat(retrievedServices.values()).contains(services);
+   }
+
+   @Test
+   void getServicesDependantOnComponent(){
+      //Arrange
+      ServiceEntity komponent = SampleData.getRandomizedServiceEntity();
+      komponent.setType(ServiceType.KOMPONENT);
+      komponent.setId(serviceRepository.save(komponent));
+      UUID komponentId = komponent.getId();
+      List<ServiceEntity>listOfServices = SampleData.getRandomLengthNonEmptyListOfServiceEntity();
+      List<UUID>listOfServicesIds = new ArrayList<>();
+      listOfServices.forEach(s ->
+      {
+         s.setType(ServiceType.TJENESTE);
+         s.setId(serviceRepository.save(s));
+         listOfServicesIds.add(s.getId());
+      });
+      listOfServicesIds.forEach(sId -> serviceRepository.addDependencyToService(sId, komponentId));
+      //Act
+      List<ServiceEntity>retrievedServices = serviceRepository.getServicesDependantOnComponent(komponentId);
+      //Assert
+      Assertions.assertThat(retrievedServices).containsAll(listOfServices);
+   }
+
+   /*@Test
+   void retrieveServicesWithPolling() {
+
+   }*/
+
+   @Test
+   void toDailyStatusAggregationForServiceEntity() {
+      //Arrange
+      /*ServiceEntity service  = SampleData.getRandomizedServiceEntity();
+      UUID serviceId = serviceRepository.save(service);
+      //Act
+      DailyStatusAggregationForServiceEntity dailyStatusAggregationForService =
+              SampleData.getRandomizedDailyStatusAggregationForService(service);
+      dailyStatusAggregationForService.setAggregation_date(LocalDate.now().minusDays(5));
+      recordRepository.saveAggregatedRecords(dailyStatusAggregationForService);
+      UUID serviceID = service.getId();
+      Optional<ServiceEntity> retrievedService = serviceRepository.retrieve(dailyStatusAggregationForService.getService_id());
+      //Assert
+
+      Assertions.assertThat(dailyStatusAggregationForService.getService_id()).isEqualTo(serviceId);
+      retrievedService.ifPresent(serviceEntity -> Assertions.assertThat(serviceEntity).isEqualTo(service));*/
+
    }
 
    @Test
