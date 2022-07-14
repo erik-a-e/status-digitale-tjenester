@@ -108,13 +108,14 @@ class RecordRepositoryTest {
         UUID serviceId = serviceEntity.getId();
         //Act
         Optional<DailyStatusAggregationForServiceEntity> shouldBeEmpty =
-                recordRepository.getServiceHistoryForServiceByDate(serviceId, ZonedDateTime.now().minusDays(4));
+                recordRepository.getServiceHistoryForServiceByDate(serviceId, LocalDate.now().minusDays(4));
         Optional<DailyStatusAggregationForServiceEntity> shouldContainOne =
-                recordRepository.getServiceHistoryForServiceByDate(serviceId, ZonedDateTime.now().minusDays(5));
+                recordRepository.getServiceHistoryForServiceByDate(serviceId, LocalDate.now().minusDays(5));
         //Assert
+        recordRepository.getServiceHistoryForNumberOfDays(10, serviceId);
         Assertions.assertThat(shouldBeEmpty).isEmpty();
         Assertions.assertThat(shouldContainOne).isPresent();
-   }
+    }
 
 
     @Test
@@ -160,25 +161,4 @@ class RecordRepositoryTest {
         Assertions.assertThat(retrievedRecordsBefore).isNotEmpty();
         Assertions.assertThat(retrievedRecordsAfter).isEmpty();
     }
-    @Test
-    void getServiceHistoryForServiceByDate() {
-        //Arrange
-        ServiceEntity serviceEntity = SampleData.getRandomizedServiceEntity();
-        serviceEntity.setId(serviceRepository.save(serviceEntity));
-        DailyStatusAggregationForServiceEntity aggregation = SampleData.getRandomizedDailyStatusAggregationForService(serviceEntity);
-        aggregation.setAggregation_date(LocalDate.now().minusDays(5));
-
-        recordRepository.saveAggregatedRecords(aggregation);
-        UUID serviceId = serviceEntity.getId();
-        //Act
-        Optional<DailyStatusAggregationForServiceEntity> shouldBeEmpty =
-                recordRepository.getServiceHistoryForServiceByDate(serviceId, LocalDate.now().minusDays(4));
-        Optional<DailyStatusAggregationForServiceEntity> shouldContainOne =
-                recordRepository.getServiceHistoryForServiceByDate(serviceId, LocalDate.now().minusDays(5));
-        //Assert
-        recordRepository.getServiceHistoryForNumberOfDays(10, serviceId);
-        Assertions.assertThat(shouldBeEmpty).isEmpty();
-        Assertions.assertThat(shouldContainOne).isPresent();
-    }
-
 }
