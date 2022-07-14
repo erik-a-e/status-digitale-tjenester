@@ -4,6 +4,8 @@ package nav.portal.core.repositories;
 import nav.portal.core.entities.DailyStatusAggregationForServiceEntity;
 import nav.portal.core.entities.ServiceEntity;
 import nav.portal.core.entities.RecordEntity;
+import org.assertj.core.api.AbstractLocalDateAssert;
+import org.assertj.core.api.Assert;
 import org.fluentjdbc.DbContext;
 import org.fluentjdbc.DbContextConnection;
 import org.junit.jupiter.api.AfterEach;
@@ -93,6 +95,26 @@ class RecordRepositoryTest {
         Assertions.assertThat(shouldContainOne.size()).isEqualTo(1);
 
     }
+
+    @Test
+    void getServiceHistoryForServiceByDate() {
+        //Arrange
+        ServiceEntity serviceEntity = SampleData.getRandomizedServiceEntity();
+        serviceEntity.setId(serviceRepository.save(serviceEntity));
+        DailyStatusAggregationForServiceEntity aggregation = SampleData.getRandomizedDailyStatusAggregationForService(serviceEntity);
+        aggregation.setAggregation_date(LocalDate.now().minusDays(5));
+
+        recordRepository.saveAggregatedRecords(aggregation);
+        UUID serviceId = serviceEntity.getId();
+        //Act
+        Optional<DailyStatusAggregationForServiceEntity> shouldBeEmpty =
+                recordRepository.getServiceHistoryForServiceByDate(serviceId, ZonedDateTime.now().minusDays(4));
+        Optional<DailyStatusAggregationForServiceEntity> shouldContainOne =
+                recordRepository.getServiceHistoryForServiceByDate(serviceId, ZonedDateTime.now().minusDays(5));
+        //Assert
+        Assertions.assertThat(shouldBeEmpty).isEmpty();
+        Assertions.assertThat(shouldContainOne).isPresent();
+   }
 
 
     @Test
