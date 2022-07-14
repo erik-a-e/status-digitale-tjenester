@@ -1,11 +1,13 @@
 package no.nav.portal.rest.api;
 
 import nav.portal.core.entities.*;
+import nav.portal.core.enums.OpsMessageSeverity;
 import nav.portal.core.enums.ServiceType;
 import no.portal.web.generated.api.*;
-import org.apache.commons.validator.routines.UrlValidator;
 
 
+import java.time.OffsetDateTime;
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -23,24 +25,17 @@ public class EntityDtoMappers {
         entity.setType(ServiceType.fromDb(dto.getType().getValue()));
         entity.setTeam(dto.getTeam());
         entity.setMonitorlink(dto.getMonitorlink());
-        entity.setPolling_url(getAndValidetePollingUrl(dto.getPollingUrl()));
+        if(dto.getPollingUrl() != null && dto.getPollingUrl().equals("")){
+            entity.setPolling_url(null);
+        }
+        else {
+            entity.setPolling_url(dto.getPollingUrl());
+        }
         entity.setStatusNotFromTeam(dto.getStatusNotFromTeam());
         return entity;
     }
 
     //TODO kanskje denne valideringen hører hjemme et annet sted?
-    private static String getAndValidetePollingUrl(String pollingUrlFromUser){
-        //Sets pollingurl to null if not valid
-        String STATUSHOLDER = "STATUSHOLDER";
-        String[] schemes = {"http","https"}; // DEFAULT schemes = "http", "https", "ftp"
-        UrlValidator urlValidator = new UrlValidator(schemes);
-        if (urlValidator.isValid(pollingUrlFromUser) || STATUSHOLDER.equals(pollingUrlFromUser)) {
-           return pollingUrlFromUser;
-        } else {
-            return null;
-        }
-
-    }
 
 
     public static AreaEntity toAreaEntity(AreaDto dto){
@@ -66,6 +61,7 @@ public class EntityDtoMappers {
         dto.setName(entity.getName());
         dto.setType(ServiceTypeDto.fromValue(entity.getType().getDbRepresentation()));
         dto.setTeam(entity.getTeam());
+        dto.setPollingUrl(entity.getPolling_url());
         dto.setMonitorlink(entity.getMonitorlink());
         dto.setStatusNotFromTeam(entity.getStatusNotFromTeam());
         return dto;
@@ -78,6 +74,11 @@ public class EntityDtoMappers {
         dto.setInternalMessage(entity.getInternalText());
         dto.setExternalHeader(entity.getExternalHeader());
         dto.setExternalMessage(entity.getExternalText());
+        dto.setStartTime(entity.getStartTime() != null? entity.getStartTime().toOffsetDateTime():null);
+        dto.setEndTime(entity.getEndTime() != null? entity.getEndTime().toOffsetDateTime():null);
+        dto.setSeverity(entity.getSeverity() != null?
+                OPSmessageDto.SeverityEnum.fromValue(entity.getSeverity().getDbRepresentation())
+                :null);
         dto.setIsActive(entity.getIsActive());
         dto.setOnlyShowForNavEmployees(entity.getOnlyShowForNavEmployees());
         return dto;
@@ -96,8 +97,17 @@ public class EntityDtoMappers {
         opsMessageEntity.setExternalText(opsMessageDto.getExternalMessage());
         opsMessageEntity.setInternalHeader(opsMessageDto.getInternalHeader());
         opsMessageEntity.setInternalText(opsMessageDto.getInternalMessage());
+        opsMessageEntity.setSeverity(opsMessageDto.getSeverity() != null?
+                OpsMessageSeverity.valueOf((opsMessageDto.getSeverity().getValue())):
+                null);
         opsMessageEntity.setIsActive(opsMessageDto.getIsActive());
         opsMessageEntity.setOnlyShowForNavEmployees(opsMessageDto.getOnlyShowForNavEmployees());
+        opsMessageEntity.setStartTime(opsMessageDto.getStartTime() != null?
+                opsMessageDto.getStartTime().toZonedDateTime():
+                null);
+        opsMessageEntity.setEndTime(opsMessageDto.getEndTime() != null?
+                opsMessageDto.getEndTime().toZonedDateTime():
+                null);
         return opsMessageEntity;
     }
 
@@ -215,13 +225,17 @@ public class EntityDtoMappers {
         return entities.stream().map(EntityDtoMappers::toDashboardDtoShallow).collect(Collectors.toList());
     }
 
-    public static List<ServiceStatusDto> toServiceStatusDto(List<RecordEntity> recordHistory) {
-        return recordHistory.stream().map(EntityDtoMappers::serviceStatusDto).collect(Collectors.toList());
+    public static List<RecordDto> toRecordDto(List<RecordEntity> recordHistory) {
+        return recordHistory.stream().map(EntityDtoMappers::toRecordDto).collect(Collectors.toList());
     }
-    public static ServiceStatusDto serviceStatusDto(RecordEntity recordEntity){
-        ServiceStatusDto dto = new ServiceStatusDto();
+    public static RecordDto toRecordDto(RecordEntity recordEntity){
+        RecordDto dto = new RecordDto();
         dto.serviceId(recordEntity.getServiceId());
         dto.setStatus(StatusDto.fromValue(recordEntity.getStatus().getDbRepresentation()));
+        dto.setDescription(recordEntity.getDescription());
+        dto.setLogLink(recordEntity.getLogglink());
+        ZonedDateTime entityTime = recordEntity.getCreated_at();
+        dto.setTimestamp(OffsetDateTime.of(entityTime.toLocalDateTime(),entityTime.getOffset()));
         return dto;
     }
 

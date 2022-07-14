@@ -6,6 +6,7 @@ import nav.portal.core.enums.ServiceStatus;
 import org.fluentjdbc.*;
 
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -18,7 +19,6 @@ public class RecordRepository {
 
 
     public RecordRepository(DbContext dbContext) {
-        //TODO:Vurder skal Record bytte navn til service_status
         recordTable = dbContext.table(new DatabaseTableWithTimestamps("service_status"));
         aggregatedStatusTable = dbContext.table(new DatabaseTableWithTimestamps("daily_status_aggregation_service"));
 
@@ -43,7 +43,7 @@ public class RecordRepository {
     }
 
 
-    public Optional<DailyStatusAggregationForServiceEntity> getServiceHistoryForServiceByDate(UUID serviceId, ZonedDateTime date) {
+    public Optional<DailyStatusAggregationForServiceEntity> getServiceHistoryForServiceByDate(UUID serviceId, LocalDate date) {
         return aggregatedStatusTable.where("service_id", serviceId)
                 .whereExpression("aggregation_date = ?", date)
                 .singleObject(ServiceRepository::toDailyStatusAggregationForServiceEntity);
@@ -99,6 +99,8 @@ public class RecordRepository {
         return new RecordEntity()
                 .setId(row.getUUID("id"))
                 .setServiceId(row.getUUID("service_id"))
+                .setDescription(row.getString("description"))
+                .setLogglink(row.getString("logglink"))
                 .setStatus(ServiceStatus.fromDb(row.getString("status")).orElse(ServiceStatus.ISSUE))
                 .setCreated_at(row.getZonedDateTime("created_at"))
                 .setResponsetime(row.getInt("response_time"));

@@ -7,6 +7,7 @@ import nav.portal.core.enums.ServiceStatus;
 import nav.portal.core.repositories.ServiceRepository;
 import no.nav.portal.rest.api.EntityDtoMappers;
 import no.nav.portal.rest.api.Helpers.ServiceControllerHelper;
+import no.nav.portal.rest.api.Helpers.Util;
 import no.portal.web.generated.api.*;
 import org.actioncontroller.*;
 import org.actioncontroller.json.JsonBody;
@@ -76,14 +77,23 @@ public class ServiceController {
     @POST("/Service")
     @JsonBody
     public ServiceDto newService(@JsonBody ServiceDto serviceDto) {
-        return serviceControllerHelper.saveNewService(serviceDto);
+        if(Util.validateUrl(serviceDto.getPollingUrl())){
+            return serviceControllerHelper.saveNewService(serviceDto);
+
+        }
+        throw new HttpRequestException("Polling not valid: "+ serviceDto.getPollingUrl());
     }
 
     @PUT("/Service/:Service_id")
     @JsonBody
     public void updateService(@PathParam("Service_id") UUID service_id, @JsonBody ServiceDto serviceDto) {
-        serviceDto.setId(service_id);
-        serviceControllerHelper.updateService(serviceDto);
+        if(Util.validateUrl(serviceDto.getPollingUrl())){
+            serviceDto.setId(service_id);
+            serviceControllerHelper.updateService(serviceDto);
+            return;
+        }
+        throw new HttpRequestException("Polling not valid: "+ serviceDto.getPollingUrl());
+
     }
 
     @PUT("/Service/:Service_id/:DependentOnService_id")

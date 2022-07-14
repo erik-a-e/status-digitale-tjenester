@@ -4,9 +4,9 @@ import nav.portal.core.entities.RecordEntity;
 import nav.portal.core.entities.ServiceEntity;
 import nav.portal.core.repositories.*;
 import no.nav.portal.rest.api.EntityDtoMappers;
+import no.portal.web.generated.api.RecordDto;
 import no.portal.web.generated.api.ServiceDto;
 
-import no.portal.web.generated.api.ServiceStatusDto;
 import no.portal.web.generated.api.StatusDto;
 import org.assertj.core.api.Assertions;
 import org.fluentjdbc.DbContext;
@@ -50,12 +50,13 @@ class RecordControllerTest {
         RecordEntity record = SampleData.getRandomizedRecordEntity();
         record.setServiceId(service.getId());
         record.setId(recordRepository.save(record));
-        ServiceStatusDto serviceStatusDto = EntityDtoMappers.serviceStatusDto(record);
+        RecordDto recordDto = EntityDtoMappers.toRecordDto(record);
         //Act
-        recordController.addServiceStatus(serviceStatusDto);
+        recordController.addServiceStatus(recordDto);
         //Assert
         ServiceDto serviceDto = serviceController.getService(serviceId);
-        Assertions.assertThat(serviceDto.getStatus()).isEqualTo(StatusDto.fromValue(record.getStatus().getDbRepresentation()));
+        Assertions.assertThat(serviceDto.getRecord().getStatus())
+                .isEqualTo(StatusDto.fromValue(record.getStatus().getDbRepresentation()));
     }
 
     @Test
@@ -95,7 +96,7 @@ class RecordControllerTest {
         //recordRepository.save()
         recordRepository.save(serviceRecord);
         //Act
-        List<ServiceStatusDto> servicesDtos = recordController.getRecordHistory(serviceId);
+        List<RecordDto> servicesDtos = recordController.getRecordHistory(serviceId);
         //Assert
         Assertions.assertThat(servicesDtos).isNotEmpty();
     }

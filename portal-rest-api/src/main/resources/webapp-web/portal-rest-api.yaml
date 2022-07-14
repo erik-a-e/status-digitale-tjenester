@@ -849,7 +849,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ServiceStatus'
+              $ref: '#/components/schemas/Record'
           text/plain:
             schema:
               type: string
@@ -1017,14 +1017,34 @@ paths:
         '404':
           description: Not Found
           content: { }
-  /OpsMessage/{OpsMessage_id}:
+  /OpsMessage/{Ops_id}:
+    delete:
+      tags:
+        - OPS
+      summary: Slett avviksmelding
+      description: Fjerner en avviksmelding fullstendig
+      parameters:
+        - name: Ops_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '201':
+          description: Deleted
+        '403':
+          description: Forbidden
+          content: { }
+        '404':
+          description: Not Found
+          content: { }
     put:
       tags:
         - OPS
       summary: Rediger avviksmelding
       description: Rediger avviksmelding
       parameters:
-        - name: OpsMessage_id
+        - name: Ops_id
           in: path
           required: true
           schema:
@@ -1048,26 +1068,40 @@ paths:
         '404':
           description: Not Found
           content: { }
-    delete:
+  /OpsMessage/Dashboard/{Dashboard_id}:
+    get:
       tags:
         - OPS
-      summary: Slett avviksmelding
-      description: Fjerner en avviksmelding fullstendig
+      summary: Hent aktive aviksmeldinger på et dashboard
+      operationId: getAllForDashboard
+      description: Hent aktive aviksmeldinger på et dashboard
       parameters:
-        - name: OpsMessage_id
+        - name: Dashboard_id
           in: path
           required: true
           schema:
             type: string
       responses:
-        '201':
-          description: Deleted
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OPSmessage'
+        '401':
+          description: Unauthorized
+          content: { }
         '403':
           description: Forbidden
           content: { }
         '404':
           description: Not Found
           content: { }
+      deprecated: false
+#--------------------------------------------------------------------------------------------------------------------------------------------------------
+#--------------------------------------------------------------------------------------------------------------------------------------------------------
 components:
   schemas:
     DashboardNameId:
@@ -1189,32 +1223,35 @@ components:
           example: "[Liste av område UUIDer]"
           items:
             $ref: '#/components/schemas/Area'
-        servicesDependantOnThisComponant:
+        servicesDependentOnThisComponent:
           type: array
           example: "[Liste av servicer som er avhengig av denne komponenten]"
           items:
             $ref: '#/components/schemas/Service'
-        ServiceOpeningHours:
+        serviceOpeningHours:
           $ref: '#/components/schemas/ServiceOpeningHours'
         monitorlink:
           type: string
         pollingUrl:
           type: string
-        status:
+        record:
           readOnly: true
-          allOf:
-            - $ref: '#/components/schemas/Status'
+          $ref: '#/components/schemas/Record'
         statusNotFromTeam:
           type: boolean
       required:
         - serviceDependencies
         - componentDependencies
         - areasContainingThisService
-        - servicesDependantOnThisComponant
-    ServiceStatus:
-      title: ServiceStatus
+        - servicesDependentOnThisComponent
+    Record:
+      title: Record
       type: object
       properties:
+        timestamp:
+          type: string
+          format: date-time
+          example: "2017-07-21T17:30:00Z"
         serviceId:
           type: string
           format: uuid
@@ -1279,10 +1316,10 @@ components:
         severity:
           type: string
           enum:
-            - NØYTRAL
-            - GRØNN
-            - GUL
-            - RØD
+            - NEUTRAL
+            - OK
+            - ISSUE
+            - DOWN
       required:
         - internalMessage
         - internalHeader
@@ -1361,7 +1398,7 @@ components:
       title: CommonAnnotations
       properties:
         severity:
-          $ref: '#/components/schemas/Severity'
+          $ref: '#/components/schemas/AlertSeverity'
     CommonLabels:
       title: commonLabels
       properties:
@@ -1373,7 +1410,7 @@ components:
       enum:
         - firing
         - resolved
-    Severity:
+    AlertSeverity:
       type: string
       enum:
         - good

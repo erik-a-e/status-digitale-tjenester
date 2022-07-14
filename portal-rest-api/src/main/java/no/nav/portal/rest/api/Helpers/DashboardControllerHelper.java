@@ -90,23 +90,26 @@ public class DashboardControllerHelper {
 
     private void settStatusOnService(ServiceDto service){
         if(recordRepository.getLatestRecord(service.getId()).isPresent()){
-            service.setStatus(StatusDto.fromValue(recordRepository.getLatestRecord(service.getId()).get().getStatus().getDbRepresentation().toUpperCase()));
-            return;
+            service.setRecord(
+                    EntityDtoMappers.toRecordDto(recordRepository.getLatestRecord(service.getId()).get())
+                    );
         }
-        service.setStatus(null);
+        else{
+            service.setRecord(new RecordDto());
+        }
     }
 
     private StatusDto getWorstStatusAmongst(List<ServiceDto> services){
         if(services.stream()
-                .map(ServiceDto::getStatus)
+                .map(s -> s.getRecord() != null? s.getRecord().getStatus(): null)
                 .collect(Collectors.toList())
                 .contains(StatusDto.DOWN)) return StatusDto.DOWN;
         if(services.stream()
-                .map(ServiceDto::getStatus)
+                .map(s -> s.getRecord() != null? s.getRecord().getStatus(): null)
                 .collect(Collectors.toList())
                 .contains(StatusDto.ISSUE)) return StatusDto.ISSUE;
         if(services.stream()
-                .map(ServiceDto::getStatus)
+                .map(s -> s.getRecord() != null? s.getRecord().getStatus(): null)
                 .collect(Collectors.toList())
                 .contains(StatusDto.OK)) return StatusDto.OK;
         return null;

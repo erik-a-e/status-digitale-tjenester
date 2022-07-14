@@ -1,12 +1,12 @@
 package no.nav.portal.rest.api.v3.controllers;
 
-import com.unboundid.ldap.sdk.unboundidds.AlertSeverity;
 import nav.portal.core.entities.RecordEntity;
 import nav.portal.core.enums.ServiceStatus;
 import nav.portal.core.repositories.RecordRepository;
 import no.nav.portal.rest.api.EntityDtoMappers;
 import no.portal.web.generated.api.*;
 import org.actioncontroller.GET;
+import org.actioncontroller.HttpRequestException;
 import org.actioncontroller.POST;
 import org.actioncontroller.PathParam;
 import org.actioncontroller.json.JsonBody;
@@ -29,21 +29,25 @@ public class RecordController {
 
 
     @POST("/ServiceStatus")
-    public  void addServiceStatus(@JsonBody ServiceStatusDto serviceStatusDto){
+    public  void addServiceStatus(@JsonBody RecordDto recordDto){
         //TODO denne må utbedres
+        ServiceStatus status = ServiceStatus.fromDb(recordDto.getStatus().getValue().toUpperCase())
+                .orElseThrow(() -> new HttpRequestException("Could not parse status: "+ recordDto.getStatus() +
+                        " should be on format: OK, ISSUE or DOWN"));
         RecordEntity entity = new RecordEntity()
-                .setServiceId(serviceStatusDto.getServiceId())
-                .setStatus(ServiceStatus.fromDb(serviceStatusDto.getStatus().getValue().toUpperCase()).orElse(ServiceStatus.ISSUE))
-                .setDescription(serviceStatusDto.getDescription())
+                .setServiceId(recordDto.getServiceId())
+                .setStatus(status)
+                .setDescription(recordDto.getDescription())
                 .setCreated_at(ZonedDateTime.now())
+                .setLogglink(recordDto.getLogLink())
                 .setResponsetime(42);//TODO se her
         recordRepository.save(entity);
     }
 
     @GET("/ServiceStatus/:Service_id")
     @JsonBody
-    public List<ServiceStatusDto> getRecordHistory(@PathParam("Service_id") UUID service_id) {
-        return EntityDtoMappers.toServiceStatusDto(
+    public List<RecordDto> getRecordHistory(@PathParam("Service_id") UUID service_id) {
+        return EntityDtoMappers.toRecordDto(
                 recordRepository.getRecordHistory(service_id,100));
     }
 
@@ -54,8 +58,8 @@ public class RecordController {
         System.out.println(test.getStatus());
         System.out.println(test.getCommonLabels().getAlertname());
         System.out.println(test.getCommonAnnotations().getSeverity());
-        ServiceStatusDto serviceStatusDto = generateServiceStatusFromAlert(test);
-        addServiceStatus(serviceStatusDto);
+        RecordDto recordDto = generateServiceStatusFromAlert(test);
+        addServiceStatus(recordDto);
 
     }
 
@@ -67,29 +71,29 @@ public class RecordController {
 
 
 
-    private ServiceStatusDto generateServiceStatusFromAlert(AlertDto alertDto){
+    private RecordDto generateServiceStatusFromAlert(AlertDto alertDto){
         if(AlertStatusDto.RESOLVED.equals(alertDto.getStatus())){
-            return new ServiceStatusDto()
+            return new RecordDto()
                     .serviceId(alertDto.getCommonLabels().getAlertname())
                     .status(StatusDto.OK)
                     .description("Resolved alert from prometheus");
         }
-        if(SeverityDto.GOOD.equals(alertDto.getCommonAnnotations().getSeverity())){
-            return new ServiceStatusDto()
+        if(AlertSeverityDto.GOOD.equals(alertDto.getCommonAnnotations().getSeverity())){
+            return new RecordDto()
                     .serviceId(alertDto.getCommonLabels().getAlertname())
                     .status(StatusDto.OK)
                     .description("Received alert from prometheus, with status ok");
 
         }
-        if(SeverityDto.WARNING.equals(alertDto.getCommonAnnotations().getSeverity())){
-            return new ServiceStatusDto()
+        if(AlertSeverityDto.WARNING.equals(alertDto.getCommonAnnotations().getSeverity())){
+            return new RecordDto()
                     .serviceId(alertDto.getCommonLabels().getAlertname())
                     .status(StatusDto.ISSUE)
                     .description("Received alert from prometheus, with status warning");
 
         }
-        if(SeverityDto.DANGER.equals(alertDto.getCommonAnnotations().getSeverity())){
-            return new ServiceStatusDto()
+        if(AlertSeverityDto.DANGER.equals(alertDto.getCommonAnnotations().getSeverity())){
+            return new RecordDto()
                     .serviceId(alertDto.getCommonLabels().getAlertname())
                     .status(StatusDto.DOWN)
                     .description("Received alert from prometheus, with status danger");

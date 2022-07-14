@@ -7,13 +7,15 @@ import org.actioncontroller.*;
 import org.actioncontroller.json.JsonBody;
 import org.fluentjdbc.DbContext;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
 public class OpsController {
 
 
-    private OpsControllerHelper opsControllerHelper;
+    private final OpsControllerHelper opsControllerHelper;
 
     public OpsController(DbContext dbContext) {
         this.opsControllerHelper = new OpsControllerHelper(dbContext);
@@ -31,21 +33,29 @@ public class OpsController {
         return opsControllerHelper.getAllOpsMessages();
     }
 
+    @PUT("/OpsMessage/:Ops_id")
+    @JsonBody
+    public OPSmessageDto updateSpecificOpsMessage(@PathParam("Ops_id") UUID ops_id ,@JsonBody OPSmessageDto opsMessageDto) {
+        opsMessageDto.setId(ops_id);
+        return opsControllerHelper.updateOpsMessage(opsMessageDto);
+    }
+
     @GET("/OpsMessage/:Ops_id")
     @JsonBody
     public OPSmessageDto getSpecificOpsMessage(@PathParam("Ops_id") UUID ops_id ) {
         return opsControllerHelper.getOpsMessage(ops_id);
     }
 
-    @PUT("/OpsMessage/:Ops_id")
-    @JsonBody
-    public OPSmessageDto updateSpecificOpsMessage(@JsonBody OPSmessageDto opsMessageDto, @PathParam("Ops_id") UUID ops_id ) {
-        return opsControllerHelper.updateOpsMessage(ops_id, opsMessageDto);
-    }
 
     @DELETE("/OpsMessage/:Ops_id")
     @JsonBody
     public void deleteOpsMessage(@PathParam("Ops_id") UUID ops_id ) {
         opsControllerHelper.deleteOps(ops_id);
+    }
+
+    @GET("/OpsMessage/Dashboard/:Dashboard_id")
+    @JsonBody
+    public List<OPSmessageDto> getAllForDashboard(@PathParam("Dashboard_id") UUID dashboard_id ) {
+        return opsControllerHelper.getAllForDashboard(dashboard_id);
     }
 }

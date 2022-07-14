@@ -46,6 +46,7 @@ public class ServiceRepository {
     public UUID save(ServiceEntity service) {
         //Sjekk på navn+type kombinasjon
         if(serviceTable.where("name",service.getName())
+                .where("deleted",false)
                 .where("type", service.getType()).getCount()>0){
             throw new HttpRequestException("Tjeneste med navn: "+ service.getName()
                     +", og type: "+service.getType()+" finnes allerede");
@@ -121,7 +122,6 @@ public class ServiceRepository {
     }
 
     public void removeAllDependenciesFromService(UUID serviceId){
-        //Sletter både avhengigheter fra tjenesten til andre tjenester
         service_serviceTable.where("service1_id", serviceId).executeDelete();
     }
 
@@ -152,7 +152,7 @@ public class ServiceRepository {
         return result
                 .entrySet()
                 .stream().findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Not found: Service with id " + service_id));
+                .orElseThrow(() -> new HttpRequestException("Not found: Service with id " + service_id));
     }
 
     public  List<ServiceEntity> retrieveAllShallow() {
@@ -228,12 +228,15 @@ public class ServiceRepository {
     }
 
     public List<ServiceEntity> retrieveServicesWithPolling() {
-        return serviceTable.query().whereExpression("polling_url is not null").stream(ServiceRepository::toService).collect(Collectors.toList());
+        return serviceTable.query().whereExpression("polling_url is not null")
+                .where("deleted", false)
+                .stream(ServiceRepository::toService).collect(Collectors.toList());
     }
 
     public Boolean doesEntryExist(UUID id){
         return serviceTable.where("id", id)
-                .singleObject(ServiceRepository::toService).isPresent();
+                .singleObject(ServiceRepository::toService)
+                .isPresent();
     }
     public List<ServiceEntity> retrieve(List<String> ids) {
         return serviceTable.whereIn("id", ids)
