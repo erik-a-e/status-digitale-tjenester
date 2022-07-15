@@ -136,6 +136,21 @@ class RecordRepositoryTest {
         Assertions.assertThat(shouldContainOne.size()).isEqualTo(1);
     }
 
+    @Test
+    void saveAggregatedRecords() {
+        //Arrange
+        ServiceEntity service = SampleData.getRandomizedServiceEntity();
+        UUID serviceId = serviceRepository.save(service);
+        service.setId(serviceId);
+        DailyStatusAggregationForServiceEntity aggregation = SampleData.getRandomizedDailyStatusAggregationForService(service);
+        //Act
+        UUID aggregationId = recordRepository.saveAggregatedRecords(aggregation);
+        aggregation.setId(aggregationId);
+        List<DailyStatusAggregationForServiceEntity> retrievedAggregatedRecords = recordRepository.getServiceHistoryForNumberOfDays(1, serviceId);
+        //Assert
+        Assertions.assertThat(retrievedAggregatedRecords.size()).isEqualTo(1);
+        Assertions.assertThat(retrievedAggregatedRecords.contains(aggregation));
+    }
 
     @Test
     void getLatestRecord2() {

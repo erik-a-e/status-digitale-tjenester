@@ -107,7 +107,6 @@ public class RecordRepository {
     }
 
 
-
     public static class Query {
 
         private final DbContextSelectBuilder query;
