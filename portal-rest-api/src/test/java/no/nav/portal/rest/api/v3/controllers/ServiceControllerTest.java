@@ -7,11 +7,10 @@ import nav.portal.core.entities.RecordEntity;
 import nav.portal.core.entities.ServiceEntity;
 import nav.portal.core.repositories.*;
 import no.nav.portal.rest.api.EntityDtoMappers;
+import no.portal.web.generated.api.*;
 import no.nav.portal.rest.api.Helpers.AccessTokenHelper;
-import no.portal.web.generated.api.AreaDto;
-import no.portal.web.generated.api.ServiceDto;
-import no.portal.web.generated.api.MaintenanceDto;
 
+import org.actioncontroller.PathParam;
 import org.fluentjdbc.DbContext;
 import org.fluentjdbc.DbContextConnection;
 
@@ -22,11 +21,16 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 
+import javax.json.Json;
+import javax.json.JsonReader;
+import javax.json.JsonObject;
+
 import javax.sql.DataSource;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.time.Month;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -39,8 +43,10 @@ class ServiceControllerTest {
     private final DbContext dbContext = new DbContext();
 
     private DbContextConnection connection;
+    private final DashboardController dashboardController = new DashboardController(dbContext);
+    private final AreaController areaController = new AreaController(dbContext);
+    private final ServiceController serviceController = new ServiceController(dbContext);
     private final AreaRepository areaRepository = new AreaRepository(dbContext);
-    private final ServiceController serviceController = new ServiceController(dbContext, true);
     private final ServiceRepository serviceRepository = new ServiceRepository(dbContext);
     private final RecordRepository recordRepository = new RecordRepository(dbContext);
 
@@ -57,6 +63,44 @@ class ServiceControllerTest {
 
     @Test
     void getServices() {
+        //Arrange
+        AreaDto areaDto = SampleDataDto.getRandomizedAreaDto();
+        IdContainerDto idContainerDto = areaController.newArea(areaDto);
+        areaDto.setId(idContainerDto.getId());
+
+        List<ServiceDto> serviceDtos = SampleDataDto.getRandomLengthListOfServiceDto();
+        serviceDtos.forEach(serviceDto1 -> {
+            ServiceDto savedServiceDto1 = serviceController.newService(serviceDto1);
+            serviceDto1.setId(savedServiceDto1.getId());
+            areaController.addServiceToArea(areaDto.getId(), serviceDto1.getId());
+        });
+
+        DashboardDto dashboardDto = SampleDataDto.getRandomizedDashboardDto();
+        dashboardDto.setAreas(List.of(areaDto));
+        IdContainerDto dashboardIdContainerDto = dashboardController.postDashboard(dashboardDto);
+        dashboardDto.setId(dashboardIdContainerDto.getId());
+
+        //Act
+        List<ServiceDto> resultingServiceDtos = serviceController.getServices();
+
+        //Assert
+        Assertions.assertThat(resultingServiceDtos.size()).isEqualTo(serviceDtos.size());
+        Assertions.assertThat(resultingServiceDtos).containsExactlyInAnyOrderElementsOf(serviceDtos);
+
+        //Finner alle tjenester med avhengigheter fra resultatet
+        /*List<ServiceDto> retrievedServicesWithDependencies = resultingDtos
+                .stream()
+                .filter(dto -> dto.getComponentDependencies().size() +dto.getServiceDependencies().size() > 0)
+                .collect(Collectors.toList());
+        //Forventer at det bare er en tjeneste med avhengighet
+        Assertions.assertThat(retrievedServicesWithDependencies.size()).isEqualTo(1);
+        //Forventer at den har samme UUID som entiteten vi valgte skulle ha avhengigheter
+        Assertions.assertThat(retrievedServicesWithDependencies.get(0).getId()).isEqualTo(expectedUUIDOfServiceWithDependecies);*/
+
+    }
+
+    @Test
+    void getServicesx() {
         //Arrange
         int NumberOfServices = 4;
         List<ServiceEntity> services = SampleData.getNonEmptyListOfServiceEntity(NumberOfServices);
