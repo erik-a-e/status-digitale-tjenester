@@ -46,6 +46,7 @@ class ServiceControllerTest {
     private final DashboardController dashboardController = new DashboardController(dbContext);
     private final AreaController areaController = new AreaController(dbContext);
     private final ServiceController serviceController = new ServiceController(dbContext);
+    private final RecordController recordController = new RecordController(dbContext);
     private final AreaRepository areaRepository = new AreaRepository(dbContext);
     private final ServiceRepository serviceRepository = new ServiceRepository(dbContext);
     private final RecordRepository recordRepository = new RecordRepository(dbContext);
@@ -68,10 +69,14 @@ class ServiceControllerTest {
         IdContainerDto idContainerDto = areaController.newArea(areaDto);
         areaDto.setId(idContainerDto.getId());
 
+
+
         List<ServiceDto> serviceDtos = SampleDataDto.getRandomLengthListOfServiceDto();
         serviceDtos.forEach(serviceDto1 -> {
             ServiceDto savedServiceDto1 = serviceController.newService(serviceDto1);
             serviceDto1.setId(savedServiceDto1.getId());
+
+
             areaController.addServiceToArea(areaDto.getId(), serviceDto1.getId());
         });
 
@@ -85,7 +90,7 @@ class ServiceControllerTest {
 
         //Assert
         Assertions.assertThat(resultingServiceDtos.size()).isEqualTo(serviceDtos.size());
-        Assertions.assertThat(resultingServiceDtos).containsExactlyInAnyOrderElementsOf(serviceDtos);
+        Assertions.assertThat(resultingServiceDtos).containsAll(serviceDtos);
 
         //Finner alle tjenester med avhengigheter fra resultatet
         /*List<ServiceDto> retrievedServicesWithDependencies = resultingDtos
