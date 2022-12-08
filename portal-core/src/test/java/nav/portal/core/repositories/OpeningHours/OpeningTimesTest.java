@@ -21,19 +21,26 @@ public class OpeningTimesTest {
     private final OpeningTimes openingTimes = new OpeningTimes();
 
     @Test
-    void isSaved(){
+    void isASavedRule(){
         //Arrange
-        String example = "??.??.???? 07:00-21:00 1-5 ?";
+        String validExample = "??.??.???? 07:00-21:00 1-5 ?";
+        String invalidExample = "??.??.???? 07:00-21:00 0-5 ?";
+
+        boolean validAnswer = true;
+        boolean invalidAnswer = false;
         //Act
+        Boolean isTrueIfAnswerValid = openingTimes.isASavedRule(validExample);
+        ArrayList<String>retrievedRule = openingTimes.getOpeningTimeRules();
 
-        Boolean isSaved = openingTimes.isSaved(example);
         //Assign
-        ArrayList<String> retrievedRules = openingTimes.getOpeningTimeRules();
+        Assertions.assertEquals(isTrueIfAnswerValid, validAnswer);
+        Assertions.assertEquals(retrievedRule.size(), 1);
 
-        System.out.println(isSaved);
+        Boolean isFalseWhenAnswerInValid = openingTimes.isASavedRule(invalidExample);
 
-        System.out.println("Retrieved rules size: " + retrievedRules.size());
-        //System.out.println("Retrieved string: " + retrievedRules.get(0));
+
+        //Assign
+        Assertions.assertEquals(isFalseWhenAnswerInValid, invalidAnswer);
     }
 
     @Test
@@ -43,5 +50,49 @@ public class OpeningTimesTest {
         //Assign
         System.out.println(new StringBuilder().append("local date and time: ").append(openingTimes.openingDateAndTime()).toString());
 
+    }
+
+    @Test
+    void returnOpeningDateAndTime(){
+        //Arrange
+        //Act
+        //Assign
+        String aDate = "15/12/2022";
+        System.out.println(openingTimes.formatOpeningDateAndTime(aDate));
+
+    }
+
+    @Test
+    void  getDayNumber(){
+        //Arrange
+        //Act
+        //Assign
+        String aDate = "19/12/2022";
+        System.out.println(openingTimes.getDayNumber(aDate));
+
+    }
+
+    @Test
+    void displayValidPeriod(){
+        //Arrange
+        String example = "??.??.???? 07:00-21:00 1-5 ?";
+        String testDate1 = "15/12/2022";
+        String testDate2 = "16/12/2022";
+        String testDate3 = "17/12/2022";
+        String testDate4 = "18/12/2022";
+        String testDate5 = "19/12/2022";
+        String testDate6 = "20/12/2022";
+        String testDate7 = "21/12/2022";
+        Boolean isSaved = openingTimes.isASavedRule(example);
+        //Assign
+        String retrievedRule = openingTimes.retrieveOpeningTimeDate();
+        //Assign
+        openingTimes.displayValidPeriod(testDate1, retrievedRule);
+        openingTimes.displayValidPeriod(testDate2, retrievedRule);
+        openingTimes.displayValidPeriod(testDate3, retrievedRule);
+        openingTimes.displayValidPeriod(testDate4, retrievedRule);
+        openingTimes.displayValidPeriod(testDate5, retrievedRule);
+        openingTimes.displayValidPeriod(testDate6, retrievedRule);
+        openingTimes.displayValidPeriod(testDate7, retrievedRule);
     }
 }
