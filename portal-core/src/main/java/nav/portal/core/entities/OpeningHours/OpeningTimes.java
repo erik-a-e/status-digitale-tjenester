@@ -56,7 +56,6 @@ public class OpeningTimes {
 
     private Boolean isAValidRule(String openingTimeRule){
         if (isLengthValid(openingTimeRule) && isValidFormatTimes(rules)){
-            System.out.println("perform isAValidDayDateOrPeriodLength");
             return isAValidDayDateOrPeriod(rules);
         }else{
             return false;
@@ -64,9 +63,12 @@ public class OpeningTimes {
     }
 
     private Boolean isAValidDayDateOrPeriod(String[] rules){
-        if (!rules[2].matches("\s*[?*]\s*")){
-            System.out.println("perform isValidFormatForWeekday");
+        if (!rules[0].substring(0,2).equals("??")){
+            return  isAValidFormatForASpecifiedDate(rules);
+        }else if (!rules[2].matches("\s*[?*]\s*")){
             return isValidFormatForWeekday(rules);
+        }else if (!rules[3].substring(0).trim().equals("?")){
+            return true;
         }else{
             return false;
         }
@@ -81,23 +83,38 @@ public class OpeningTimes {
             rules[2] = ruleParts[2];
             rules[3] = ruleParts[3];
             return true;
-          }else{
+        }else{
+            return false;
+        }
+    }
+
+    private boolean isAValidFormatForASpecifiedDate(String[] rules) {
+        if (rules[0].substring(0).trim().matches("[0-9]{2}[/][0-9]{2}[/][0-9]{4}")){
+            return isAValidDate(rules[0].substring(0).trim(), rules[0].substring(0).trim());
+        }else{
             return false;
         }
     }
 
     private Boolean isValidFormatForWeekday (String[] rules) {
-        if (rules[2].substring(0).matches("[1-7]\s*-\s*[1-7]")) {
+        if (rules[2].substring(0).matches("[1-7]\s*:\s*[1-7]")) {
             int range1 = Integer.parseInt(rules[2].substring(0,1));
             int range2 = Integer.parseInt(rules[2].substring(2));
-            System.out.println("isAValidWeekday");
             return range1 <= range2;
         }else{
             return false;
         }
     }
 
-    private Boolean isValidFormatTimes(String[] rules){ //
+    private Boolean isValidFormatForDayInAMonth(String[] rules) {
+        if (rules[2].substring(0).matches("([1-9]|0[1-9]|[1-2][0-9]|3[0-1])(?:\\b|/)")) {
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    private Boolean isValidFormatTimes(String[] rules){
         if ((rules[1].substring(0,5).matches("([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]"))
                 && (rules[1].substring(6,11).matches("([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]"))){
             int from = toMins(rules[1].substring(0, 5));
@@ -119,7 +136,6 @@ public class OpeningTimes {
     public String openingDateAndTime(){
         SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm");
         Date date = new Date();
-        System.out.println(formatter.format(date));
         return formatter.format(date);
     }
 
@@ -140,33 +156,66 @@ public class OpeningTimes {
         return LocalDate.parse(date, dateTimeFormatter);
     }
 
+
+
     public static int getDayNumber(String date) {
         LocalDate localDate = formatOpeningDateAndTime(date);
         DayOfWeek day = localDate.getDayOfWeek();
         return day.getValue();
     }
 
-    public boolean isAValidPeriodRange(String date, String retrievedRule){
+    public boolean isAValidDate(String date, String retrievedRule){
+        String[] retrievedRuleParts = retrievedRule.split("[\s]");
+        return (getDayNumber(retrievedRuleParts[0].trim()) >= 1 &&
+                getDayNumber(retrievedRuleParts[0].trim()) <= 5);
+    }
+
+    public boolean isAValidPeriodRange(String entryDate, String retrievedRule){
         String[] retrievedRuleParts = retrievedRule.split("[\s]");
         int range1 = Integer.parseInt(retrievedRuleParts[2].substring(0,1));
         int range2 = Integer.parseInt(retrievedRuleParts[2].substring(2));
-        return (getDayNumber(date) >= range1 && getDayNumber(date) <= range2);
+        return (getDayNumber(entryDate) >= range1 && getDayNumber(entryDate) <= range2);
     }
 
     public String retrieveOpeningTimeDate(){
         return openingTimesRules.get(0);
     }
 
-    public void displayValidPeriod(String date, String retrievedRule){
-        if (isAValidPeriodRange(date, retrievedRule)){
-            System.out.println("Openings times for the " + date + " is "  + rules[1]);
+    public boolean isAValidSpecidiedDate(String entryDate){
+        boolean retVal = false;
+        for (String opr : openingTimesRules) {
+            String[] ruleParts = opr.split("[\s]");
+            rules = new String [2];
+            rules[0] = ruleParts[0];
+            rules[1] = ruleParts[1];
+            if (formatOpeningDateAndTime(rules[0].trim()).equals(formatOpeningDateAndTime(entryDate))) {
+                retVal = true;
+                break;
+            }
+        }
+        return retVal;
+    }
+
+    public void displayDate(String entryDate){
+        if (isAValidSpecidiedDate(entryDate)){
+            System.out.println("Åpningstider " + entryDate + " is "  + rules[1].trim());
         }else{
-            System.out.println(date + " Not a valid opening time");
+            System.out.println("Dato "+ entryDate + " er en utenfor åpningstids");
         }
     }
 
+    public void displayPeriod(String entryDate, String retrievedRule){
+        if (isAValidPeriodRange(entryDate, retrievedRule)){
+            System.out.println("Åpningstider for " + entryDate + " is "  + rules[1]);
+        }else{
+            System.out.println(("Dato "+ entryDate + " er en utenfor åpningstidsdato"));
+        }
+    }
 
 }
+
+
+
 
 
 
