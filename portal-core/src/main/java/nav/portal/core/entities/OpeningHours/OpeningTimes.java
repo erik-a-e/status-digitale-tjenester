@@ -31,7 +31,7 @@ public class OpeningTimes {
 
     private Boolean isAValidCheck(String openingTimeRule){
         if (isAValidRuleLength(openingTimeRule)) {
-            createRuleArray(openingTimeRule);
+            createRules(openingTimeRule);
             if (isValidTimes(rules)) {
                 return isAValidDayDateOrPeriod(rules);
             }
@@ -44,7 +44,7 @@ public class OpeningTimes {
         return (ruleParts.length == 4);
     }
 
-    private void createRuleArray (String openingTimeRule){
+    private void createRules (String openingTimeRule){
         String[] ruleParts = openingTimeRule.split("[\s]");
         rules = new String [ruleParts.length];
         rules[0] = ruleParts[0];
