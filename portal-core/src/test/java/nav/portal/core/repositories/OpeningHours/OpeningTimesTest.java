@@ -33,6 +33,7 @@ public class OpeningTimesTest {
         String example8 = "??.??.???? 07:00-21:00 0:8 ?";    //Ugyldig dato utenfor range
         String example9 = "??.??.???? 07:00-21:00 0:z ?";    //Ugyldig format
         String example10 = "??.??.???? 00:00-00:00 1:3 ?";   //Ugldig åpningstider
+        String example11 = "??.??.???? 07:00-21:00 ? 5";
 
         //Act
         Boolean example1isFalse = openingTimes.isAValidRule(example1);
@@ -45,6 +46,7 @@ public class OpeningTimesTest {
         Boolean example8isFalse = openingTimes.isAValidRule(example8);
         Boolean example9isFalse = openingTimes.isAValidRule(example9);
         Boolean example10isFalse = openingTimes.isAValidRule(example10);
+        Boolean example11isTrue = openingTimes.isAValidRule(example11);
 
         //Assign
         Assertions.assertFalse((boolean)example1isFalse);

@@ -2,17 +2,14 @@ package nav.portal.core.entities.OpeningHours;
 
 import net.sourceforge.jtds.jdbc.DateTime;
 
+import java.text.DateFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Objects;
+import java.util.*;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class OpeningTimes {
     private String[] rules;
@@ -44,7 +41,7 @@ public class OpeningTimes {
         return (ruleParts.length == 4);
     }
 
-    private void createRules (String openingTimeRule){
+    private void createRules(String openingTimeRule){
         String[] ruleParts = openingTimeRule.split("[\s]");
         rules = new String [ruleParts.length];
         rules[0] = ruleParts[0];
@@ -82,14 +79,13 @@ public class OpeningTimes {
         }else if (!rules[2].matches("\s*[?*]\s*")){
             return isValidFormatForWeekday(rules);
         }else if (!rules[3].substring(0).equals("?")){
-            return false;
+            return isAValidDayInTheMonthFormat(rules);
         }else{
             return false;
         }
     }
 
     //Test for dato med format dd.mm.yyyy, dekker også skuddår
-    //
     private boolean isAValidFormatForASpecifiedDate(String[] rules) {
         return (rules[0].matches("(((0[1-9]|[12][0-9]|3[01])([.])(0[13578]|10|12)([.])(\\d{4}))" +
             "|(([0][1-9]|[12][0-9]|30)([.])(0[469]|11)([.])(\\d{4}))|((0[1-9]|1[0-9]|2[0-8])([.])(02)([.])(\\d{4}))" +
@@ -106,6 +102,12 @@ public class OpeningTimes {
             return false;
         }
     }
+
+    private boolean isAValidDayInTheMonthFormat(String [] rules){
+        return (rules[3].trim().matches("([1-9]|[12][0-9]|3[01])|-1"));
+    }
+
+
 }
 
 
