@@ -21,73 +21,115 @@ public class OpeningTimesTest {
     private final OpeningTimes openingTimes = new OpeningTimes();
 
     @Test
-    void isASavedRule(){
+    void isValidForWeekDays(){
         //Arrange
-        String example1 = "??.??.???? ? ";                   //Ugyldig format:
-        String example2 = "??.??.???? ? ? 1:5";              //Ugyldig format: days of week mangler tidsperioder
-        String example3 = "??.??.???? ? ? 1";                //Ugyldig format: day in month mangler tidsperioder
-        String example4 = "02.05.2022 ? 1:5 ?";
-        String example5 = "??.??.???? 07:00-21:00 1:5 ?";
-        String example6 = "??.??.???? 07:00-21:00 2:4 ?";
-        String example7 = "??.??.???? 07:00-21:00 0:5 ?";
-        String example8 = "??.??.???? 07:00-21:00 1:7 ?";
-        String example9 = "??.??.???? 07:00-21:00 1:9 ?";
-        String example10 = "??.??.???? 07:00-21:00 0:8 ?";
-        String example11 = "??.??.???? 07:00-21:00 0:z ?";
-        String example12 = "??.??.???? 00:00-00:00 1:3 ?";
-        String example13 = "02.05.2022 09:00-22:00 ? ?";
-        String example14 = "11.12.2022 09:00-22:00 ? ?";
-        String example15 = "51.12.2022 09:00-22:00 ? ?";
-        String example16 = "01.15.???? 09:00-22:00 ? ?";
-        String example17 = "11.??.2022 09:00-22:00 ? ?";
-        String example18 = "14.12.20zz 09:00-22:00 ? ?";
-        String example19 = "14.12.9999 09:00-22:00 ? ?";
-        String example20 = "29.02.2022 10:00-22:00 ? ?"; //Uglyldig skuddår
-        String example21 = "29.02.2024 10:00-22:00 ? ?"; //Gyldig skuddår dato
-        String example22 = "11/12/2022 09:00-22:00 ? ?";
-
+        String example1 = "??.??.???? ? ? 1:5";              //Ugyldig format: days of week mangler tidsperioder
+        String example2 = "??.??.???? ? ? 1";                //Ugyldig format: day in month mangler tidsperioder
+        String example3 = "??.??.???? 07:00-21:00 1:5 ?";    //Gyldig
+        String example4 = "??.??.???? 07:00-21:00 2:4 ?";    //Gyldig
+        String example5 = "??.??.???? 07:00-21:00 0:5 ?";    //Ugyldig dato utenfor range - nederst
+        String example6 = "??.??.???? 07:00-21:00 1:7 ?";    //Glydig -dekker alle ukedager
+        String example7 = "??.??.???? 07:00-21:00 1:9 ?";    //Ugyldig dato utenfor range - overst
+        String example8 = "??.??.???? 07:00-21:00 0:8 ?";    //Ugyldig dato utenfor range
+        String example9 = "??.??.???? 07:00-21:00 0:z ?";    //Ugyldig format
+        String example10 = "??.??.???? 00:00-00:00 1:3 ?";   //Ugldig åpningstider
 
         //Act
-        Boolean isTrueIfAnswerValidForExample1 = openingTimes.isASavedRule(example1);
-        Boolean isTrueIfAnswerValidForExample2 = openingTimes.isASavedRule(example2);
-        Boolean isTrueIfAnswerValidForExample3 = openingTimes.isASavedRule(example3);
-        Boolean isTrueIfAnswerValidForExample4 = openingTimes.isASavedRule(example4);
-        Boolean isTrueIfAnswerValidForExample5 = openingTimes.isASavedRule(example5);
-        Boolean isTrueIfAnswerValidForExample6 = openingTimes.isASavedRule(example6);
-        Boolean isTrueIfAnswerValidForExample7 = openingTimes.isASavedRule(example7);
-        Boolean isTrueIfAnswerValidForExample8 = openingTimes.isASavedRule(example8);
-        Boolean isTrueIfAnswerValidForExample9 = openingTimes.isASavedRule(example9);
-        Boolean isTrueIfAnswerValidForExample10 = openingTimes.isASavedRule(example10);
-        Boolean isTrueIfAnswerValidForExample11 = openingTimes.isASavedRule(example11);
-        Boolean isTrueIfAnswerValidForExample12 = openingTimes.isASavedRule(example12);
-        Boolean isTrueIfAnswerValidForExample13 = openingTimes.isASavedRule(example13);
-        Boolean isTrueIfAnswerValidForExample14 = openingTimes.isASavedRule(example14);
-        Boolean isTrueIfAnswerValidForExample15 = openingTimes.isASavedRule(example15);
-        Boolean isTrueIfAnswerValidForExample16 = openingTimes.isASavedRule(example16);
-        Boolean isTrueIfAnswerValidForExample17 = openingTimes.isASavedRule(example17);
-        Boolean isTrueIfAnswerValidForExample18 = openingTimes.isASavedRule(example18);
-        Boolean isTrueIfAnswerValidForExample19 = openingTimes.isASavedRule(example19);
-        Boolean isTrueIfAnswerValidForExample20 = openingTimes.isASavedRule(example20);
-        Boolean isTrueIfAnswerValidForExample21 = openingTimes.isASavedRule(example21);
-        Boolean isTrueIfAnswerValidForExample22 = openingTimes.isASavedRule(example22);
+        Boolean example1isFalse = openingTimes.isAValidRule(example1);
+        Boolean example2isFalse = openingTimes.isAValidRule(example2);
+        Boolean example3isTrue = openingTimes.isAValidRule(example3);
+        Boolean example4isTrue = openingTimes.isAValidRule(example4);
+        Boolean example5isFalse = openingTimes.isAValidRule(example5);
+        Boolean example6isTrue = openingTimes.isAValidRule(example6);
+        Boolean example7isFalse = openingTimes.isAValidRule(example7);
+        Boolean example8isFalse = openingTimes.isAValidRule(example8);
+        Boolean example9isFalse = openingTimes.isAValidRule(example9);
+        Boolean example10isFalse = openingTimes.isAValidRule(example10);
 
         //Assign
-
+        Assertions.assertFalse((boolean)example1isFalse);
+        Assertions.assertFalse((boolean)example2isFalse);
+        Assertions.assertTrue((boolean)example3isTrue);
+        Assertions.assertTrue((boolean)example4isTrue);
+        Assertions.assertFalse((boolean)example5isFalse);
+        Assertions.assertTrue((boolean)example6isTrue);
+        Assertions.assertFalse((boolean)example7isFalse);
+        Assertions.assertFalse((boolean)example8isFalse);
+        Assertions.assertFalse((boolean)example9isFalse);
+        Assertions.assertFalse((boolean)example10isFalse);
     }
 
     @Test
     void isASavedRuleTimes(){
+        //Arrange
         String example1 = "??.??.???? 07:00-21:00 1:5 ?"; //Gyldig times
+        String example2 = "??.??.???? 00:0z-21:00 1:5 ?"; //Uglyldig dato format
+        String example3 = "??.??.???? 00:00-21:0z 1:5 ?"; //Uglyldig dato format
+        String example4 = "??.??.???? 77:29-21:00 1:5 ?"; //Uglyldig dato format
+        String example5 = "??.??.???? 07:63-21:00 1:5 ?"; //Uglyldig dato format
+        String example6 = "??.??.???? 07:00-99:00 1:5 ?"; //Ugyldig times
+        String example7 = "??.??.???? 07:00-21:60 1:5 ?"; //Ugyldig times
         //Act
-        Boolean isTrueIfAnswerValidForExample1 = openingTimes.isASavedRule(example1);
+        Boolean example1isTrue = openingTimes.isAValidRule(example1);
+        Boolean example2isFalse = openingTimes.isAValidRule(example2);
+        Boolean example3isFalse  = openingTimes.isAValidRule(example3);
+        Boolean example4isFalse  = openingTimes.isAValidRule(example4);
+        Boolean example5isFalse  = openingTimes.isAValidRule(example5);
+        Boolean example6isFalse  = openingTimes.isAValidRule(example6);
+        Boolean example7isFalse  = openingTimes.isAValidRule(example7);
         //Assert
-        Assertions.assertEquals(true, (boolean) isTrueIfAnswerValidForExample1);
+        Assertions.assertTrue((boolean) example1isTrue);
+        Assertions.assertFalse((boolean)example2isFalse);
+        Assertions.assertFalse((boolean)example3isFalse);
+        Assertions.assertFalse((boolean)example4isFalse);
+        Assertions.assertFalse((boolean)example5isFalse);
+        Assertions.assertFalse((boolean) example6isFalse);
+        Assertions.assertFalse((boolean) example7isFalse);
     }
 
+    @Test
+    void isAValidRuleForASpecifiedDate(){
+        //Arrange
+        String example1 = "??.??.???? ? ";              //Ugyldig format
+        String example2 = "02.05.2022 ? 1:5 ?";         //Ugyldig Mangler åpningstider
+        String example3 = "02.05.2022 09:00-22:00 ? ?"; //Gyldig  åpningstider
+        String example4 = "11.12.2022 09:00-22:00 ? ?"; //Gyldig  åpningstider
+        String example5 = "51.12.2022 09:00-22:00 ? ?"; //Uglyldig dagsverdi
+        String example6 = "01.15.???? 09:00-22:00 ? ?"; //Uglyldig månedsverdi
+        String example7 = "11.??.2022 09:00-22:00 ? ?"; //Ugyldig format
+        String example8 = "14.12.20zz 09:00-22:00 ? ?"; //Ugyldig format
+        String example9 = "14.12.9999 09:00-22:00 ? ?"; //Gyldig  åpningstider
+        String example10 = "29.02.2022 10:00-22:00 ? ?"; //Uglyldig skuddår
+        String example11 = "29.02.2024 10:00-22:00 ? ?"; //Gyldig skuddår dato
+        String example12 = "11/12/2022 09:00-22:00 ? ?"; //Ugyldig format
+        //Act
+        Boolean example1isFalse = openingTimes.isAValidRule(example1);
+        Boolean example2isFalse = openingTimes.isAValidRule(example2);
+        Boolean example3isTrue  = openingTimes.isAValidRule(example3);
+        Boolean example4isTrue  = openingTimes.isAValidRule(example4);
+        Boolean example5isFalse  = openingTimes.isAValidRule(example5);
+        Boolean example6isFalse  = openingTimes.isAValidRule(example6);
+        Boolean example7isFalse  = openingTimes.isAValidRule(example7);
+        Boolean example8isFalse  = openingTimes.isAValidRule(example8);
+        Boolean example9isTrue  = openingTimes.isAValidRule(example9);
+        Boolean example10isFalse  = openingTimes.isAValidRule(example10);
+        Boolean example11isTrue  = openingTimes.isAValidRule(example11);
+        Boolean example12isFalse  = openingTimes.isAValidRule(example12);
 
+        //Assert
+        Assertions.assertFalse((boolean)example1isFalse);
+        Assertions.assertFalse((boolean)example2isFalse);
+        Assertions.assertTrue((boolean)example3isTrue);
+        Assertions.assertTrue((boolean)example4isTrue);
+        Assertions.assertFalse((boolean)example5isFalse);
+        Assertions.assertFalse((boolean)example6isFalse);
+        Assertions.assertFalse((boolean)example7isFalse);
+        Assertions.assertFalse((boolean)example8isFalse);
+        Assertions.assertTrue((boolean)example9isTrue);
+        Assertions.assertFalse((boolean)example10isFalse);
+        Assertions.assertTrue((boolean)example11isTrue);
+        Assertions.assertFalse((boolean)example12isFalse);
 
-
-
-
+    }
 }
 
