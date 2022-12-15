@@ -19,17 +19,17 @@ public class OpeningTimes {
 
     //Kode som aksepterer oppføring av åpningstider regel
     //Returnerer en setning som sier om åpningstidsregelen er gyldig eller ikke
-    public Boolean isASavedRule(String openingTimeRule){
-        if( isAValidRule(openingTimeRule)) {
-            System.out.println("Gyldig regle: " + openingTimeRule);
+    public Boolean isAValidRule(String openingTimeRule){
+        if( isAValidCheck(openingTimeRule)) {
+            System.out.println("Gyldig regel: " + openingTimeRule);
             return true;
         }else{
-            System.out.println("Ugyldig regle: " + openingTimeRule);
+            System.out.println("Ugyldig regel: " + openingTimeRule);
             return false;
         }
     }
 
-    private Boolean isAValidRule(String openingTimeRule){
+    private Boolean isAValidCheck(String openingTimeRule){
         if (isAValidRuleLength(openingTimeRule)) {
             createRuleArray(openingTimeRule);
             if (isValidTimes(rules)) {
@@ -81,7 +81,7 @@ public class OpeningTimes {
             return  isAValidFormatForASpecifiedDate(rules);
         }else if (!rules[2].matches("\s*[?*]\s*")){
             return isValidFormatForWeekday(rules);
-        }else if (!rules[3].substring(0).trim().equals("?")){
+        }else if (!rules[3].substring(0).equals("?")){
             return false;
         }else{
             return false;
@@ -106,7 +106,6 @@ public class OpeningTimes {
             return false;
         }
     }
-
 }
 
 
