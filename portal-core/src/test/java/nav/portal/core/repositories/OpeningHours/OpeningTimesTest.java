@@ -23,11 +23,28 @@ public class OpeningTimesTest {
     @Test
     void isASavedRule(){
         //Arrange
-        String example1 = "??.??.???? 07:00-21:00 1:5 ?"; //glydig period
-        String example2 = "02/05/2022 09:00-22:00 ? ?";
-        String example3 = "??.??.???? 07:00-21:00 0:5 ?";
-        String example4 = "??.??.???? 09:00-22:00 ? 1";
-        String example5 = "11/12/2022 09:00-22:00 ? ?";
+        String example1 = "??.??.???? ? ";                   //Ugyldig format:
+        String example2 = "??.??.???? ? ? 1:5";              //Ugyldig format: days of week mangler tidsperioder
+        String example3 = "??.??.???? ? ? 1";                //Ugyldig format: day in month mangler tidsperioder
+        String example4 = "02.05.2022 ? 1:5 ?";
+        String example5 = "??.??.???? 07:00-21:00 1:5 ?";
+        String example6 = "??.??.???? 07:00-21:00 2:4 ?";
+        String example7 = "??.??.???? 07:00-21:00 0:5 ?";
+        String example8 = "??.??.???? 07:00-21:00 1:7 ?";
+        String example9 = "??.??.???? 07:00-21:00 1:9 ?";
+        String example10 = "??.??.???? 07:00-21:00 0:8 ?";
+        String example11 = "??.??.???? 07:00-21:00 0:z ?";
+        String example12 = "??.??.???? 00:00-00:00 1:3 ?";
+        String example13 = "02.05.2022 09:00-22:00 ? ?";
+        String example14 = "11.12.2022 09:00-22:00 ? ?";
+        String example15 = "51.12.2022 09:00-22:00 ? ?";
+        String example16 = "01.15.???? 09:00-22:00 ? ?";
+        String example17 = "11.??.2022 09:00-22:00 ? ?";
+        String example18 = "14.12.20zz 09:00-22:00 ? ?";
+        String example19 = "14.12.9999 09:00-22:00 ? ?";
+        String example20 = "29.02.2022 10:00-22:00 ? ?"; //Uglyldig skuddår
+        String example21 = "29.02.2024 10:00-22:00 ? ?"; //Gyldig skuddår dato
+        String example22 = "11/12/2022 09:00-22:00 ? ?";
 
 
         //Act
@@ -36,101 +53,41 @@ public class OpeningTimesTest {
         Boolean isTrueIfAnswerValidForExample3 = openingTimes.isASavedRule(example3);
         Boolean isTrueIfAnswerValidForExample4 = openingTimes.isASavedRule(example4);
         Boolean isTrueIfAnswerValidForExample5 = openingTimes.isASavedRule(example5);
-        ArrayList<String>retrievedRule = openingTimes.getOpeningTimeRules();
+        Boolean isTrueIfAnswerValidForExample6 = openingTimes.isASavedRule(example6);
+        Boolean isTrueIfAnswerValidForExample7 = openingTimes.isASavedRule(example7);
+        Boolean isTrueIfAnswerValidForExample8 = openingTimes.isASavedRule(example8);
+        Boolean isTrueIfAnswerValidForExample9 = openingTimes.isASavedRule(example9);
+        Boolean isTrueIfAnswerValidForExample10 = openingTimes.isASavedRule(example10);
+        Boolean isTrueIfAnswerValidForExample11 = openingTimes.isASavedRule(example11);
+        Boolean isTrueIfAnswerValidForExample12 = openingTimes.isASavedRule(example12);
+        Boolean isTrueIfAnswerValidForExample13 = openingTimes.isASavedRule(example13);
+        Boolean isTrueIfAnswerValidForExample14 = openingTimes.isASavedRule(example14);
+        Boolean isTrueIfAnswerValidForExample15 = openingTimes.isASavedRule(example15);
+        Boolean isTrueIfAnswerValidForExample16 = openingTimes.isASavedRule(example16);
+        Boolean isTrueIfAnswerValidForExample17 = openingTimes.isASavedRule(example17);
+        Boolean isTrueIfAnswerValidForExample18 = openingTimes.isASavedRule(example18);
+        Boolean isTrueIfAnswerValidForExample19 = openingTimes.isASavedRule(example19);
+        Boolean isTrueIfAnswerValidForExample20 = openingTimes.isASavedRule(example20);
+        Boolean isTrueIfAnswerValidForExample21 = openingTimes.isASavedRule(example21);
+        Boolean isTrueIfAnswerValidForExample22 = openingTimes.isASavedRule(example22);
 
         //Assign
 
     }
 
-    /*@Test
-    void isASavedRule(){
-        //Arrange
-        String validExample = "??.??.???? 07:00-21:00 1:5 ?";
-        String invalidExample = "??.??.???? 07:00-21:00 0:5 ?";
-
-        boolean validAnswer = true;
-        boolean invalidAnswer = false;
+    @Test
+    void isASavedRuleTimes(){
+        String example1 = "??.??.???? 07:00-21:00 1:5 ?"; //Gyldig times
         //Act
-        Boolean isTrueIfAnswerValid = openingTimes.isASavedRule(validExample);
-        ArrayList<String>retrievedRule = openingTimes.getOpeningTimeRules();
-
-        //Assign
-        Assertions.assertEquals(isTrueIfAnswerValid, validAnswer);
-        Assertions.assertEquals(retrievedRule.size(), 1);
-
-        Boolean isFalseWhenAnswerInValid = openingTimes.isASavedRule(invalidExample);
-
-
-        //Assign
-        Assertions.assertEquals(isFalseWhenAnswerInValid, invalidAnswer);
-    }*/
-
-    @Test
-    void openingDateAndTime(){
-        //Arrange
-        //Act
-        //Assign
-        System.out.println(new StringBuilder().append("local date and time: ").append(openingTimes.openingDateAndTime()).toString());
-
+        Boolean isTrueIfAnswerValidForExample1 = openingTimes.isASavedRule(example1);
+        //Assert
+        Assertions.assertEquals(true, (boolean) isTrueIfAnswerValidForExample1);
     }
 
-    @Test
-    void returnOpeningDateAndTime(){
-        //Arrange
-        //Act
-        //Assign
-        String aDate = "15/12/2022";
-        System.out.println(openingTimes.formatOpeningDateAndTime(aDate));
 
-    }
 
-    @Test
-    void  getDayNumber(){
-        //Arrange
-        //Act
-        //Assign
-        String aDate = "19/12/2022";
-        System.out.println(openingTimes.getDayNumber(aDate));
 
-    }
 
-    @Test
-    void displayValidPeriod(){
-        //Arrange
-        String example = "??.??.???? 07:00-21:00 1:5 ?";
-        String testDate1 = "15/12/2022";
-        String testDate2 = "16/12/2022";
-        String testDate3 = "17/12/2022";
-        String testDate4 = "18/12/2022";
-        String testDate5 = "19/12/2022";
-        String testDate6 = "20/12/2022";
-        String testDate7 = "21/12/2022";
-        //Assign
-        Boolean isTrueIfAnswerValidForExample = openingTimes.isASavedRule(example);
-        String retrievedRule = openingTimes.retrieveOpeningTimeDate();
-        //Assign
-        openingTimes.displayPeriod(testDate1, retrievedRule);
-        openingTimes.displayPeriod(testDate2, retrievedRule);
-        openingTimes.displayPeriod(testDate3, retrievedRule);
-        openingTimes.displayPeriod(testDate4, retrievedRule); //Ugyldig dato
-        openingTimes.displayPeriod(testDate5, retrievedRule);
-        openingTimes.displayPeriod(testDate6, retrievedRule);
-        openingTimes.displayPeriod(testDate7, retrievedRule);
-    }
 
-    @Test
-    void displayValidDate(){
-        //Arrange
-        String example = "16/12/2022 07:00-21:00 ? ?";
-        String testDate1 = "15/12/2022";
-        String testDate2 = "16/12/2022";
-        String testDate3 = "17/12/2022";
-        //Assign
-        Boolean isTrueIfAnswerValidForExample = openingTimes.isASavedRule(example);
-        String retrievedRule = openingTimes.retrieveOpeningTimeDate();
-        //Assign
-        openingTimes.displayDate(testDate1);
-        openingTimes.displayDate(testDate2);
-        openingTimes.displayDate(testDate3);
-    }
 }
+
