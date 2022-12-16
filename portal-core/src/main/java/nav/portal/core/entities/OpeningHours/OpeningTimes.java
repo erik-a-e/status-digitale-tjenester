@@ -124,10 +124,11 @@ public class OpeningTimes {
         }
     }
 
-    //Tester gyldigheten for dager i en måned, og inkluderer -1 som representerer den siste dagen i en måned,
-    // ellers returnerer falsk hvis betingelsen ikke er oppfylt
+    //Tester gyldigheten for dager i en måned, og inkluderer -1 to -10 som representerer den siste
+    // dagen og 10 dager fra siste dagen i en måned, ellers returnerer falsk hvis betingelsen ikke er oppfylt
     private boolean isAValidDayInTheMonthFormat(String [] rules){
-        return (rules[3].trim().matches("([1-9]|[12][0-9]|3[01])|-1"));
+        return ((Integer.parseInt(rules[3].trim()) >= 1 && Integer.parseInt(rules[3].trim()) <= 31)||
+        (Integer.parseInt(rules[3].trim()) <= -1 && Integer.parseInt(rules[3].trim()) >= -10));
     }
 
 

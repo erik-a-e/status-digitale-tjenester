@@ -142,14 +142,14 @@ public class OpeningTimesTest {
         //Assign
         String example1 = "??.??.???? 07:00-21:00 ? 5";    //Gyldig random dato
         String example2 = "??.??.???? 07:00-21:00 ? 1";    //Gyldig første dag i måneden
-        String example3 = "??.??.???? 07:00-21:00 ? 30";   //Gyldig nest siste dag i måneden
+        String example3 = "??.??.???? 07:00-21:00 ? 30";   //Gyldig dag 30 i måneden
         String example4 = "??.??.???? 07:00-21:00 ? 31";   //Gyldig siste dag i måneden
         String example5 = "??.??.???? 07:00-21:00 ? -1";   //Gyldig siste dag av hver måned
         String example6 = "??.??.???? 07:00-21:00 ? 32";   //Ugyldig dato utenfor måned
         String example7 = "??.??.???? 07:00-21:00 ? 0";    //Ugyldig dato utenfor måned
-        String example8 = "??.??.???? 07:00-21:00 ? -3";    //Ugyldig dato utenfor måned
+        String example8 = "??.??.???? 07:00-21:00 ? -11";    //Ugyldig dato utenfor måned
         String example9 = "??.??.???? 07:00-21:00 ? 1 7";   //Ugyldig feil rulelengde
-
+        String example10 = "??.??.???? 07:00-21:00 ? -2";   //Gyldig annen siste dag av hver måned
         //Act
         Boolean example1isTrue = openingTimes.isAValidRule(example1);
         Boolean example2isTrue = openingTimes.isAValidRule(example2);
@@ -160,6 +160,7 @@ public class OpeningTimesTest {
         Boolean example7isFalse  = openingTimes.isAValidRule(example7);
         Boolean example8isFalse  = openingTimes.isAValidRule(example8);
         Boolean example9isFalse  = openingTimes.isAValidRule(example9);
+        Boolean example10isTrue = openingTimes.isAValidRule(example10);
 
         //Assert
         Assertions.assertTrue((boolean) example1isTrue);
@@ -171,6 +172,7 @@ public class OpeningTimesTest {
         Assertions.assertFalse((boolean)example7isFalse);
         Assertions.assertFalse((boolean)example8isFalse);
         Assertions.assertFalse((boolean)example9isFalse);
+        Assertions.assertTrue((boolean)example10isTrue);
     }
 }
 
