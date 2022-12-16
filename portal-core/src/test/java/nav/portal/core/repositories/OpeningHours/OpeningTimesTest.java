@@ -33,7 +33,7 @@ public class OpeningTimesTest {
         String example8 = "??.??.???? 07:00-21:00 0:8 ?";    //Ugyldig dato utenfor range
         String example9 = "??.??.???? 07:00-21:00 0:z ?";    //Ugyldig format
         String example10 = "??.??.???? 00:00-00:00 1:3 ?";   //Ugldig åpningstider
-        String example11 = "??.??.???? 07:00-21:00 ? 5";
+
 
         //Act
         Boolean example1isFalse = openingTimes.isAValidRule(example1);
@@ -46,7 +46,7 @@ public class OpeningTimesTest {
         Boolean example8isFalse = openingTimes.isAValidRule(example8);
         Boolean example9isFalse = openingTimes.isAValidRule(example9);
         Boolean example10isFalse = openingTimes.isAValidRule(example10);
-        Boolean example11isTrue = openingTimes.isAValidRule(example11);
+
 
         //Assign
         Assertions.assertFalse((boolean)example1isFalse);
@@ -132,6 +132,42 @@ public class OpeningTimesTest {
         Assertions.assertTrue((boolean)example11isTrue);
         Assertions.assertFalse((boolean)example12isFalse);
 
+    }
+
+    @Test
+    public void isValidForDaysInTheMonth(){
+        //Assign
+        String example1 = "??.??.???? 07:00-21:00 ? 5";    //Gyldig random dato
+        String example2 = "??.??.???? 07:00-21:00 ? 1";    //Gyldig første dag i måneden
+        String example3 = "??.??.???? 07:00-21:00 ? 30";   //Gyldig nest siste dag i måneden
+        String example4 = "??.??.???? 07:00-21:00 ? 31";   //Gyldig siste dag i måneden
+        String example5 = "??.??.???? 07:00-21:00 ? -1";   //Gyldig siste dag av hver måned
+        String example6 = "??.??.???? 07:00-21:00 ? 32";   //Ugyldig dato utenfor måned
+        String example7 = "??.??.???? 07:00-21:00 ? 0";    //Ugyldig dato utenfor måned
+        String example8 = "??.??.???? 07:00-21:00 ? -3";    //Ugyldig dato utenfor måned
+        String example9 = "??.??.???? 07:00-21:00 ? 1 7";   //Ugyldig feil rulelengde
+
+        //Act
+        Boolean example1isTrue = openingTimes.isAValidRule(example1);
+        Boolean example2isTrue = openingTimes.isAValidRule(example2);
+        Boolean example3isTrue = openingTimes.isAValidRule(example3);
+        Boolean example4isTrue = openingTimes.isAValidRule(example4);
+        Boolean example5isTrue = openingTimes.isAValidRule(example5);
+        Boolean example6isFalse  = openingTimes.isAValidRule(example6);
+        Boolean example7isFalse  = openingTimes.isAValidRule(example7);
+        Boolean example8isFalse  = openingTimes.isAValidRule(example8);
+        Boolean example9isFalse  = openingTimes.isAValidRule(example9);
+
+        //Assert
+        Assertions.assertTrue((boolean) example1isTrue);
+        Assertions.assertTrue((boolean)example2isTrue);
+        Assertions.assertTrue((boolean)example3isTrue);
+        Assertions.assertTrue((boolean)example4isTrue);
+        Assertions.assertTrue((boolean)example5isTrue);
+        Assertions.assertFalse((boolean)example6isFalse);
+        Assertions.assertFalse((boolean)example7isFalse);
+        Assertions.assertFalse((boolean)example8isFalse);
+        Assertions.assertFalse((boolean)example9isFalse);
     }
 }
 
