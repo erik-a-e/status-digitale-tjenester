@@ -2,6 +2,7 @@ package nav.portal.core.entities.OpeningHours;
 
 import net.sourceforge.jtds.jdbc.DateTime;
 
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -16,7 +17,6 @@ import java.text.SimpleDateFormat;
 // Koden kontrollerer gyldigheten av de ulike datoene og tidspunktene.
 
 public class OpeningTimes {
-    private String[] rules;
 
     //Kode som aksepterer oppføring av åpningstider regel
     //Den skriver ut om åpningstidsregelen er gyldig eller ikke
@@ -36,7 +36,7 @@ public class OpeningTimes {
     // er retur hvis disse betingelsene ikke er oppfylt.
     private Boolean isAValidCheck(String openingTimeRule){
         if (isAValidRuleLength(openingTimeRule)) {
-            createRules(openingTimeRule);
+            String [] rules = createRules(openingTimeRule);
             if (isValidTimes(rules)) {
                 return isAValidDayDateOrPeriod(rules);
             }
@@ -53,13 +53,9 @@ public class OpeningTimes {
 
     //Oppretter en tabell som består av de fire delene av regelen:
     // del 1: en dato, del 2: åpningstider, del 3: Ukedager del 4: dag i måneden
-    private void createRules(String openingTimeRule){
+    private static String [] createRules(String openingTimeRule){
         String[] ruleParts = openingTimeRule.split("[\s]");
-        rules = new String [ruleParts.length];
-        rules[0] = ruleParts[0];
-        rules[1] = ruleParts[1];
-        rules[2] = ruleParts[2];
-        rules[3] = ruleParts[3];
+        return ruleParts;
     }
 
     //Validerer for korrekt åpningstid format: tt:mm-tt:mm og riktig start- og sluttid,
@@ -80,8 +76,9 @@ public class OpeningTimes {
                 "([01]\\d:[0-5][0-9]|2[0-3]:[0-5][0-9])"));
     }
 
+
     //Tester at starttidspunktet for åpningen er mindre enn slutttiden og returnerer falsk ellers.
-    private static int toMins(String s) {
+     private static int toMins(String s) {
         String[] hourMin = s.split(":");
         int hour = Integer.parseInt(hourMin[0]);
         int mins = Integer.parseInt(hourMin[1]);
