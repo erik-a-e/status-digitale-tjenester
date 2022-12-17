@@ -4,10 +4,7 @@ import net.sourceforge.jtds.jdbc.DateTime;
 
 import java.sql.Timestamp;
 import java.text.DateFormat;
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.text.SimpleDateFormat;
@@ -58,31 +55,30 @@ public class OpeningTimes {
     }
 
     //Validerer for korrekt åpningstid format: tt:mm-tt:mm og riktig start- og sluttid,
-    // ellers returnerer falskt.
+    // og starttidspunktet for åpningen er mindre enn slutttiden ellers returnerer falskt.
     private Boolean isValidTimes(String[] rules){
         if (isAValidTimesFormat(rules)) {
-            int from = toMins(rules[1].substring(0, 5));
-            int to = toMins(rules[1].substring(6, 11));
-            return from < to;
+            return fromLessThanToTimes(rules) < 0;
         }else {
             return false;
         }
+    }
+
+    //Validerer for korrekt åpningstid format: tt:mm-tt:mm og riktig start- og sluttid,
+    // ellers returnerer falskt.
+    private static int fromLessThanToTimes(String[] rules){
+        LocalDate date = LocalDate.now();
+        LocalTime timeFrom = LocalTime.of(Integer.parseInt(rules[1].substring(0, 2)), Integer.parseInt(rules[1].substring(3, 5)));
+        LocalTime timeTo = LocalTime.of(Integer.parseInt(rules[1].substring(6, 8)), Integer.parseInt(rules[1].substring(9, 11)));
+        LocalDateTime localDateTimeFrom = LocalDateTime.of(date, timeFrom);
+        LocalDateTime localDateTimeTo = LocalDateTime.of(date, timeTo);
+        return localDateTimeFrom.compareTo(localDateTimeTo);
     }
 
     //Tester for riktig åpningstidsformat: tt:mm-tt:mm ellers returnerer falskt.
     private Boolean isAValidTimesFormat(String[] rules){
         return (rules[1].trim().matches("([01]\\d:[0-5][0-9]|2[0-3]:[0-5][0-9])-" +
                 "([01]\\d:[0-5][0-9]|2[0-3]:[0-5][0-9])"));
-    }
-
-
-    //Tester at starttidspunktet for åpningen er mindre enn slutttiden og returnerer falsk ellers.
-     private static int toMins(String s) {
-        String[] hourMin = s.split(":");
-        int hour = Integer.parseInt(hourMin[0]);
-        int mins = Integer.parseInt(hourMin[1]);
-        int hoursInMins = hour * 60;
-        return hoursInMins + mins;
     }
 
     //Sjekker at de ulike delene inneholder en annen verdi enn et spørsmålstegn,
