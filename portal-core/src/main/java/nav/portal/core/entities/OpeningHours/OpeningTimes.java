@@ -54,8 +54,7 @@ public class OpeningTimes {
     //Oppretter en tabell som består av de fire delene av regelen:
     // del 1: en dato, del 2: åpningstider, del 3: Ukedager del 4: dag i måneden
     private static String [] createRules(String openingTimeRule){
-        String[] ruleParts = openingTimeRule.split("[\s]");
-        return ruleParts;
+        return openingTimeRule.split("[\s]");
     }
 
     //Validerer for korrekt åpningstid format: tt:mm-tt:mm og riktig start- og sluttid,
@@ -127,8 +126,6 @@ public class OpeningTimes {
         return ((Integer.parseInt(rules[3].trim()) >= 1 && Integer.parseInt(rules[3].trim()) <= 31)||
         (Integer.parseInt(rules[3].trim()) <= -1 && Integer.parseInt(rules[3].trim()) >= -10));
     }
-
-
 }
 
 
