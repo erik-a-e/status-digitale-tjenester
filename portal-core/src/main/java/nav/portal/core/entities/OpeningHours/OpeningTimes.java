@@ -2,12 +2,12 @@ package nav.portal.core.entities.OpeningHours;
 
 import net.sourceforge.jtds.jdbc.DateTime;
 
-import java.sql.Timestamp;
+
 import java.text.DateFormat;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.text.SimpleDateFormat;
+
 
 //Navs åpningstidskalender er bygget på regler som består av enten en dato,
 // ukedager eller dag i måneden med tilsvarende åpnings- og sluttid.
@@ -102,7 +102,6 @@ public class OpeningTimes {
             "|((29)(02)([.])([02468][048]00))|((29)([.])(02)([.])([13579][26]00))|((29)([.])(02)([.])([0-9][0-9][0][48]))" +
             "|((29)([.])(02)([.])([0-9][0-9][2468][048]))|((29)([.])(02)([.])([0-9][0-9][13579][26])))"));
     }
-
 
     //Tester gyldigheten for ukedagsregler formatet d:d der den representerer dagene i en uke i et område
     // (enhver variasjon fra mandag til og med søndag; ellers returneres falskt

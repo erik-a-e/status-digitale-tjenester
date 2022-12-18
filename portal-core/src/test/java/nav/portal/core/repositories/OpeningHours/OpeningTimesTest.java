@@ -50,17 +50,17 @@ public class OpeningTimesTest {
 
 
         //Assign
-        Assertions.assertFalse((boolean)example1isFalse);
-        Assertions.assertFalse((boolean)example2isFalse);
-        Assertions.assertTrue((boolean)example3isTrue);
-        Assertions.assertTrue((boolean)example4isTrue);
-        Assertions.assertFalse((boolean)example5isFalse);
-        Assertions.assertTrue((boolean)example6isTrue);
-        Assertions.assertFalse((boolean)example7isFalse);
-        Assertions.assertFalse((boolean)example8isFalse);
-        Assertions.assertFalse((boolean)example9isFalse);
-        Assertions.assertFalse((boolean)example10isFalse);
-        Assertions.assertFalse((boolean)example11isFalse);
+        Assertions.assertFalse((boolean)example1isFalse);          //Ugyldig format: days of week mangler tidsperioder
+        Assertions.assertFalse((boolean)example2isFalse);          //Ugyldig format: day in month mangler tidsperioder
+        Assertions.assertTrue((boolean)example3isTrue);            //Gyldig
+        Assertions.assertTrue((boolean)example4isTrue);            //Gyldig
+        Assertions.assertFalse((boolean)example5isFalse);          //Ugyldig dato utenfor range - nederst
+        Assertions.assertTrue((boolean)example6isTrue);            //Glydig -dekker alle ukedager
+        Assertions.assertFalse((boolean)example7isFalse);          //Ugyldig dato utenfor range - overst
+        Assertions.assertFalse((boolean)example8isFalse);          //Ugyldig dato utenfor range
+        Assertions.assertFalse((boolean)example9isFalse);          //Ugyldig format
+        Assertions.assertFalse((boolean)example10isFalse);         //Ugldig åpningstider
+        Assertions.assertFalse((boolean)example11isFalse);          //Ugyldig start dato > end dato
     }
 
     @Test
@@ -83,12 +83,12 @@ public class OpeningTimesTest {
         Boolean example6isFalse  = openingTimes.isAValidRule(example6);
 
         //Assert
-        Assertions.assertTrue((boolean) example1isTrue);
-        Assertions.assertFalse((boolean)example2isFalse);
-        Assertions.assertFalse((boolean)example3isFalse);
-        Assertions.assertFalse((boolean)example4isFalse);
-        Assertions.assertFalse((boolean)example5isFalse);
-        Assertions.assertFalse((boolean) example6isFalse);
+        Assertions.assertTrue((boolean) example1isTrue);      //Gyldig times
+        Assertions.assertFalse((boolean)example2isFalse);     //Uglyldig dato format
+        Assertions.assertFalse((boolean)example3isFalse);     //Uglyldig dato format
+        Assertions.assertFalse((boolean)example4isFalse);     //Uglyldig dato format
+        Assertions.assertFalse((boolean)example5isFalse);     //Uglyldig dato format
+        Assertions.assertFalse((boolean) example6isFalse);    //Ugyldig times
 
     }
 
@@ -122,18 +122,18 @@ public class OpeningTimesTest {
         Boolean example12isFalse  = openingTimes.isAValidRule(example12);
 
         //Assert
-        Assertions.assertFalse((boolean)example1isFalse);
-        Assertions.assertFalse((boolean)example2isFalse);
-        Assertions.assertTrue((boolean)example3isTrue);
-        Assertions.assertTrue((boolean)example4isTrue);
-        Assertions.assertFalse((boolean)example5isFalse);
-        Assertions.assertFalse((boolean)example6isFalse);
-        Assertions.assertFalse((boolean)example7isFalse);
-        Assertions.assertFalse((boolean)example8isFalse);
-        Assertions.assertTrue((boolean)example9isTrue);
-        Assertions.assertFalse((boolean)example10isFalse);
-        Assertions.assertTrue((boolean)example11isTrue);
-        Assertions.assertFalse((boolean)example12isFalse);
+        Assertions.assertFalse((boolean)example1isFalse);    //Ugyldig format
+        Assertions.assertFalse((boolean)example2isFalse);    //Ugyldig Mangler åpningstider
+        Assertions.assertTrue((boolean)example3isTrue);      //Gyldig  åpningstider
+        Assertions.assertTrue((boolean)example4isTrue);      //Gyldig  åpningstider
+        Assertions.assertFalse((boolean)example5isFalse);    //Uglyldig dagsverdi
+        Assertions.assertFalse((boolean)example6isFalse);    //Uglyldig månedsverdi
+        Assertions.assertFalse((boolean)example7isFalse);    //Ugyldig format
+        Assertions.assertFalse((boolean)example8isFalse);    //Ugyldig format
+        Assertions.assertTrue((boolean)example9isTrue);      //Gyldig  åpningstider
+        Assertions.assertFalse((boolean)example10isFalse);   //Uglyldig skuddår
+        Assertions.assertTrue((boolean)example11isTrue);     //Gyldig skuddår dato
+        Assertions.assertFalse((boolean)example12isFalse);   //Ugyldig format
 
     }
 
@@ -151,6 +151,7 @@ public class OpeningTimesTest {
         String example9 = "??.??.???? 07:00-21:00 ? 1 7";   //Ugyldig feil rulelengde
         String example10 = "??.??.???? 07:00-21:00 ? -2";   //Gyldig annen siste dag av hver måned
         String example11 = "??.??.???? 07:00-21:00 ? 0";    //Ugyldig for dato 0
+        String example12 = "??.??.???? 07:00-21:00 ? -10";    //Gyldig for dato -10
         //Act
         Boolean example1isTrue = openingTimes.isAValidRule(example1);
         Boolean example2isTrue = openingTimes.isAValidRule(example2);
@@ -163,19 +164,21 @@ public class OpeningTimesTest {
         Boolean example9isFalse  = openingTimes.isAValidRule(example9);
         Boolean example10isTrue = openingTimes.isAValidRule(example10);
         Boolean example11isFalse  = openingTimes.isAValidRule(example11);
+        Boolean example12isTrue = openingTimes.isAValidRule(example12);
 
         //Assert
-        Assertions.assertTrue((boolean) example1isTrue);
-        Assertions.assertTrue((boolean)example2isTrue);
-        Assertions.assertTrue((boolean)example3isTrue);
-        Assertions.assertTrue((boolean)example4isTrue);
-        Assertions.assertTrue((boolean)example5isTrue);
-        Assertions.assertFalse((boolean)example6isFalse);
-        Assertions.assertFalse((boolean)example7isFalse);
-        Assertions.assertFalse((boolean)example8isFalse);
-        Assertions.assertFalse((boolean)example9isFalse);
-        Assertions.assertTrue((boolean)example10isTrue);
-        Assertions.assertFalse((boolean)example11isFalse);
+        Assertions.assertTrue((boolean) example1isTrue); //Gyldig random dato
+        Assertions.assertTrue((boolean)example2isTrue);  //Gyldig første dag i måneden
+        Assertions.assertTrue((boolean)example3isTrue);  //Gyldig dag 30 i måneden
+        Assertions.assertTrue((boolean)example4isTrue);  //Gyldig siste dag i måneden
+        Assertions.assertTrue((boolean)example5isTrue);   //Gyldig siste dag av hver måned
+        Assertions.assertFalse((boolean)example6isFalse);  //Ugyldig dato utenfor måned
+        Assertions.assertFalse((boolean)example7isFalse);  //Ugyldig dato utenfor måned
+        Assertions.assertFalse((boolean)example8isFalse);  //Ugyldig dato utenfor måned
+        Assertions.assertFalse((boolean)example9isFalse);  //Ugyldig feil rulelengde
+        Assertions.assertTrue((boolean)example10isTrue);   //Gyldig annen siste dag av hver måned
+        Assertions.assertFalse((boolean)example11isFalse); //Ugyldig for dato 0
+        Assertions.assertTrue((boolean)example12isTrue);   //Gyldig for dato -10
     }
 }
 
