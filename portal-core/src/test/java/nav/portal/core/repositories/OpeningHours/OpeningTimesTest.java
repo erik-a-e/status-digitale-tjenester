@@ -2,15 +2,12 @@ package nav.portal.core.repositories.OpeningHours;
 
 import nav.portal.core.entities.OpeningHours.OpeningTimes;
 import nav.portal.core.repositories.AreaRepository;
-import org.junit.jupiter.api.Assertions;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Time;
 import java.time.DayOfWeek;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 //Import of Matcher and Pattern class
 import java.util.regex.Matcher;
@@ -50,17 +47,17 @@ public class OpeningTimesTest {
 
 
         //Assign
-        Assertions.assertFalse(example1isFalse);          //Ugyldig format: days of week mangler tidsperioder
-        Assertions.assertFalse(example2isFalse);          //Ugyldig format: day in month mangler tidsperioder
-        Assertions.assertTrue(example3isTrue);            //Gyldig
-        Assertions.assertTrue(example4isTrue);            //Gyldig
-        Assertions.assertFalse(example5isFalse);          //Ugyldig dato utenfor range - nederst
-        Assertions.assertTrue(example6isTrue);            //Glydig -dekker alle ukedager
-        Assertions.assertFalse(example7isFalse);          //Ugyldig dato utenfor range - overst
-        Assertions.assertFalse(example8isFalse);          //Ugyldig dato utenfor range
-        Assertions.assertFalse(example9isFalse);          //Ugyldig format
-        Assertions.assertFalse(example10isFalse);         //Ugldig åpningstider
-        Assertions.assertFalse(example11isFalse);          //Ugyldig start dato > end dato
+        Assertions.assertThat(example1isFalse).isFalse();         //Ugyldig format: days of week mangler tidsperioder
+        Assertions.assertThat(example2isFalse).isFalse();        //Ugyldig format: day in month mangler tidsperioder
+        Assertions.assertThat(example3isTrue).isTrue();            //Gyldig
+        Assertions.assertThat(example4isTrue).isTrue();                //Gyldig
+        Assertions.assertThat(example5isFalse ).isFalse();          //Ugyldig dato utenfor range - nederst
+        Assertions.assertThat(example6isTrue).isTrue();                //Glydig -dekker alle ukedager
+        Assertions.assertThat(example7isFalse).isFalse();          //Ugyldig dato utenfor range - overst
+        Assertions.assertThat(example8isFalse).isFalse();          //Ugyldig dato utenfor range
+        Assertions.assertThat(example9isFalse).isFalse();          //Ugyldig format
+        Assertions.assertThat(example10isFalse).isFalse();         //Ugldig åpningstider
+        Assertions.assertThat(example11isFalse).isFalse();          //Ugyldig start dato > end dato
     }
 
     @Test
@@ -73,7 +70,6 @@ public class OpeningTimesTest {
         String example5 = "??.??.???? 07:63-21:00 1:5 ?"; //Uglyldig dato format
         String example6 = "??.??.???? 07:00-99:00 1:5 ?"; //Ugyldig times
 
-
         //Act
         Boolean example1isTrue = openingTimes.isAValidRule(example1);
         Boolean example2isFalse = openingTimes.isAValidRule(example2);
@@ -81,16 +77,39 @@ public class OpeningTimesTest {
         Boolean example4isFalse  = openingTimes.isAValidRule(example4);
         Boolean example5isFalse  = openingTimes.isAValidRule(example5);
         Boolean example6isFalse  = openingTimes.isAValidRule(example6);
+        Set<String> retrievedOpeningTimes = openingTimes.getOpeningTimesSet();
 
         //Assert
-        Assertions.assertTrue(example1isTrue);      //Gyldig times
-        Assertions.assertFalse(example2isFalse);     //Uglyldig dato format
-        Assertions.assertFalse(example3isFalse);     //Uglyldig dato format
-        Assertions.assertFalse(example4isFalse);     //Uglyldig dato format
-        Assertions.assertFalse(example5isFalse);     //Uglyldig dato format
-        Assertions.assertFalse(example6isFalse);    //Ugyldig times
+        Assertions.assertThat(example1isTrue).isTrue();       //Gyldig times
+        Assertions.assertThat(example2isFalse).isFalse();     //Uglyldig dato format
+        Assertions.assertThat(example3isFalse).isFalse();     //Uglyldig dato format
+        Assertions.assertThat(example4isFalse).isFalse();     //Uglyldig dato format
+        Assertions.assertThat(example5isFalse).isFalse();     //Uglyldig dato format
+        Assertions.assertThat(example6isFalse).isFalse();    //Ugyldig times
+        Assertions.assertThat(retrievedOpeningTimes.size()).isEqualTo(1);
+    }
+
+    @Test
+    void getOpeningTimesSet() {
+        //Arrange
+        String example1 = "??.??.???? 07:00-21:00 1:5 ?"; //Gyldig times
+        String example2 = "??.??.???? 00:0z-21:00 1:5 ?"; //Uglyldig dato format
+        String example3 = "??.??.???? 00:00-21:0z 1:5 ?"; //Uglyldig dato format
+        String example4 = "??.??.???? 77:29-21:00 1:5 ?"; //Uglyldig dato format
+
+
+        //Act
+        openingTimes.isAValidRule(example1);
+        openingTimes.isAValidRule(example2);
+        openingTimes.isAValidRule(example3);
+        openingTimes.isAValidRule(example4);
+        Set<String> retrievedOpeningTimes = openingTimes.getOpeningTimesSet();
+
+        //Assert
+        Assertions.assertThat(retrievedOpeningTimes.size()).isEqualTo(1);
 
     }
+
 
     @Test
     void isAValidRuleForASpecifiedDate(){
@@ -122,22 +141,22 @@ public class OpeningTimesTest {
         Boolean example12isFalse  = openingTimes.isAValidRule(example12);
 
         //Assert
-        Assertions.assertFalse(example1isFalse);    //Ugyldig format
-        Assertions.assertFalse(example2isFalse);    //Ugyldig Mangler åpningstider
-        Assertions.assertTrue(example3isTrue);      //Gyldig  åpningstider
-        Assertions.assertTrue(example4isTrue);      //Gyldig  åpningstider
-        Assertions.assertFalse(example5isFalse);    //Uglyldig dagsverdi
-        Assertions.assertFalse(example6isFalse);    //Uglyldig månedsverdi
-        Assertions.assertFalse(example7isFalse);    //Ugyldig format
-        Assertions.assertFalse(example8isFalse);    //Ugyldig format
-        Assertions.assertTrue(example9isTrue);      //Gyldig  åpningstider
-        Assertions.assertFalse(example10isFalse);   //Uglyldig skuddår
-        Assertions.assertTrue(example11isTrue);     //Gyldig skuddår dato
-        Assertions.assertFalse(example12isFalse);   //Ugyldig format
+        Assertions.assertThat(example1isFalse).isFalse();    //Ugyldig format
+        Assertions.assertThat(example2isFalse).isFalse();    //Ugyldig Mangler åpningstider
+        Assertions.assertThat(example3isTrue).isTrue();      //Gyldig  åpningstider
+        Assertions.assertThat(example4isTrue).isTrue();      //Gyldig  åpningstider
+        Assertions.assertThat(example5isFalse).isFalse();    //Uglyldig dagsverdi
+        Assertions.assertThat(example6isFalse).isFalse();    //Uglyldig månedsverdi
+        Assertions.assertThat(example7isFalse).isFalse();    //Ugyldig format
+        Assertions.assertThat(example8isFalse).isFalse();    //Ugyldig format
+        Assertions.assertThat(example9isTrue).isTrue();      //Gyldig  åpningstider
+        Assertions.assertThat(example10isFalse).isFalse();   //Uglyldig skuddår
+        Assertions.assertThat(example11isTrue).isTrue();    //Gyldig skuddår dato
+        Assertions.assertThat(example12isFalse).isFalse();   //Ugyldig format
 
     }
 
-    @Test
+   @Test
     public void isValidForDaysInTheMonth(){
         //Assign
         String example1 = "??.??.???? 07:00-21:00 ? 5";    //Gyldig random dato
@@ -153,6 +172,7 @@ public class OpeningTimesTest {
         String example11 = "??.??.???? 07:00-21:00 ? 0";    //Ugyldig for dato 0
         String example12 = "??.??.???? 07:00-21:00 ? -10";    //Gyldig for dato -10
         //Act
+
         Boolean example1isTrue = openingTimes.isAValidRule(example1);
         Boolean example2isTrue = openingTimes.isAValidRule(example2);
         Boolean example3isTrue = openingTimes.isAValidRule(example3);
@@ -166,19 +186,53 @@ public class OpeningTimesTest {
         Boolean example11isFalse  = openingTimes.isAValidRule(example11);
         Boolean example12isTrue = openingTimes.isAValidRule(example12);
 
+        Set<String> retrievedOpeningTimes = openingTimes.getOpeningTimesSet();
+
         //Assert
-        Assertions.assertTrue(example1isTrue); //Gyldig random dato
-        Assertions.assertTrue(example2isTrue);  //Gyldig første dag i måneden
-        Assertions.assertTrue(example3isTrue);  //Gyldig dag 30 i måneden
-        Assertions.assertTrue(example4isTrue);  //Gyldig siste dag i måneden
-        Assertions.assertTrue(example5isTrue);   //Gyldig siste dag av hver måned
-        Assertions.assertFalse(example6isFalse);  //Ugyldig dato utenfor måned
-        Assertions.assertFalse(example7isFalse);  //Ugyldig dato utenfor måned
-        Assertions.assertFalse(example8isFalse);  //Ugyldig dato utenfor måned
-        Assertions.assertFalse(example9isFalse);  //Ugyldig feil rulelengde
-        Assertions.assertTrue(example10isTrue);   //Gyldig annen siste dag av hver måned
-        Assertions.assertFalse(example11isFalse); //Ugyldig for dato 0
-        Assertions.assertTrue(example12isTrue);   //Gyldig for dato -10
+        Assertions.assertThat(example1isTrue).isTrue(); //Gyldig random dato
+        Assertions.assertThat(example2isTrue).isTrue();  //Gyldig første dag i måneden
+        Assertions.assertThat(example3isTrue).isTrue();  //Gyldig dag 30 i måneden
+        Assertions.assertThat(example4isTrue).isTrue();  //Gyldig siste dag i måneden
+        Assertions.assertThat(example5isTrue).isTrue();   //Gyldig siste dag av hver måned
+        Assertions.assertThat(example6isFalse).isFalse();  //Ugyldig dato utenfor måned
+        Assertions.assertThat(example7isFalse).isFalse();  //Ugyldig dato utenfor måned
+        Assertions.assertThat(example8isFalse).isFalse();  //Ugyldig dato utenfor måned
+        Assertions.assertThat(example9isFalse).isFalse();  //Ugyldig feil rulelengde
+        Assertions.assertThat(example10isTrue).isTrue();   //Gyldig annen siste dag av hver måned
+        Assertions.assertThat(example11isFalse).isFalse(); //Ugyldig for dato 0
+        Assertions.assertThat(example12isTrue).isTrue();   //Gyldig for dato -10
+
+        Assertions.assertThat(retrievedOpeningTimes.size()).isEqualTo(7);
     }
+
+
+    @Test
+    public void isOpeningLocalDate(){
+        String example1 = "02.05.2023 09:00-22:00 ? ?"; //Gyldig  åpningstider
+        String example2 = "07.02.2023 09:00-22:00 ? ?"; //Gyldig  åpningstider
+        String example3 = "03.01.2023 09:00-22:00 ? ?"; //Gyldig  åpningstider
+
+        Boolean example1isTrue = openingTimes.isAValidRule(example1);
+        Boolean example2isTrue = openingTimes.isAValidRule(example2);
+        Boolean example3isTrue = openingTimes.isAValidRule(example3);
+
+        System.out.println(openingTimes.isAnOpeningLocalDate());
+    }
+
+    @Test
+    public void isAnOpeningSpecifiedDate(){
+        String example1 = "02.05.2023 09:00-22:00 ? ?"; //Gyldig  åpningstider
+        String example2 = "07.02.2023 09:00-18:00 ? ?"; //Gyldig  åpningstider
+        String example3 = "03.01.2023 09:00-22:00 ? ?"; //Gyldig  åpningstider
+
+        Boolean example1isTrue = openingTimes.isAValidRule(example1);
+        Boolean example2isTrue = openingTimes.isAValidRule(example2);
+        Boolean example3isTrue = openingTimes.isAValidRule(example3);
+        String aDate = "07.02.2023";
+        System.out.println(openingTimes.isAnOpeningSpecifiedDate(aDate));
+    }
+
+
+
 }
 
