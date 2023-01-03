@@ -1,9 +1,8 @@
 package nav.portal.core.entities.OpeningHours;
 
-import net.sourceforge.jtds.jdbc.DateTime;
 
-
-import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -15,12 +14,22 @@ import java.util.*;
 
 public class OpeningTimes {
 
+    private final Set<String>openingTimesRules;
+
     //Kode som aksepterer oppføring av åpningstider regel
     //Den skriver ut om åpningstidsregelen er gyldig eller ikke
+    public OpeningTimes(){
+        this.openingTimesRules = new HashSet<>();
+    }
+
+    public Set<String> getOpeningTimesSet(){
+        return openingTimesRules;
+    }
+
     public Boolean isAValidRule(String openingTimeRule){
         if( isAValidCheck(openingTimeRule)) {
             System.out.println("Gyldig regel: " + openingTimeRule);
-            return true;
+            return openingTimesRules.add(openingTimeRule);
         }else{
             System.out.println("Ugyldig regel: " + openingTimeRule);
             return false;
@@ -121,6 +130,48 @@ public class OpeningTimes {
         return ((Integer.parseInt(rules[3].trim()) >= 1 && Integer.parseInt(rules[3].trim()) <= 31)||
         (Integer.parseInt(rules[3].trim()) <= -1 && Integer.parseInt(rules[3].trim()) >= -10));
     }
+
+    public boolean isAnOpeningLocalDate(){
+        return isAValidSpecifiedDateAndTime(checkLocalDate());
+    }
+
+    public boolean isAnOpeningSpecifiedDate(String aDate){
+        return isAValidSpecifiedDateAndTime(formatOpeningDate(aDate));
+    }
+
+    private boolean isAValidSpecifiedDateAndTime(String enteredDate){
+        boolean retVal = false;
+        for(String otr : openingTimesRules) {
+            String[] retrievedOTRule = createRules(otr);
+            if (!retrievedOTRule[0].substring(0, 2).equals("??")) {
+                if (formatOpeningDate(retrievedOTRule[0]).equals(enteredDate)) {
+                    System.out.println("is True for isAValidSpecifiedDate");
+                    if (LocalTime.now().isBefore(LocalTime.parse(retrievedOTRule[1].substring(6)))&&
+                            LocalTime.now().isAfter(LocalTime.parse(retrievedOTRule[1].substring(0,5)))){
+                            System.out.println("is True for isAValidSpecifiedTime");
+                            retVal = true;
+                            break;
+                    }
+                }
+            }
+        }
+        return retVal;
+    }
+
+    private String checkLocalDate() {
+        LocalDate localDate = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return localDate.format(formatter);
+    }
+
+    private String formatOpeningDate(String date){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+        DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        System.out.println(LocalDate.parse(date, formatter).format(formatter2));
+        return LocalDate.parse(date, formatter).format(formatter2);
+    }
+
+
 }
 
 
