@@ -77,7 +77,7 @@ public class OpeningTimesTest {
         Boolean example4isFalse  = openingTimes.isAValidRule(example4);
         Boolean example5isFalse  = openingTimes.isAValidRule(example5);
         Boolean example6isFalse  = openingTimes.isAValidRule(example6);
-        Set<String> retrievedOpeningTimes = openingTimes.getOpeningTimesSet();
+        List<String> retrievedOpeningTimes = openingTimes.getOpeningTimesSet();
 
         //Assert
         Assertions.assertThat(example1isTrue).isTrue();       //Gyldig times
@@ -103,7 +103,7 @@ public class OpeningTimesTest {
         openingTimes.isAValidRule(example2);
         openingTimes.isAValidRule(example3);
         openingTimes.isAValidRule(example4);
-        Set<String> retrievedOpeningTimes = openingTimes.getOpeningTimesSet();
+        List<String> retrievedOpeningTimes = openingTimes.getOpeningTimesSet();
 
         //Assert
         Assertions.assertThat(retrievedOpeningTimes.size()).isEqualTo(1);
@@ -186,7 +186,7 @@ public class OpeningTimesTest {
         Boolean example11isFalse  = openingTimes.isAValidRule(example11);
         Boolean example12isTrue = openingTimes.isAValidRule(example12);
 
-        Set<String> retrievedOpeningTimes = openingTimes.getOpeningTimesSet();
+        List<String> retrievedOpeningTimes = openingTimes.getOpeningTimesSet();
 
         //Assert
         Assertions.assertThat(example1isTrue).isTrue(); //Gyldig random dato
@@ -210,7 +210,7 @@ public class OpeningTimesTest {
     public void isOpeningLocalDate(){
         String example1 = "02.05.2023 09:00-22:00 ? ?"; //Gyldig  åpningstider
         String example2 = "07.02.2023 09:00-22:00 ? ?"; //Gyldig  åpningstider
-        String example3 = "03.01.2023 09:00-22:00 ? ?"; //Gyldig  åpningstider
+        String example3 = "04.01.2023 09:00-22:00 ? ?"; //Gyldig  åpningstider
 
         Boolean example1isTrue = openingTimes.isAValidRule(example1);
         Boolean example2isTrue = openingTimes.isAValidRule(example2);
