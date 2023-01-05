@@ -232,7 +232,12 @@ public class OpeningTimesTest {
         System.out.println(openingTimes.isAnOpeningSpecifiedDate(aDate));
     }
 
-
+    @Test
+    public void isAValidOTForDayInMonthLocalTime(){
+        String example1 = "??.??.???? 07:00-21:00 ? -10";
+        Boolean example1isTrue = openingTimes.isAValidRule(example1);
+        System.out.println(openingTimes.isAValidOTForDayInMonthLocalTime());
+    }
 
 }
 
