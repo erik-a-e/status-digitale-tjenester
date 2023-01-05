@@ -193,8 +193,16 @@ public class OpeningTimes {
         return false;
     }
 
+    public boolean isAValidOTForDayInMonthSpecifiedDate(String date){
+        int dayInMonthAtPositionInRulesList = isAValidDayInMonth(getSpecifiedDate(date));
+        if (dayInMonthAtPositionInRulesList != -1){
+            return isAValidOpeningTime(dayInMonthAtPositionInRulesList);
+        }
+        return false;
+    }
+
     public int getSpecifiedDate(String date){
-        LocalDate currentDate  = LocalDate.parse(date);
+        LocalDate currentDate  = LocalDate.parse(formatOpeningDate(date));
         return currentDate.getDayOfMonth();
     }
 
@@ -233,7 +241,7 @@ public class OpeningTimes {
        cal.add(Calendar.MONTH, 1);
        cal.set(Calendar.DATE, 1);
        cal.add(Calendar.DATE, dayNumbersBack);
-       int dayOfMonth = cal.get(cal.DAY_OF_MONTH);
+       int dayOfMonth = cal.get(Calendar.DAY_OF_MONTH);
        System.out.println("day with substring: " + dayOfMonth);
        return String.valueOf(dayOfMonth);
    }

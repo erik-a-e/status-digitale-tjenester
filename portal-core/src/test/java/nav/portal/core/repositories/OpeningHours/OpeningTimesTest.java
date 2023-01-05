@@ -239,5 +239,12 @@ public class OpeningTimesTest {
         System.out.println(openingTimes.isAValidOTForDayInMonthLocalTime());
     }
 
+    @Test
+    public void isAValidOTForDayInMonthSpecifiedDate(){
+        String example1 = "??.??.???? 07:00-23:30 ? 14";
+        Boolean example1isTrue = openingTimes.isAValidRule(example1);
+        System.out.println(openingTimes.isAValidOTForDayInMonthSpecifiedDate("14.01.2023"));
+    }
+
 }
 
