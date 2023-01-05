@@ -134,7 +134,7 @@ public class OpeningTimes {
     }
 
     public boolean isAnOpeningLocalDate() {
-        int dateFoundAtPosition = isAValidSpecifiedDate(checkLocalDate());
+        int dateFoundAtPosition = isAValidSpecifiedDate(formatLocalDate());
         if (dateFoundAtPosition > -1){
             return isAValidOpeningTime(dateFoundAtPosition);
         }
@@ -172,7 +172,7 @@ public class OpeningTimes {
         return false;
     }
 
-    private String checkLocalDate() {
+    private String formatLocalDate() {
         LocalDate localDate = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         return localDate.format(formatter);
@@ -185,6 +185,58 @@ public class OpeningTimes {
         return LocalDate.parse(date, formatter).format(formatter2);
     }
 
+    public boolean isAValidOTForDayInMonthLocalTime(){
+        int dayInMonthAtPositionInRulesList = isAValidDayInMonth(getSpecificDateFromLocalDate());
+        if (dayInMonthAtPositionInRulesList != -1){
+           return isAValidOpeningTime(dayInMonthAtPositionInRulesList);
+        }
+        return false;
+    }
+
+    public int getSpecifiedDate(String date){
+        LocalDate currentDate  = LocalDate.parse(date);
+        return currentDate.getDayOfMonth();
+    }
+
+    public int getSpecificDateFromLocalDate(){
+        LocalDate currentDate = LocalDate.now();
+        return currentDate.getDayOfMonth();
+    }
+
+    private int isAValidDayInMonth(int specifiedDate){
+        for(int i = 0; i < openingTimesRules.size(); i++){
+            String[] rule = createRules(openingTimesRules.get(i));
+            if (!rule[3].startsWith("?")){
+                String date = Integer.toString(specifiedDate);
+                String rule3 = rule[3];
+                if (dayNumberFromRule(rule3).equals(date)){
+                    System.out.println("return i:  " + i);
+                    return i;
+                }
+            }
+        }
+        return -1;
+    }
+
+    private String dayNumberFromRule(String rule3){
+        int intOfRule3 = Integer.parseInt(rule3.trim());
+        if (intOfRule3 < 0){
+            return dateFromLastDayInMonth(rule3);
+        }else{
+            return rule3;
+        }
+    }
+
+   private String dateFromLastDayInMonth(String rule3){
+       int dayNumbersBack = Integer.parseInt(rule3);
+       Calendar cal = Calendar.getInstance();
+       cal.add(Calendar.MONTH, 1);
+       cal.set(Calendar.DATE, 1);
+       cal.add(Calendar.DATE, dayNumbersBack);
+       int dayOfMonth = cal.get(cal.DAY_OF_MONTH);
+       System.out.println("day with substring: " + dayOfMonth);
+       return String.valueOf(dayOfMonth);
+   }
 }
 
 
