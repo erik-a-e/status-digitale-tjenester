@@ -6,6 +6,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Time;
+import java.text.ParseException;
 import java.time.DayOfWeek;
 import java.util.*;
 
@@ -244,6 +245,28 @@ public class OpeningTimesTest {
         String example1 = "??.??.???? 07:00-23:30 ? 14";
         Boolean example1isTrue = openingTimes.isAValidRule(example1);
         System.out.println(openingTimes.isAValidOTForDayInMonthSpecifiedDate("14.01.2023"));
+    }
+
+    @Test
+    public void weekDayNumberLocalDate(){
+        String example1 = "??.??.???? 07:00-21:00 1:5 ?";
+        Boolean example1isTrue = openingTimes.isAValidRule(example1);
+        int weekdayNumber = openingTimes.weekDayNumberLocalDate();
+    }
+
+    @Test
+    public void weekDayNumberForSpecifiedDate() throws ParseException {
+        String example1 = "??.??.???? 07:00-21:00 1:5 ?";
+        Boolean example1isTrue = openingTimes.isAValidRule(example1);
+        int weekdayNumber = openingTimes.weekDayNumber("13.03.2023");
+    }
+
+    @Test
+    public void isAValidOTForWeekday(){
+        String example1 = "??.??.???? 07:00-23:00 1:5 ?";
+        Boolean example1isTrue = openingTimes.isAValidRule(example1);
+        System.out.println(openingTimes.isAValidOTForWeekday("13.03.2023"));
+
     }
 
 }

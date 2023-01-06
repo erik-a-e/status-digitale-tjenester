@@ -95,11 +95,11 @@ public class OpeningTimes {
     //Sjekker at de ulike delene inneholder en annen verdi enn et spørsmålstegn,
     // del 1 indikerer en dato, del 3 ukedager og del 4 dager i måneden, ellers returnerer falsk.
     private Boolean isAValidDayDateOrPeriod(String[] rules) {
-        if (!rules[0].substring(0, 2).equals("??")) {
+        if (!rules[0].startsWith("??")) {
             return isAValidFormatForASpecifiedDate(rules);
         } else if (!rules[2].matches("\s*[?*]\s*")) {
             return isValidFormatForWeekday(rules);
-        } else if (!rules[3].substring(0).equals("?")) {
+        } else if (!rules[3].equals("?")) {
             return isAValidDayInTheMonthFormat(rules);
         } else {
             return false;
@@ -117,7 +117,7 @@ public class OpeningTimes {
     //Tester gyldigheten for ukedagsregler formatet d:d der den representerer dagene i en uke i et område
     // (enhver variasjon fra mandag til og med søndag; ellers returneres falskt
     private Boolean isValidFormatForWeekday(String[] rules) {
-        if (rules[2].substring(0).matches("[1-7]\s*:\s*[1-7]")) {
+        if (rules[2].matches("[1-7]\s*:\s*[1-7]")) {
             int range1 = Integer.parseInt(rules[2].substring(0, 1));
             int range2 = Integer.parseInt(rules[2].substring(2));
             return range1 <= range2;
@@ -245,6 +245,50 @@ public class OpeningTimes {
        System.out.println("day with substring: " + dayOfMonth);
        return String.valueOf(dayOfMonth);
    }
+
+    public boolean isAValidOTForWeekday(String date){
+       for (int i = 0; i < openingTimesRules.size(); i++) {
+           String[] rule = createRules(openingTimesRules.get(i));
+           if (!rule[2].startsWith("?")){
+               int startOfRange = Integer.parseInt(rule[2].substring(0,1));
+               int endOfRange = Integer.parseInt(rule[2].substring(2));
+               return (((weekDayNumber(date) >= startOfRange) &&
+                  (weekDayNumber(date) <= endOfRange))&&
+                       isAValidOpeningTime(i));
+
+           }
+       }
+       return false;
+    }
+
+    public int weekDayNumberLocalDate(){
+        LocalDate localDate = LocalDate.now();
+        DayOfWeek dayOfWeek = DayOfWeek.from(localDate);
+        System.out.println("Day of the Week on "
+                + localDate + " - "
+                + dayOfWeek.name());
+        int weekDayNumber = dayOfWeek.get(ChronoField.DAY_OF_WEEK); //day number
+        System.out.println("Int Value of "
+                + dayOfWeek.name()
+                + " - " + weekDayNumber);
+        return weekDayNumber;
+    }
+
+    public int weekDayNumber(String date) {
+        String dateInString = formatOpeningDate(date);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate specifiedDate = LocalDate.parse(dateInString, formatter);
+        DayOfWeek dayOfWeek = DayOfWeek.from(specifiedDate);
+        System.out.println("Day of the Week on "
+                + specifiedDate + " - "
+                + dayOfWeek.name());
+        int weekDayNumber = dayOfWeek.get(ChronoField.DAY_OF_WEEK); //day number
+        System.out.println("Int Value of "
+                + dayOfWeek.name()
+                + " - " + weekDayNumber);
+        return weekDayNumber;
+    }
+
 }
 
 
