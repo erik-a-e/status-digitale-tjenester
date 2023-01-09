@@ -240,17 +240,13 @@ public class OpeningTimesTest {
     }
 
     @Test
-    public void weekDayNumberLocalDate(){
-        String example1 = "??.??.???? 07:00-21:00 1:5 ?";
-        Boolean example1isTrue = openingTimes.isAValidRule(example1);
-        int weekdayNumber = openingTimes.weekDayNumberLocalDate();
-    }
-
-    @Test
     public void weekDayNumberForSpecifiedDate()  {
         String example1 = "??.??.???? 07:00-21:00 1:5 ?";
         Boolean example1isTrue = openingTimes.isAValidRule(example1);
-        int weekdayNumber = openingTimes.weekDayNumber("13.03.2023");
+        int weekdayNumber = openingTimes.weekDayNumber("");
+        /*String example1 = "??.??.???? 07:00-21:00 1:5 ?";
+        Boolean example1isTrue = openingTimes.isAValidRule(example1);
+        int weekdayNumber = openingTimes.weekDayNumber("13.03.2023");*/
     }
 
     @Test
