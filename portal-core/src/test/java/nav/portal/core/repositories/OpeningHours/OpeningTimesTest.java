@@ -234,17 +234,13 @@ public class OpeningTimesTest {
     }
 
     @Test
-    public void isAValidOTForDayInMonthLocalTime(){
-        String example1 = "??.??.???? 07:00-21:00 ? -10";
+    public void isAValidOTForDayInMonth(){
+        /*String example1 = "??.??.???? 07:00-21:00 ? -10";
         Boolean example1isTrue = openingTimes.isAValidRule(example1);
-        System.out.println(openingTimes.isAValidOTForDayInMonthLocalTime());
-    }
-
-    @Test
-    public void isAValidOTForDayInMonthSpecifiedDate(){
+        System.out.println(openingTimes.isAValidOTForDayInMonth(""));*/
         String example1 = "??.??.???? 07:00-23:30 ? 14";
         Boolean example1isTrue = openingTimes.isAValidRule(example1);
-        System.out.println(openingTimes.isAValidOTForDayInMonthSpecifiedDate("14.01.2023"));
+        System.out.println(openingTimes.isAValidOTForDayInMonth("14.01.2023"));
     }
 
     @Test
@@ -255,7 +251,7 @@ public class OpeningTimesTest {
     }
 
     @Test
-    public void weekDayNumberForSpecifiedDate() throws ParseException {
+    public void weekDayNumberForSpecifiedDate()  {
         String example1 = "??.??.???? 07:00-21:00 1:5 ?";
         Boolean example1isTrue = openingTimes.isAValidRule(example1);
         int weekdayNumber = openingTimes.weekDayNumber("13.03.2023");

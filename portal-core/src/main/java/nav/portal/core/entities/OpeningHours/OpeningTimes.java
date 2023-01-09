@@ -172,12 +172,15 @@ public class OpeningTimes {
         return false;
     }
 
+
+    //Formaterer en dato oppføring fra dd.mm.åååå og returnerer åååå-mm-dd fra localDate.
     private String formatLocalDate() {
         LocalDate localDate = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         return localDate.format(formatter);
     }
 
+    //Formaterer en dato oppføring fra dd.mm.åååå og returnerer åååå-mm-dd.
     private static String formatOpeningDate(String date) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
         DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -185,39 +188,42 @@ public class OpeningTimes {
         return LocalDate.parse(date, formatter).format(formatter2);
     }
 
-    public boolean isAValidOTForDayInMonthLocalTime(){
-        int dayInMonthAtPositionInRulesList = isAValidDayInMonth(getSpecificDateFromLocalDate());
-        if (dayInMonthAtPositionInRulesList != -1){
-           return isAValidOpeningTime(dayInMonthAtPositionInRulesList);
-        }
-        return false;
-    }
-
-    public boolean isAValidOTForDayInMonthSpecifiedDate(String date){
-        int dayInMonthAtPositionInRulesList = isAValidDayInMonth(getSpecifiedDate(date));
+    /*Formaterer dataene fra @Param-datoen før dagen sammenlignes med dagen for regel 3
+     i åpningstidsreglene og returnerer sann hvis en gyldig åpningstid; ellers falsk.
+     */
+    public boolean isAValidOTForDayInMonth(String date){
+        int dayInMonthAtPositionInRulesList = isAValidDayInMonth(getDateForDayInMonth(date));
         if (dayInMonthAtPositionInRulesList != -1){
             return isAValidOpeningTime(dayInMonthAtPositionInRulesList);
         }
         return false;
     }
 
-    public int getSpecifiedDate(String date){
-        LocalDate currentDate  = LocalDate.parse(formatOpeningDate(date));
-        return currentDate.getDayOfMonth();
-    }
 
-    public int getSpecificDateFromLocalDate(){
-        LocalDate currentDate = LocalDate.now();
-        return currentDate.getDayOfMonth();
-    }
+    /*Inspiserer @param date for en verdi, bruker gjeldende dato når verdien til strengen er tom,
+     ellers formaterer den spesifiserte datoen til åååå-mm-dd før månedsdagen returneres som et heltall.
+     */
+    public int getDateForDayInMonth(String date){
+        LocalDate formattedDate;
+        if (date.isEmpty()){
+            formattedDate = LocalDate.now();
+        }else{
+            formattedDate = LocalDate.parse(formatOpeningDate(date));
+        }
+        return formattedDate.getDayOfMonth();
+   }
 
-    private int isAValidDayInMonth(int specifiedDate){
+   /*Inspiserer hver dag i måned-regel, @param DateEntry for en match mot den forespurte
+    dagen og returnerer verdien av regelposisjonen i arrayList,
+    ellers returnerer -1 som indikerer ingen match.
+    */
+    private int isAValidDayInMonth(int DateEntry){
         for(int i = 0; i < openingTimesRules.size(); i++){
             String[] rule = createRules(openingTimesRules.get(i));
             if (!rule[3].startsWith("?")){
-                String date = Integer.toString(specifiedDate);
+                String day = Integer.toString(DateEntry);
                 String rule3 = rule[3];
-                if (dayNumberFromRule(rule3).equals(date)){
+                if (dayNumberFromRule(rule3).equals(day)){
                     System.out.println("return i:  " + i);
                     return i;
                 }
@@ -226,6 +232,10 @@ public class OpeningTimes {
         return -1;
     }
 
+    /*Sjekker parameterverdiregel 3 for en positiv verdi som representerer
+    en dag fra begynnelsen av måneden eller en negativ verdi som representerer dagen fra
+    slutten av måneden før dagen representert som en streng.
+     */
     private String dayNumberFromRule(String rule3){
         int intOfRule3 = Integer.parseInt(rule3.trim());
         if (intOfRule3 < 0){
@@ -235,6 +245,9 @@ public class OpeningTimes {
         }
     }
 
+   /*Beregner fra siste dag i måneden hvis datainntasting er en negativ verdi.
+   @param regel3 representerer en dag fra slutten av en måned opp til -10 dager
+    */
    private String dateFromLastDayInMonth(String rule3){
        int dayNumbersBack = Integer.parseInt(rule3);
        Calendar cal = Calendar.getInstance();
@@ -289,6 +302,19 @@ public class OpeningTimes {
         return weekDayNumber;
     }
 
+    /**
+     * Metode beregner siste arbeidsdag for siste dag i måneden som input
+     * @param lastDayOfMonth
+     * @return LocalDate-forekomst som inneholder siste arbeidsdag
+     */
+    public static LocalDate getLastWorkingDayOfMonth(LocalDate lastDayOfMonth) {
+        LocalDate lastWorkingDayofMonth = switch (DayOfWeek.of(lastDayOfMonth.get(ChronoField.DAY_OF_WEEK))) {
+            case SATURDAY -> lastDayOfMonth.minusDays(1);
+            case SUNDAY -> lastDayOfMonth.minusDays(2);
+            default -> lastDayOfMonth;
+        };
+        return lastWorkingDayofMonth;
+    }
 }
 
 
