@@ -133,27 +133,43 @@ public class OpeningTimes {
                 (Integer.parseInt(rules[3].trim()) <= -1 && Integer.parseInt(rules[3].trim()) >= -10));
     }
 
-    public boolean isAnOpeningLocalDate() {
-        int dateFoundAtPosition = isAValidSpecifiedDate(formatLocalDate());
+    //Formaterer datainnføringsdatoen før du sjekker om det er samsvar for en bestemt dato i åpningstidsarrayList.
+    public boolean isASpecificDate(String dataEntry) {
+        int dateFoundAtPosition = isAValidSpecificDate(formatDateToString(dataEntry));
         if (dateFoundAtPosition > -1){
             return isAValidOpeningTime(dateFoundAtPosition);
         }
         return false;
     }
 
-    public boolean isAnOpeningSpecifiedDate(String aDate) {
-        int dateFoundAtPosition = isAValidSpecifiedDate(formatOpeningDate(aDate));
-        if (dateFoundAtPosition > -1){
-            return isAValidOpeningTime(dateFoundAtPosition);
-        }
-        return false;
+    //Formaterer dato @Param dataEntry-formatet fra LocalDate til String
+    private String formatDateToString(String dataEntry) {
+        LocalDate formattedDataEntry = getFormattedDate(dataEntry);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return formattedDataEntry.format(formatter);
     }
 
-    private int isAValidSpecifiedDate(String enteredDate) {
+
+    /*Inspiserer @param date for en verdi, bruker gjeldende dato når verdien til strengen er tom,
+     ellers formaterer den spesifiserte datoen til åååå-mm-dd før månedsdagen returneres som et heltall.
+     */
+    private LocalDate getFormattedDate(String date){
+        LocalDate formattedDate;
+        if (date.isEmpty()){
+            return LocalDate.now();
+        }else{
+            return LocalDate.parse(formatOpeningDate(date));
+        }
+    }
+
+    /*Inspiserer hver spesifisert datoregel, regel[0] returnerer posisjonen i matrisen hvis
+    den finnes, eller en negativ verdi hvis ikke
+     */
+    private int isAValidSpecificDate(String dateEntry) {
         for (int i = 0; i < openingTimesRules.size(); i++) {
             String[] rule = createRules(openingTimesRules.get(i));
             if (!rule[0].startsWith("??")) {
-                if (formatOpeningDate(rule[0]).equals(enteredDate)) {
+                if (formatOpeningDate(rule[0]).equals(dateEntry)) {
                     System.out.println("is True for isAValidSpecifiedDate");
                         return i;
                 }
@@ -162,11 +178,14 @@ public class OpeningTimes {
         return -1;
     }
 
+    /*Bruker posisjonen til regelen i matrisen @ for å finne åpningstidene, regel[1]
+     returnerer verdien sann hvis den blir funnet; usant ellers
+     */
     private boolean isAValidOpeningTime(int i){
         String[] rule = createRules(openingTimesRules.get(i));
         if (LocalTime.now().isBefore(LocalTime.parse(rule[1].substring(6)))&&
                 LocalTime.now().isAfter(LocalTime.parse(rule[1].substring(0,5)))){
-                System.out.println("is True for isAValidSpecifiedTime");
+                System.out.println("is True for isAValidOpeningTime");
                 return true;
         }
         return false;
@@ -192,26 +211,13 @@ public class OpeningTimes {
      i åpningstidsreglene og returnerer sann hvis en gyldig åpningstid; ellers falsk.
      */
     public boolean isAValidOTForDayInMonth(String date){
-        int dayInMonthAtPositionInRulesList = isAValidDayInMonth(getDateForDayInMonth(date));
+        LocalDate formattedDate = getFormattedDate(date);
+        int dayInMonthAtPositionInRulesList = isAValidDayInMonth(formattedDate.getDayOfMonth());
         if (dayInMonthAtPositionInRulesList != -1){
             return isAValidOpeningTime(dayInMonthAtPositionInRulesList);
         }
         return false;
     }
-
-
-    /*Inspiserer @param date for en verdi, bruker gjeldende dato når verdien til strengen er tom,
-     ellers formaterer den spesifiserte datoen til åååå-mm-dd før månedsdagen returneres som et heltall.
-     */
-    public int getDateForDayInMonth(String date){
-        LocalDate formattedDate;
-        if (date.isEmpty()){
-            formattedDate = LocalDate.now();
-        }else{
-            formattedDate = LocalDate.parse(formatOpeningDate(date));
-        }
-        return formattedDate.getDayOfMonth();
-   }
 
    /*Inspiserer hver dag i måned-regel, @param DateEntry for en match mot den forespurte
     dagen og returnerer verdien av regelposisjonen i arrayList,

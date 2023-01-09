@@ -208,8 +208,8 @@ public class OpeningTimesTest {
 
 
     @Test
-    public void isOpeningLocalDate(){
-        String example1 = "02.05.2023 09:00-22:00 ? ?"; //Gyldig  åpningstider
+    public void isASpecificDate(){
+        /*String example1 = "02.05.2023 09:00-22:00 ? ?"; //Gyldig  åpningstider
         String example2 = "07.02.2023 09:00-22:00 ? ?"; //Gyldig  åpningstider
         String example3 = "04.01.2023 09:00-22:00 ? ?"; //Gyldig  åpningstider
 
@@ -217,11 +217,7 @@ public class OpeningTimesTest {
         Boolean example2isTrue = openingTimes.isAValidRule(example2);
         Boolean example3isTrue = openingTimes.isAValidRule(example3);
 
-        System.out.println(openingTimes.isAnOpeningLocalDate());
-    }
-
-    @Test
-    public void isAnOpeningSpecifiedDate(){
+        System.out.println(openingTimes.isASpecificDate("04.01.2023"));*/
         String example1 = "02.05.2023 09:00-22:00 ? ?"; //Gyldig  åpningstider
         String example2 = "07.02.2023 09:00-18:00 ? ?"; //Gyldig  åpningstider
         String example3 = "03.01.2023 09:00-22:00 ? ?"; //Gyldig  åpningstider
@@ -230,7 +226,7 @@ public class OpeningTimesTest {
         Boolean example2isTrue = openingTimes.isAValidRule(example2);
         Boolean example3isTrue = openingTimes.isAValidRule(example3);
         String aDate = "07.02.2023";
-        System.out.println(openingTimes.isAnOpeningSpecifiedDate(aDate));
+        System.out.println(openingTimes.isASpecificDate(aDate));
     }
 
     @Test
