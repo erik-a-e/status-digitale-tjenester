@@ -265,6 +265,10 @@ public class OpeningTimes {
        return String.valueOf(dayOfMonth);
    }
 
+
+   /*Test den formaterte @param date faller innenfor et ukedagsområde og
+   returnerer verdien av true hvis gyldig, ellers usant;
+    */
     public boolean isAValidOTForWeekday(String date){
        for (int i = 0; i < openingTimesRules.size(); i++) {
            String[] rule = createRules(openingTimesRules.get(i));
@@ -274,32 +278,16 @@ public class OpeningTimes {
                return (((weekDayNumber(date) >= startOfRange) &&
                   (weekDayNumber(date) <= endOfRange))&&
                        isAValidOpeningTime(i));
-
            }
        }
        return false;
     }
 
-    public int weekDayNumberLocalDate(){
-        LocalDate localDate = LocalDate.now();
-        DayOfWeek dayOfWeek = DayOfWeek.from(localDate);
-        System.out.println("Day of the Week on "
-                + localDate + " - "
-                + dayOfWeek.name());
-        int weekDayNumber = dayOfWeek.get(ChronoField.DAY_OF_WEEK); //day number
-        System.out.println("Int Value of "
-                + dayOfWeek.name()
-                + " - " + weekDayNumber);
-        return weekDayNumber;
-    }
-
+    /*utilises the dateEntry parameter to return a numeric value for the day in the week*/
     public int weekDayNumber(String date) {
-        String dateInString = formatOpeningDate(date);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate specifiedDate = LocalDate.parse(dateInString, formatter);
-        DayOfWeek dayOfWeek = DayOfWeek.from(specifiedDate);
+        DayOfWeek dayOfWeek = DayOfWeek.from(getFormattedDate(date));
         System.out.println("Day of the Week on "
-                + specifiedDate + " - "
+                + getFormattedDate(date) + " - "
                 + dayOfWeek.name());
         int weekDayNumber = dayOfWeek.get(ChronoField.DAY_OF_WEEK); //day number
         System.out.println("Int Value of "
