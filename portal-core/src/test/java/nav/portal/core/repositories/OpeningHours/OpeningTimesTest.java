@@ -206,55 +206,183 @@ public class OpeningTimesTest {
         Assertions.assertThat(retrievedOpeningTimes.size()).isEqualTo(7);
     }
 
-
     @Test
     public void isASpecificDate(){
-        /*String example1 = "02.05.2023 09:00-22:00 ? ?"; //Gyldig  åpningstider
-        String example2 = "07.02.2023 09:00-22:00 ? ?"; //Gyldig  åpningstider
-        String example3 = "04.01.2023 09:00-22:00 ? ?"; //Gyldig  åpningstider
+        //Assign
+        String example1 = "29.02.2023 07:00-22:00 ? ?"; //Ugyldig  dato
+        String example2 = "10.04.2023 07:00-22:00 ? ?"; //Gyldig  åpningstider
+        String example3 = "07.02.2023 07:00-22:00 ? ?"; //Gyldig  åpningstider
+        String example4 = "04.01.2023 07:00-22:00 ? ?"; //Gyldig  åpningstider
+        String example5 = "17.05.2023 07:00-22:00 ? ?"; //Gyldig  åpningstider
+        String example6 = "10.01.2023 07:00-22:00 ? ?"; //Gyldig  åpningstider
 
-        Boolean example1isTrue = openingTimes.isAValidRule(example1);
-        Boolean example2isTrue = openingTimes.isAValidRule(example2);
-        Boolean example3isTrue = openingTimes.isAValidRule(example3);
+        Boolean isValid1  = openingTimes.isAValidRule(example1);
+        Boolean isValid2 = openingTimes.isAValidRule(example2);
+        Boolean isValid3 = openingTimes.isAValidRule(example3);
+        Boolean isValid4  = openingTimes.isAValidRule(example4);
+        Boolean isValid5  = openingTimes.isAValidRule(example5);
+        Boolean isValid6  = openingTimes.isAValidRule(example6);
 
-        System.out.println(openingTimes.isASpecificDate("04.01.2023"));*/
-        String example1 = "02.05.2023 09:00-22:00 ? ?"; //Gyldig  åpningstider
-        String example2 = "07.02.2023 09:00-18:00 ? ?"; //Gyldig  åpningstider
-        String example3 = "03.01.2023 09:00-22:00 ? ?"; //Gyldig  åpningstider
+        //Act
+        boolean date04012023 = openingTimes.isASpecificDate("04.01.2023");  //Gyldig  dato
+        boolean date06022023 = openingTimes.isASpecificDate("06.02.2023");  //Ugyldig dato
+        boolean date10042023 = openingTimes.isASpecificDate("10.04.2023");  //Gyldig  dato
+        boolean date17052023 = openingTimes.isASpecificDate("17.05.2023");  //Gyldig  dato
+        boolean date18052023 = openingTimes.isASpecificDate("18.05.2023");  //Ugyldig  dato
+        boolean date29022023 = openingTimes.isASpecificDate("29.02.2023");  //Ugyldig  dato
+        boolean dateLocalTime = openingTimes.isASpecificDate("");
 
-        Boolean example1isTrue = openingTimes.isAValidRule(example1);
-        Boolean example2isTrue = openingTimes.isAValidRule(example2);
-        Boolean example3isTrue = openingTimes.isAValidRule(example3);
-        String aDate = "07.02.2023";
-        System.out.println(openingTimes.isASpecificDate(aDate));
+        //Assert
+        Assertions.assertThat(date04012023).isTrue();       //Gyldig  dato
+        Assertions.assertThat(date06022023).isFalse();      //Ugyldig dato
+        Assertions.assertThat(date10042023).isTrue();       //Gyldig  dato
+        Assertions.assertThat(date17052023).isTrue();       //Gyldig  dato
+        Assertions.assertThat(date18052023).isFalse();      //Ugyldig dato
+        Assertions.assertThat(date29022023).isFalse();      //Ugyldig dato
+        Assertions.assertThat(dateLocalTime).isTrue();      //Gyldig  nåtid
     }
 
     @Test
     public void isAValidOTForDayInMonth(){
-        /*String example1 = "??.??.???? 07:00-21:00 ? -10";
-        Boolean example1isTrue = openingTimes.isAValidRule(example1);
-        System.out.println(openingTimes.isAValidOTForDayInMonth(""));*/
-        String example1 = "??.??.???? 07:00-23:30 ? 14";
-        Boolean example1isTrue = openingTimes.isAValidRule(example1);
-        System.out.println(openingTimes.isAValidOTForDayInMonth("14.01.2023"));
-    }
+        //Assign
+        String example1 = "??.??.???? 07:00-19:00 ? 14";   //Gyldig  dag
+        String example2 = "??.??.???? 07:00-19:00 ? -10";  //Gyldig  dag
+        String example3 = "??.??.???? 07:00-19:00 ? 17";   //Gyldig  dag
+        String example4 = "??.??.???? 07:00-19:00 ? 0";    //Ugyldig dag
+        String example5 = "??.??.???? 07:00-19:00 ? -1";   //Gyldig  dag
+        String example6 = "??.??.???? 07:00-19:00 ? -4";   //Gyldig  dag
+        String example7 = "??.??.???? 07:00-19:00 ? 29";   //Gyldig  dag
+        String example8  = "??.??.???? 07:00-19:00 ? 28";  //Gyldig  dag
+        String example9 = "??.??.???? 07:00-19:00 ? 1";   //Gyldig  dag
 
-    @Test
-    public void weekDayNumberForSpecifiedDate()  {
-        String example1 = "??.??.???? 07:00-21:00 1:5 ?";
-        Boolean example1isTrue = openingTimes.isAValidRule(example1);
-        int weekdayNumber = openingTimes.weekDayNumber("");
-        /*String example1 = "??.??.???? 07:00-21:00 1:5 ?";
-        Boolean example1isTrue = openingTimes.isAValidRule(example1);
-        int weekdayNumber = openingTimes.weekDayNumber("13.03.2023");*/
+
+        Boolean isValid1 = openingTimes.isAValidRule(example1);
+        Boolean isValid2 = openingTimes.isAValidRule(example2);
+        Boolean isValid3 = openingTimes.isAValidRule(example3);
+        Boolean isValid4 = openingTimes.isAValidRule(example4);
+        Boolean isValid5 = openingTimes.isAValidRule(example5);
+        Boolean isValid6 = openingTimes.isAValidRule(example6);
+        Boolean isValid7 = openingTimes.isAValidRule(example7);
+        Boolean isValid8 = openingTimes.isAValidRule(example8);
+        Boolean isValid9 = openingTimes.isAValidRule(example9);
+
+        //Act
+        boolean date14012023 = openingTimes.isAValidOTForDayInMonth("14.01.2023");
+        boolean date22012023 = openingTimes.isAValidOTForDayInMonth("22.01.2023");
+        boolean date17012023 = openingTimes.isAValidOTForDayInMonth("17.01.2023");
+        boolean date03012023 = openingTimes.isAValidOTForDayInMonth("03.01.2023");
+        boolean date28012023 = openingTimes.isAValidOTForDayInMonth("28.01.2023");
+        boolean date29012023 = openingTimes.isAValidOTForDayInMonth("29.01.2023");
+        boolean date30012023 = openingTimes.isAValidOTForDayInMonth("30.01.2023");
+        boolean date31012023 = openingTimes.isAValidOTForDayInMonth("31.01.2023");
+
+        //Assert
+        Assertions.assertThat(date28012023).isTrue();       //Gyldig  dato
+        Assertions.assertThat(date29012023).isTrue();       //Gyldig  dato
+        Assertions.assertThat(date03012023).isFalse();       //Gyldig  dato
+        Assertions.assertThat(date31012023).isTrue();       //Gyldig  dato
+        Assertions.assertThat(date03012023).isFalse();       //Ugyldig  dato
+        Assertions.assertThat(date17012023).isTrue();       //Gyldig  dato
+        Assertions.assertThat(date14012023).isTrue();       //Gyldig  dato
+        Assertions.assertThat(date22012023).isTrue();       //Gyldig  dato
     }
 
     @Test
     public void isAValidOTForWeekday(){
-        String example1 = "??.??.???? 07:00-23:00 1:5 ?";
-        Boolean example1isTrue = openingTimes.isAValidRule(example1);
-        System.out.println(openingTimes.isAValidOTForWeekday("13.03.2023"));
 
+        //Gyldig fra måndag til fredag fra kl.07:00 - kl.19:00
+        /*Assign
+        String example1 = "??.??.???? 07:00-19:00 1:5 ?";                                //Gyldig fra mandag til fredag
+        Boolean validRuleForWeekDay = openingTimes.isAValidRule(example1);
+        //Act
+        boolean dateForSunday = openingTimes.isAValidOTForWeekday("12.03.2023");    //søndag
+        boolean dateForMonday = openingTimes.isAValidOTForWeekday("13.03.2023");    //måndag
+        boolean dateForTuesday = openingTimes.isAValidOTForWeekday("14.03.2023");   //tirsdag
+        boolean dateForWednesday = openingTimes.isAValidOTForWeekday("15.03.2023"); //ondsag
+        boolean dateForThursday = openingTimes.isAValidOTForWeekday("16.03.2023");  //torsdag
+        boolean dateForFriday = openingTimes.isAValidOTForWeekday("17.03.2023");    //fredag
+        boolean dateForSaturday = openingTimes.isAValidOTForWeekday("18.03.2023");  //lørdag
+        System.out.println(openingTimes.isAValidOTForWeekday(""));                  // Nåtid
+        //Assert
+        Assertions.assertThat(validRuleForWeekDay).isTrue();                              //gyldig regler mandag-fredag
+        Assertions.assertThat(dateForSunday).isFalse();                                   //søndag
+        Assertions.assertThat(dateForMonday).isTrue();                                    //månddag
+        Assertions.assertThat(dateForTuesday).isTrue();                                   //tirsdag
+        Assertions.assertThat(dateForWednesday).isTrue();                                 //onsdag
+        Assertions.assertThat(dateForThursday).isTrue();                                  //torsdag
+        Assertions.assertThat(dateForFriday).isTrue();                                    //fredag
+        Assertions.assertThat(dateForSaturday).isFalse();                                 //lørdag*/
+
+
+        //Gyldig fra onsdag til torsdag fra kl.07:00 - kl.19:00
+        //Assign
+        /*String example1 = "??.??.???? 07:00-19:00 3:4 ?";                                //Gyldig fra onsdag til torsdag
+        Boolean validRuleForWeekDay = openingTimes.isAValidRule(example1);
+        //Act
+        boolean dateForSunday = openingTimes.isAValidOTForWeekday("12.03.2023");           //søndag
+        boolean dateForMonday = openingTimes.isAValidOTForWeekday("13.03.2023");           //måndag
+        boolean dateForTuesday = openingTimes.isAValidOTForWeekday("14.03.2023");          //tirsdag
+        boolean dateForWednesday = openingTimes.isAValidOTForWeekday("15.03.2023");        //ondsag
+        boolean dateForThursday = openingTimes.isAValidOTForWeekday("16.03.2023");         //torsdag
+        boolean dateForFriday = openingTimes.isAValidOTForWeekday("17.03.2023");           //fredag
+        boolean dateForSaturday = openingTimes.isAValidOTForWeekday("18.03.2023");         //lørdag
+        System.out.println(openingTimes.isAValidOTForWeekday(""));                         // Nåtid
+        //Assert
+        Assertions.assertThat(validRuleForWeekDay).isTrue();                              //gyldig regler onsdag-tordag
+        Assertions.assertThat(dateForSunday).isFalse();                                   //søndag
+        Assertions.assertThat(dateForMonday).isFalse();                                    //monddag
+        Assertions.assertThat(dateForTuesday).isFalse();                                   //tirsdag
+        Assertions.assertThat(dateForWednesday).isTrue();                                 //onsdag
+        Assertions.assertThat(dateForThursday).isTrue();                                  //torsdag
+        Assertions.assertThat(dateForFriday).isFalse();                                    //fredag
+        Assertions.assertThat(dateForSaturday).isFalse();                                 //lørdag*/
+
+
+        //Gyldig fra måndag til søndag fra kl.01:00 - kl.06:00
+        //Assign
+        /*String example1 = "??.??.???? 01:00-06:00 1:7 ?";                                //Gyldig fra måndag til sondag åpeningstid utendor dagtid
+        Boolean validRuleForWeekDay = openingTimes.isAValidRule(example1);
+        //Act
+        boolean dateForSunday = openingTimes.isAValidOTForWeekday("12.03.2023");    //søndag
+        boolean dateForMonday = openingTimes.isAValidOTForWeekday("13.03.2023");    //måndag
+        boolean dateForTuesday = openingTimes.isAValidOTForWeekday("14.03.2023");   //tirsdag
+        boolean dateForWednesday = openingTimes.isAValidOTForWeekday("15.03.2023"); //ondsag
+        boolean dateForThursday = openingTimes.isAValidOTForWeekday("16.03.2023");  //torsdag
+        boolean dateForFriday = openingTimes.isAValidOTForWeekday("17.03.2023");    //fredag
+        boolean dateForSaturday = openingTimes.isAValidOTForWeekday("18.03.2023");  //lørdag
+        System.out.println(openingTimes.isAValidOTForWeekday(""));                  // Nåtid
+        //Assert
+        Assertions.assertThat(validRuleForWeekDay).isTrue();                              //gyldig regler måndag-tordag
+        Assertions.assertThat(dateForSunday).isFalse();                                   //søndag
+        Assertions.assertThat(dateForMonday).isFalse();                                    //monddag
+        Assertions.assertThat(dateForTuesday).isFalse();                                   //tirsdag
+        Assertions.assertThat(dateForWednesday).isFalse();                                 //onsdag
+        Assertions.assertThat(dateForThursday).isFalse();                                  //torsdag
+        Assertions.assertThat(dateForFriday).isFalse();                                    //fredag
+        Assertions.assertThat(dateForSaturday).isFalse();                                 //lørdag*/
+
+        //Gyldig fra søndag til lørdag fra kl.00:00 - kl.23:59
+        //Assign
+        String example1 = "??.??.???? 00:00-23:59 1:7 ?";                                //Gyldig fra mandag til fredag
+        Boolean validRuleForWeekDay = openingTimes.isAValidRule(example1);
+        //Act
+        boolean dateForSunday = openingTimes.isAValidOTForWeekday("12.03.2023");    //søndag
+        boolean dateForMonday = openingTimes.isAValidOTForWeekday("13.03.2023");    //måndag
+        boolean dateForTuesday = openingTimes.isAValidOTForWeekday("14.03.2023");   //tirsdag
+        boolean dateForWednesday = openingTimes.isAValidOTForWeekday("15.03.2023"); //ondsag
+        boolean dateForThursday = openingTimes.isAValidOTForWeekday("16.03.2023");  //torsdag
+        boolean dateForFriday = openingTimes.isAValidOTForWeekday("17.03.2023");    //fredag
+        boolean dateForSaturday = openingTimes.isAValidOTForWeekday("18.03.2023");  //lørdag
+        System.out.println(openingTimes.isAValidOTForWeekday(""));                  // Nåtid
+        //Assert
+        Assertions.assertThat(validRuleForWeekDay).isTrue();                              //gyldig regler mandag-fredag
+        Assertions.assertThat(dateForSunday).isTrue();                                   //søndag
+        Assertions.assertThat(dateForMonday).isTrue();                                    //månddag
+        Assertions.assertThat(dateForTuesday).isTrue();                                   //tirsdag
+        Assertions.assertThat(dateForWednesday).isTrue();                                 //onsdag
+        Assertions.assertThat(dateForThursday).isTrue();                                  //torsdag
+        Assertions.assertThat(dateForFriday).isTrue();                                    //fredag
+        Assertions.assertThat(dateForSaturday).isTrue();                                 //lørdag
     }
 
 }

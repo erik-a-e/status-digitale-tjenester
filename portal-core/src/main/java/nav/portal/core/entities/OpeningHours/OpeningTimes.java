@@ -30,10 +30,10 @@ public class OpeningTimes {
 
     public Boolean isAValidRule(String openingTimeRule) {
         if (isAValidCheck(openingTimeRule)) {
-            System.out.println("Gyldig regel: " + openingTimeRule);
+            //System.out.println("Gyldig regel: " + openingTimeRule);
             return openingTimesRules.add(openingTimeRule);
         } else {
-            System.out.println("Ugyldig regel: " + openingTimeRule);
+            //System.out.println("Ugyldig regel: " + openingTimeRule);
             return false;
         }
     }
@@ -149,7 +149,6 @@ public class OpeningTimes {
         return formattedDataEntry.format(formatter);
     }
 
-
     /*Inspiserer @param date for en verdi, bruker gjeldende dato når verdien til strengen er tom,
      ellers formaterer den spesifiserte datoen til åååå-mm-dd før månedsdagen returneres som et heltall.
      */
@@ -170,7 +169,7 @@ public class OpeningTimes {
             String[] rule = createRules(openingTimesRules.get(i));
             if (!rule[0].startsWith("??")) {
                 if (formatOpeningDate(rule[0]).equals(dateEntry)) {
-                    System.out.println("is True for isAValidSpecifiedDate");
+                    //System.out.println("is True for isAValidSpecifiedDate");
                         return i;
                 }
             }
@@ -185,7 +184,7 @@ public class OpeningTimes {
         String[] rule = createRules(openingTimesRules.get(i));
         if (LocalTime.now().isBefore(LocalTime.parse(rule[1].substring(6)))&&
                 LocalTime.now().isAfter(LocalTime.parse(rule[1].substring(0,5)))){
-                System.out.println("is True for isAValidOpeningTime");
+                //System.out.println("is True for isAValidOpeningTime");
                 return true;
         }
         return false;
@@ -203,7 +202,7 @@ public class OpeningTimes {
     private static String formatOpeningDate(String date) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
         DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        System.out.println(LocalDate.parse(date, formatter).format(formatter2));
+        //System.out.println(LocalDate.parse(date, formatter).format(formatter2));
         return LocalDate.parse(date, formatter).format(formatter2);
     }
 
@@ -230,7 +229,7 @@ public class OpeningTimes {
                 String day = Integer.toString(DateEntry);
                 String rule3 = rule[3];
                 if (dayNumberFromRule(rule3).equals(day)){
-                    System.out.println("return i:  " + i);
+                    //System.out.println("return i:  " + i);
                     return i;
                 }
             }
@@ -261,10 +260,9 @@ public class OpeningTimes {
        cal.set(Calendar.DATE, 1);
        cal.add(Calendar.DATE, dayNumbersBack);
        int dayOfMonth = cal.get(Calendar.DAY_OF_MONTH);
-       System.out.println("day with substring: " + dayOfMonth);
+       //System.out.println("day with substring: " + dayOfMonth);
        return String.valueOf(dayOfMonth);
    }
-
 
    /*Test den formaterte @param date faller innenfor et ukedagsområde og
    returnerer verdien av true hvis gyldig, ellers usant;
@@ -284,31 +282,19 @@ public class OpeningTimes {
     }
 
     /*utilises the dateEntry parameter to return a numeric value for the day in the week*/
-    public int weekDayNumber(String date) {
+    private int weekDayNumber(String date) {
         DayOfWeek dayOfWeek = DayOfWeek.from(getFormattedDate(date));
-        System.out.println("Day of the Week on "
+        /*System.out.println("Day of the Week on "
                 + getFormattedDate(date) + " - "
-                + dayOfWeek.name());
+                + dayOfWeek.name());*/
         int weekDayNumber = dayOfWeek.get(ChronoField.DAY_OF_WEEK); //day number
-        System.out.println("Int Value of "
+        /*System.out.println("Int Value of "
                 + dayOfWeek.name()
-                + " - " + weekDayNumber);
+                + " - " + weekDayNumber);*/
         return weekDayNumber;
     }
 
-    /**
-     * Metode beregner siste arbeidsdag for siste dag i måneden som input
-     * @param lastDayOfMonth
-     * @return LocalDate-forekomst som inneholder siste arbeidsdag
-     */
-    public static LocalDate getLastWorkingDayOfMonth(LocalDate lastDayOfMonth) {
-        LocalDate lastWorkingDayofMonth = switch (DayOfWeek.of(lastDayOfMonth.get(ChronoField.DAY_OF_WEEK))) {
-            case SATURDAY -> lastDayOfMonth.minusDays(1);
-            case SUNDAY -> lastDayOfMonth.minusDays(2);
-            default -> lastDayOfMonth;
-        };
-        return lastWorkingDayofMonth;
-    }
+
 }
 
 
