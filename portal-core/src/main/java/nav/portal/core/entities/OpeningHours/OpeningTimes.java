@@ -182,12 +182,9 @@ public class OpeningTimes {
      */
     private boolean isAValidOpeningTime(int i){
         String[] rule = createRules(openingTimesRules.get(i));
-        if (LocalTime.now().isBefore(LocalTime.parse(rule[1].substring(6)))&&
-                LocalTime.now().isAfter(LocalTime.parse(rule[1].substring(0,5)))){
-                //System.out.println("is True for isAValidOpeningTime");
-                return true;
-        }
-        return false;
+        //System.out.println("is True for isAValidOpeningTime");
+        return LocalTime.now().isBefore(LocalTime.parse(rule[1].substring(6))) &&
+                LocalTime.now().isAfter(LocalTime.parse(rule[1].substring(0, 5)));
     }
 
 
@@ -287,13 +284,20 @@ public class OpeningTimes {
         /*System.out.println("Day of the Week on "
                 + getFormattedDate(date) + " - "
                 + dayOfWeek.name());*/
-        int weekDayNumber = dayOfWeek.get(ChronoField.DAY_OF_WEEK); //day number
+        return dayOfWeek.get(ChronoField.DAY_OF_WEEK); //day number
         /*System.out.println("Int Value of "
                 + dayOfWeek.name()
                 + " - " + weekDayNumber);*/
-        return weekDayNumber;
+        //return weekDayNumber;
     }
 
+    /*public void displayDate(String dataEntry){
+        if (isASpecificDate(dataEntry)){
+            System.out.println("Åpningstider for" + dataEntry + " is "  + rule[1].trim());
+        }else{
+            System.out.println("Dato "+ dataEntry + " er en utenfor åpningstids");
+        }
+    }*/
 
 }
 
