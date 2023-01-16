@@ -152,6 +152,12 @@ public class OpeningTimesV2 {
     }
 
     private static boolean isValidTimeFormat(String timeRule) {
+        //checks for hh:mm-hh:mm
+        if (!timeRule.matches("^([0-9]|0[0-9]|1[0-9]|2[0-3]):([0-9]|[0-5][0-9])-([0-9]|0[0-9]|1[0-9]|2[0-3]):([0-9]|[0-5][0-9])$")){
+            System.out.println("Illegal time format, should be hh:mm-hh:mm");
+            return false;
+        }
+
         String[] ruleParts = timeRule.split("[-]");
         if (ruleParts.length != 2) {
             return false;
@@ -172,10 +178,6 @@ public class OpeningTimesV2 {
             return false;
         }
         return true;
-    }
-    //Checks for a numeric value
-    private static boolean isNumeric(String str){
-        return str != null && str.matches("[0-9.]+");
     }
 
 }
