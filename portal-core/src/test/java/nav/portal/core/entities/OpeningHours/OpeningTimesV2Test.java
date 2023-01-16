@@ -227,7 +227,9 @@ class OpeningTimesV2Test {
         String example6 = "??.??.???? L ? 07:00-18:00";
         String example7 = "??.??.???? ? 6-7 00:00-00:00";
         String example8 = "??.??.???? ? 1-5 07:00-21:00";
-
+        String example9 = "??.??.???? 2,5,6,21 1-5 07:00-21:00";
+        String example10 = "??.??.???? L 10 07:00-21:00";
+        String example11 = "15.10.???? 1,14-16,L 2 07:00-19:00";
 
         //Act
         Boolean example1isTrue = OpeningTimesV2.isAValidRule(example1);
@@ -238,6 +240,9 @@ class OpeningTimesV2Test {
         Boolean example6isTrue  = OpeningTimesV2.isAValidRule(example6);
         Boolean example7isTrue = OpeningTimesV2.isAValidRule(example7);
         Boolean example8isTrue = OpeningTimesV2.isAValidRule(example8);
+        Boolean example9isTrue = OpeningTimesV2.isAValidRule(example9);
+        Boolean example10isTrue = OpeningTimesV2.isAValidRule(example10);
+        Boolean example11isTrue = OpeningTimesV2.isAValidRule(example11);
 
         //Assert
         Assertions.assertThat(example1isTrue).isTrue();
@@ -248,8 +253,98 @@ class OpeningTimesV2Test {
         Assertions.assertThat(example6isTrue).isTrue();
         Assertions.assertThat(example7isTrue).isTrue();
         Assertions.assertThat(example8isTrue).isTrue();
-
-
+        Assertions.assertThat(example9isTrue).isTrue();
+        Assertions.assertThat(example10isTrue).isTrue();
+        Assertions.assertThat(example11isTrue).isTrue();
     }
+
+
+    @Test
+    void validateEntryDateFormat(){
+        //Assign
+        String example1 = "??.??.????";
+        String example2 = "02.05.2023";
+        String example3 = "14.08.2023";
+        String example4 = "29.02.2024";
+        String example5 = "51.12.2023";
+        String example6 = "01.15.????";
+        String example7 = "11.??.2023";
+        String example8 = "14.12.20zz";
+        String example9 = "16.12.9999";
+        String example10 = "25.010.2022";
+        String example11 = "18.06.2024";
+        String example12 = "11/12/2023";
+        String example13 = "29.02.2023";
+        String example14 = "29.02.2024";
+
+        //Act
+        Boolean example1isFalse = OpeningTimesV2.isValidEntryDateFormat(example1);
+        Boolean example2isTrue = OpeningTimesV2.isValidEntryDateFormat(example2);
+        Boolean example3isTrue = OpeningTimesV2.isValidEntryDateFormat(example2);
+        Boolean example4isTrue = OpeningTimesV2.isValidEntryDateFormat(example2);
+        Boolean example5isFalse  = OpeningTimesV2.isValidEntryDateFormat(example5);
+        Boolean example6isFalse  = OpeningTimesV2.isValidEntryDateFormat(example6);
+        Boolean example7isFalse  = OpeningTimesV2.isValidEntryDateFormat(example7);
+        Boolean example8isFalse  = OpeningTimesV2.isValidEntryDateFormat(example8);
+        Boolean example9isTrue  = OpeningTimesV2.isValidEntryDateFormat(example9);
+        Boolean example10isFalse  = OpeningTimesV2.isValidEntryDateFormat(example10);
+        Boolean example11isTrue = OpeningTimesV2.isValidEntryDateFormat(example11);
+        Boolean example12isFalse  = OpeningTimesV2.isValidEntryDateFormat(example12);
+        Boolean example13isFalse  = OpeningTimesV2.isValidEntryDateFormat(example13);
+        Boolean example14isTrue = OpeningTimesV2.isValidEntryDateFormat(example14);
+
+
+        //Assert
+        Assertions.assertThat(example1isFalse).isFalse();
+        Assertions.assertThat(example2isTrue).isTrue();
+        Assertions.assertThat(example3isTrue).isTrue();
+        Assertions.assertThat(example4isTrue).isTrue();
+        Assertions.assertThat(example5isFalse).isFalse();
+        Assertions.assertThat(example6isFalse).isFalse();
+        Assertions.assertThat(example7isFalse).isFalse();
+        Assertions.assertThat(example8isFalse).isFalse();
+        Assertions.assertThat(example9isTrue).isTrue();
+        Assertions.assertThat(example10isFalse).isFalse();
+        Assertions.assertThat(example11isTrue).isTrue();
+        Assertions.assertThat(example12isFalse).isFalse();
+        Assertions.assertThat(example13isFalse).isFalse();
+        Assertions.assertThat(example14isTrue).isTrue();
+    }
+
+    @Test
+    void validateEntryDate(){
+        //assign
+        String rule1 = "06.04.2023 ? ? 00:00-00:00";
+        String rule2 = "07.04.2023 ? ? 00:00-00:00";
+        String rule3 = "16.01.2023 ? ? 00:00-00:00";
+        String rule4 = "24.12.2023 ? 1-5 09:00-14:00";
+        String rule5 = "17.05.2023 ? ? 00:00-00:00";
+        String rule6 = "??.??.???? L ? 07:00-18:00";
+        String rule7 = "??.??.???? ? 6-7 00:00-00:00";
+        String rule8 = "??.??.???? ? 1-5 07:00-21:00";
+        String rule9 = "??.??.???? 2,5,6,21 1-5 07:00-21:00";
+        String rule10 = "??.??.???? L 10 07:00-21:00";
+        String rule11 = "15.10.???? 1,14-16,L 2 07:00-19:00";
+
+        String entryDate1 = ""; //current time
+        String entryDate2 = "07.04.2023";
+
+        //Act
+        Boolean test1isTrue = OpeningTimesV2.isOpen(entryDate1, rule3);//Current time
+        Boolean test2isFalse = OpeningTimesV2.isOpen(entryDate1, rule1);//Current time
+        Boolean test3isTrue = OpeningTimesV2.isOpen(entryDate2, rule2); //date entry
+        Boolean test4isFalse = OpeningTimesV2.isOpen(entryDate2, rule1); //date entry
+        Boolean test5isTrue = OpeningTimesV2.isOpen(entryDate2, rule6); //date entry
+        Boolean test6isTrue = OpeningTimesV2.isOpen(entryDate2, rule8); //date entry
+
+        //Assert
+        Assertions.assertThat(test1isTrue).isTrue();
+        Assertions.assertThat(test2isFalse).isFalse();
+        Assertions.assertThat(test3isTrue).isTrue();
+        Assertions.assertThat(test4isFalse).isFalse();
+        Assertions.assertThat(test5isTrue).isTrue();
+        Assertions.assertThat(test6isTrue).isTrue();
+    }
+
 
 }

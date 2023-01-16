@@ -3,6 +3,9 @@ package nav.portal.core.entities.OpeningHours;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 public class OpeningTimesV2 {
@@ -179,5 +182,67 @@ public class OpeningTimesV2 {
         }
         return true;
     }
+
+    public static boolean isOpen(String dateEntry, String rule) {
+        if(!isValidEntryDateFormat(dateEntry)){
+            return false;
+        }
+        String date;
+        if (dateEntry.isEmpty()){
+            LocalDate localDate = LocalDate.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+            date =  localDate.format(formatter);
+        }else{
+            date = dateEntry;
+        }
+        String[] ruleParts = rule.split("[\s]");
+
+        if (!isValidMatchForDate(date, ruleParts[0])){
+            return false;
+        }
+
+        return true;
+
+    }
+
+    public static boolean isValidEntryDateFormat(String dateEntry) {
+        //The current date is taken into use if the  date entry is spaces
+        if (dateEntry.isEmpty()){
+            return true;
+        }
+
+        //Checks the date entry has the format dd.mm.yyyy
+        //returning false if not
+        return dateEntry.matches("(((0[1-9]|[12][0-9]|3[01])([.])(0[13578]|10|12)([.])(\\d{4}))" +
+                "|(([0][1-9]|[12][0-9]|30)([.])(0[469]|11)([.])(\\d{4}))|((0[1-9]|1[0-9]|2[0-8])([.])(02)([.])(\\d{4}))" +
+                "|((29)(02)([.])([02468][048]00))|((29)([.])(02)([.])([13579][26]00))|((29)([.])(02)([.])([0-9][0-9][0][48]))" +
+                "|((29)([.])(02)([.])([0-9][0-9][2468][048]))|((29)([.])(02)([.])([0-9][0-9][13579][26])))");
+    }
+
+
+    private static boolean isValidMatchForDate(String dateEntry, String dateRule) {
+        //Checks for ??.??.????
+        if (dateRule.equals("??.??.????")) {
+            return true;
+        }
+
+        String[] ruleParts = dateRule.split("[.]"); //Rule's date
+        String[] dateEntryParts = dateEntry.split("[.]"); //entry date
+        //Checks formats ??.mm.???? and dd.mm.????
+        if (ruleParts[2].equals("????")) {
+            if (ruleParts[0].equals("??")) {
+                //Checks the date entry and rule date for a match of the month
+                return ruleParts[1].equals(dateEntryParts[0]);
+            }
+            //Checks the date entry and rule date for a dd.mm match
+            String ddmmRule = dateRule.substring(0,5);
+            String ddmmdateEntry = dateEntry.substring(0,5);
+            return ddmmRule.equals(ddmmdateEntry);
+        }
+
+        //Checks the date entry and rule date for a match of the dd.mm.yyyy
+        return dateEntry.equals(dateRule);
+    }
+
 
 }
