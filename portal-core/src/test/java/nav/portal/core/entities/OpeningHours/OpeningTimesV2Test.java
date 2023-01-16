@@ -176,11 +176,19 @@ class OpeningTimesV2Test {
     void validateTimeformatPart(){
         //Arrange
         String example1 = "??.??.???? ? ? 07:00-21:00"; //Gyldig times
-        String example2 = "??.??.???? ? ? 00:00-21:00"; //Uglyldig tid format
-        String example3 = "??.??.???? ? ? 00:00-21:00"; //Uglyldig tid format
+        String example2 = "??.??.???? ? ? 00:00-21:00"; //Glyldig tid format
+        String example3 = "??.??.???? ? ? 17:00-17:00"; //Uglyldig tid format
         String example4 = "??.??.???? ? ? 77:29-21:00"; //Uglyldig tid format
         String example5 = "??.??.???? ? ? 12:30-0b:00"; //Uglyldig tid åpning skal være før slutt format
         String example6 = "??.??.???? ? ? 00:00-00:00"; //Gyldig tid angir stengt
+        String example7 = "??.??.???? ? ? 12:34-23:45"; //Uglyldig tid format
+        String example8 = "??.??.???? ? ? 16:00-13:00"; //Uglyldig tid format
+        String example9 = "??.??.???? ? ? 1a:34-16:18"; //Uglyldig tid format
+        String example10 = "??.??.???? ? ? d2:b4-16:18"; //Uglyldig tid format
+        String example11 = "??.??.???? ? ? 17:b1-16:18"; //Uglyldig tid format
+        String example12 = "??.??.???? ? ? 10:44-a1:18"; //Uglyldig tid format
+        String example13 = "??.??.???? ? ? 10:44- :1b"; //Uglyldig tid format
+        String example14 = "??.??.???? ? ? 10:44-12:c1"; //Uglyldig tid format
 
         //Act
         Boolean example1isTrue = OpeningTimesV2.isAValidRule(example1);
@@ -189,6 +197,14 @@ class OpeningTimesV2Test {
         Boolean example4isFalse  = OpeningTimesV2.isAValidRule(example4);
         Boolean example5isFalse  = OpeningTimesV2.isAValidRule(example5);
         Boolean example6isTrue  = OpeningTimesV2.isAValidRule(example6);
+        Boolean example7isTrue  = OpeningTimesV2.isAValidRule(example7);
+        Boolean example8isFalse  = OpeningTimesV2.isAValidRule(example8);
+        Boolean example9isFalse  = OpeningTimesV2.isAValidRule(example9);
+        Boolean example10isFalse  = OpeningTimesV2.isAValidRule(example10);
+        Boolean example11isFalse  = OpeningTimesV2.isAValidRule(example11);
+        Boolean example12isFalse  = OpeningTimesV2.isAValidRule(example12);
+        Boolean example13isFalse  = OpeningTimesV2.isAValidRule(example13);
+        Boolean example14isFalse  = OpeningTimesV2.isAValidRule(example14);
 
         //Assert
         Assertions.assertThat(example1isTrue).isTrue();
@@ -197,6 +213,7 @@ class OpeningTimesV2Test {
         Assertions.assertThat(example4isFalse).isFalse();
         Assertions.assertThat(example5isFalse).isFalse();
         Assertions.assertThat(example6isTrue).isTrue();
+        Assertions.assertThat(example7isTrue).isTrue();
     }
 
     @Test
@@ -210,6 +227,7 @@ class OpeningTimesV2Test {
         String example6 = "??.??.???? L ? 07:00-18:00";
         String example7 = "??.??.???? ? 6-7 00:00-00:00";
         String example8 = "??.??.???? ? 1-5 07:00-21:00";
+
 
         //Act
         Boolean example1isTrue = OpeningTimesV2.isAValidRule(example1);
