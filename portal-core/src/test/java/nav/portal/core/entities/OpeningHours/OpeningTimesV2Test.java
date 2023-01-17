@@ -316,34 +316,40 @@ class OpeningTimesV2Test {
         //assign
         String rule1 = "06.04.2023 ? ? 00:00-00:00";
         String rule2 = "07.04.2023 ? ? 00:00-00:00";
-        String rule3 = "16.01.2023 ? ? 00:00-00:00";
+        String rule3 = "17.01.2023 ? ? 00:00-00:00";
         String rule4 = "24.12.2023 ? 1-5 09:00-14:00";
         String rule5 = "17.05.2023 ? ? 00:00-00:00";
         String rule6 = "??.??.???? L ? 07:00-18:00";
         String rule7 = "??.??.???? ? 6-7 00:00-00:00";
         String rule8 = "??.??.???? ? 1-5 07:00-21:00";
         String rule9 = "??.??.???? 2,5,6,21 1-5 07:00-21:00";
-        String rule10 = "??.??.???? L 10 07:00-21:00";
-        String rule11 = "15.10.???? 1,14-16,L 2 07:00-19:00";
+        String rule10 = "??.??.???? L 1 07:00-21:00";
+        String rule11 = "??.??.???? 1,23-26,L 2 07:00-19:00";
+        String rule12 = "??.??.???? 1,8,22,17,26,27-29 ? 07:00-21:00";
 
         String entryDate1 = ""; //current time
         String entryDate2 = "07.04.2023";
+        String entryDate3 = "26.03.2023";
 
         //Act
         Boolean test1isTrue = OpeningTimesV2.isOpen(entryDate1, rule3);//Current time
         Boolean test2isFalse = OpeningTimesV2.isOpen(entryDate1, rule1);//Current time
         Boolean test3isTrue = OpeningTimesV2.isOpen(entryDate2, rule2); //date entry
         Boolean test4isFalse = OpeningTimesV2.isOpen(entryDate2, rule1); //date entry
-        Boolean test5isTrue = OpeningTimesV2.isOpen(entryDate2, rule6); //date entry
+        Boolean test5isFalse = OpeningTimesV2.isOpen(entryDate2, rule6); //date entry
         Boolean test6isTrue = OpeningTimesV2.isOpen(entryDate2, rule8); //date entry
+        Boolean test7isTrue = OpeningTimesV2.isOpen(entryDate3, rule11); //date entry
+        Boolean test8isTrue = OpeningTimesV2.isOpen(entryDate3, rule12); //date entry
 
         //Assert
         Assertions.assertThat(test1isTrue).isTrue();
         Assertions.assertThat(test2isFalse).isFalse();
         Assertions.assertThat(test3isTrue).isTrue();
         Assertions.assertThat(test4isFalse).isFalse();
-        Assertions.assertThat(test5isTrue).isTrue();
+        Assertions.assertThat(test5isFalse).isFalse();
         Assertions.assertThat(test6isTrue).isTrue();
+        Assertions.assertThat(test7isTrue).isTrue();
+        Assertions.assertThat(test8isTrue).isTrue();
     }
 
 
