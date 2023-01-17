@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 import java.util.Date;
 
 public class OpeningTimesV2 {
@@ -109,11 +110,11 @@ public class OpeningTimesV2 {
             }else{       //use of the original length
                 length = ruleParts.length;
             }
-            //Checks for a range of weekdays from 1 - Monday  7 - Sunday*/
+            //Checks for a range of days in the month*/
             int lowerRange = Integer.parseInt(ruleParts[0]);
             for (int i = 1; i < length; i++) {
                 int upperRange = Integer.parseInt(ruleParts[i]);
-                //if not a valid weekday number or range of values consecutively increasing
+                //Checks a a range of values consecutively increasing
                 if (!ruleParts[i].matches("^([0-2]?[0-9]$|[3]?[0-1])$") || !(lowerRange <= upperRange)) {
                     return false;
                 }
@@ -201,6 +202,9 @@ public class OpeningTimesV2 {
             return false;
         }
 
+        if(!isValidMatchForDays(date, ruleParts[1])){
+            return false;
+        }
         return true;
 
     }
@@ -218,7 +222,6 @@ public class OpeningTimesV2 {
                 "|((29)(02)([.])([02468][048]00))|((29)([.])(02)([.])([13579][26]00))|((29)([.])(02)([.])([0-9][0-9][0][48]))" +
                 "|((29)([.])(02)([.])([0-9][0-9][2468][048]))|((29)([.])(02)([.])([0-9][0-9][13579][26])))");
     }
-
 
     private static boolean isValidMatchForDate(String dateEntry, String dateRule) {
         //Checks for ??.??.????
@@ -242,6 +245,63 @@ public class OpeningTimesV2 {
 
         //Checks the date entry and rule date for a match of the dd.mm.yyyy
         return dateEntry.equals(dateRule);
+    }
+
+    private static boolean isValidMatchForDays(String dateEntry, String dayInMonthRule) {
+        //Checks for ?
+        if (dayInMonthRule.equals("?")) {
+            return true;
+        }
+
+        //Checks for a singular day in the month or for last day in the month(L) entry
+        String[] ruleParts = dayInMonthRule.split("[,-]");
+        String[] dateEntryParts = dateEntry.split("[.]"); //entry date
+
+        if (dayInMonthRule.contains("L")){
+            int dayNumbersBack = 1; //number of days back from the first day of the next month
+            Calendar cal = Calendar.getInstance();
+            cal.add(Calendar.MONTH, 1);
+            cal.set(Calendar.DATE, 1);
+            cal.add(Calendar.DATE, dayNumbersBack);
+            int daysFromEndOfMonth = cal.get(Calendar.DAY_OF_MONTH);//day of last day of month
+            String daysNumberFromEndOfMonthString = String.valueOf(daysFromEndOfMonth);
+            if (ruleParts.length == 1){
+                //Check for a match of the entry date days for a match of the end of the month day
+                return daysNumberFromEndOfMonthString.equals(dateEntryParts[0]);
+            }
+            //Match for last day of month that is within a range of numbers
+            if (ruleParts.length > 1 && (daysNumberFromEndOfMonthString.equals(dateEntryParts[0]))){
+                return true;
+            }
+        }
+
+        //checks the day in entry date matches non L day values in the day month rule
+        if (ruleParts.length == 1) {
+            return (dateEntryParts[0].equals(ruleParts[0]));
+        }
+
+        int length;
+        if (ruleParts.length > 0) {
+            if(dayInMonthRule.contains("L")){//if L found, remove exclude from the length
+                length = ruleParts.length - 1;
+            }else{       //use of the original length
+                length = ruleParts.length;
+            }
+            //Checks for a range of days in the month*/
+            int lowerRange = Integer.parseInt(ruleParts[0]);
+            for (int i = 1; i < length; i++) {
+                int upperRange = Integer.parseInt(ruleParts[i]);
+                //checks a range of values consecutively increasing for a match
+                //returns true for a match
+                if (ruleParts[i].equals(ruleParts[0])) {
+                    return true;
+                }
+                lowerRange = upperRange;
+            }
+            return true;
+        }
+        System.out.println("dayInMonthRule : " + dayInMonthRule);
+        return true;
     }
 
 
