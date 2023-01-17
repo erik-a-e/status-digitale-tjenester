@@ -1,6 +1,7 @@
 package nav.portal.core.entities.OpeningHours;
 
 import java.sql.Timestamp;
+import java.text.Format;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
@@ -194,7 +195,7 @@ public class OpeningTimesV2 {
         if (dateEntry.isEmpty()){
             LocalDate localDate = LocalDate.now();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-            date =  localDate.format(formatter);
+            date = localDate.format(formatter);
         }else{
             date = dateEntry;
         }
@@ -212,12 +213,10 @@ public class OpeningTimesV2 {
             return false;
         }
 
-
-        return true;
-
+        return isValidForOpeningTimes(ruleParts[3]);
     }
 
-    public static boolean isValidEntryDateFormat(String dateEntry) {
+    private static boolean isValidEntryDateFormat(String dateEntry) {
         //The current date is taken into use if the  date entry is spaces
         if (dateEntry.isEmpty()){
             return true;
@@ -349,6 +348,35 @@ public class OpeningTimesV2 {
             }
         }
         return false;
+    }
+
+    private static boolean isValidForOpeningTimes(String timeRule){
+        //checks for hh:mm-hh:mm
+        if (timeRule.equals ("00:00-00:00")){
+            System.out.println("always closed");
+            return false;
+        }
+
+        if (timeRule.equals ("00:00-23:59")){
+            System.out.println("open around the clock");
+            return true;
+        }
+
+        String[] ruleParts = timeRule.split("[-]");
+
+        //Obtain the time in hh:mm format
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+        String strTime = sdf.format(new Date());
+        try {
+            Date currentTime = sdf.parse(strTime);
+            Date opening = sdf.parse(ruleParts[0]);
+            Date closing = sdf.parse(ruleParts[1]);
+            return ((opening.before(currentTime) || opening.equals(currentTime)) &&
+                    (closing.after(currentTime) || closing.equals(currentTime)));
+        } catch (ParseException e) {
+            System.out.println("Illegal time format, should be hh:mm-hh:mm");
+            return false;
+        }
     }
 
 }

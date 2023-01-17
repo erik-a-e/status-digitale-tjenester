@@ -314,9 +314,9 @@ class OpeningTimesV2Test {
     @Test
     void validateEntryDate(){
         //assign
-        String rule1 = "06.04.2023 ? ? 00:00-00:00";
+        String rule1 = "??.??.???? ? ? 00:00-23:59";
         String rule2 = "07.04.2023 ? ? 00:00-00:00";
-        String rule3 = "17.01.2023 ? ? 00:00-00:00";
+        String rule3 = "??.??.???? 00:00-00:00";
         String rule4 = "24.12.2023 ? 1-5 09:00-14:00";
         String rule5 = "17.05.2023 ? ? 00:00-00:00";
         String rule6 = "??.??.???? L ? 07:00-18:00";
