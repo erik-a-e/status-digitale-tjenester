@@ -3,9 +3,11 @@ package nav.portal.core.entities.OpeningHours;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoField;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -198,13 +200,19 @@ public class OpeningTimesV2 {
         }
         String[] ruleParts = rule.split("[\s]");
 
-        if (!isValidMatchForDate(date, ruleParts[0])){
+        if (!isValidForDate(date, ruleParts[0])){
             return false;
         }
 
-        if(!isValidMatchForDays(date, ruleParts[1])){
+        if(!isValidForDaysInMonth(date, ruleParts[1])){
             return false;
         }
+
+        if(!isValidForWeekDays(date, ruleParts[2])){
+            return false;
+        }
+
+
         return true;
 
     }
@@ -223,7 +231,7 @@ public class OpeningTimesV2 {
                 "|((29)([.])(02)([.])([0-9][0-9][2468][048]))|((29)([.])(02)([.])([0-9][0-9][13579][26])))");
     }
 
-    private static boolean isValidMatchForDate(String dateEntry, String dateRule) {
+    private static boolean isValidForDate(String dateEntry, String dateRule) {
         //Checks for ??.??.????
         if (dateRule.equals("??.??.????")) {
             return true;
@@ -247,7 +255,7 @@ public class OpeningTimesV2 {
         return dateEntry.equals(dateRule);
     }
 
-    private static boolean isValidMatchForDays(String dateEntry, String dayInMonthRule) {
+    private static boolean isValidForDaysInMonth(String dateEntry, String dayInMonthRule) {
         //Checks for ?
         if (dayInMonthRule.equals("?")) {
             return true;
@@ -304,5 +312,43 @@ public class OpeningTimesV2 {
         return true;
     }
 
+    private static boolean isValidForWeekDays(String dateEntry, String weekDayRule){
+        //Checks for ?
+        if (weekDayRule.equals("?")) {
+            return true;
+        }
+
+        //To derive the weekday number format the entryDate for use in the class
+        // DayOfWeek
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+        DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String dataEntryYYYYMMDD = LocalDate.parse(dateEntry, formatter).format(formatter2);
+
+        /*utilises the dateEntry parameter to return a numeric value for the day in the week*/
+        DayOfWeek dayOfWeek = DayOfWeek.from(LocalDate.parse( dataEntryYYYYMMDD));
+        int dayOfWeekNumber = dayOfWeek.get(ChronoField.DAY_OF_WEEK);
+
+        //Checks for a singular day in the month or for last day in the month(L) entry
+        String[] ruleParts = weekDayRule.split("[,]");
+
+        int lowerRange;
+        int upperRange;
+        //check the range/s for a weekday number match
+        for (String rulePart : ruleParts) {
+            if (rulePart.contains("-")) {
+                //checks weekday falls within a range
+                lowerRange = Integer.parseInt(rulePart.substring(0, 1));
+                upperRange = Integer.parseInt(rulePart.substring(2));
+                if (dayOfWeekNumber >= lowerRange && dayOfWeekNumber <= upperRange)
+                    return true;
+            } else {
+                //checks weekday value matches a single weekday value
+                if (dayOfWeekNumber == Integer.parseInt(rulePart)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
 }
