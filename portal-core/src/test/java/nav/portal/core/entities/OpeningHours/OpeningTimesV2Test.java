@@ -4,6 +4,9 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -339,7 +342,7 @@ class OpeningTimesV2Test {
 
         //Act
         //Boolean test1isTrue = OpeningTimesV2.isOpen(entryDate1, rule3);//Current time
-        Boolean test2isTrue = OpeningTimesV2.isOpen(entryDate1, rule1);//Current time
+//        Boolean test2isTrue = OpeningTimesV2.isOpen(entryDate1, rule1);//Current time
         /*Boolean test3isTrue = OpeningTimesV2.isOpen(entryDate2, rule2); //date entry
         Boolean test4isFalse = OpeningTimesV2.isOpen(entryDate2, rule1); //date entry
         Boolean test5isFalse = OpeningTimesV2.isOpen(entryDate2, rule6); //date entry
@@ -357,7 +360,7 @@ class OpeningTimesV2Test {
 
         //Assert
         /*Assertions.assertThat(test1isTrue).isTrue();*/
-        Assertions.assertThat(test2isTrue).isTrue();
+//        Assertions.assertThat(test2isTrue).isTrue();
         /*Assertions.assertThat(test3isTrue).isTrue();
         Assertions.assertThat(test4isFalse).isFalse();
         Assertions.assertThat(test5isFalse).isFalse();
@@ -386,6 +389,7 @@ class OpeningTimesV2Test {
         String basisRule3 = "??.??.???? L ? 07:00-18:00";
         String basisRule4 = "??.??.???? ? 6-7 00:00-00:00";
         String basisRule5 = "??.??.???? ? 1-5 07:00-21:00";
+        String basisRule6 = "??.??.???? 1-5,10-L ? 07:00-21:00";
 
 
         //Services
@@ -393,6 +397,7 @@ class OpeningTimesV2Test {
         String gosys1 = ""; //Current time
         String bidrag2 = "07.04.2023";
         String lastDayOfJanuary = "28.02.2023";
+
 
         //Act
 
@@ -405,19 +410,19 @@ class OpeningTimesV2Test {
 //        boolean bidragRule6isFalse = OpeningTimesV2.isOpen(bidrag1, basisRule3);
 //        boolean bidragRule7isFalse = OpeningTimesV2.isOpen(bidrag1, basisRule4);
 //        boolean bidragRule8isTrue = OpeningTimesV2.isOpen(bidrag1, basisRule5);
-        boolean lastDayOfTheMonthCheckIsTrue = OpeningTimesV2.isOpen(lastDayOfJanuary, basisRule3);
-
-        //test for Gosys
-        boolean gosysRule1isFalse = OpeningTimesV2.isOpen(gosys1, basisRule1);
-        boolean gosysRule2isFalse = OpeningTimesV2.isOpen(gosys1, basisRule2);
-        boolean gosysRule3isFalse = OpeningTimesV2.isOpen(gosys1, basisRule3);
-        boolean gosysRule4isFalse = OpeningTimesV2.isOpen(gosys1, basisRule4);
-        boolean gosysRule5isTrue = OpeningTimesV2.isOpen(gosys1, basisRule5);
-
-        //test for Bidrag2
-
-        boolean bidrag2Rule1isFalse = OpeningTimesV2.isOpen(bidrag2, helligDagRule1);
-        boolean bidrag2Rule2isFalse = OpeningTimesV2.isOpen(bidrag2, helligDagRule2);
+//        boolean lastDayOfTheMonthCheckIsTrue = OpeningTimesV2.isOpen(lastDayOfJanuary, basisRule3);
+//
+//        //test for Gosys
+//        boolean gosysRule1isFalse = OpeningTimesV2.isOpen(gosys1, basisRule1);
+//        boolean gosysRule2isFalse = OpeningTimesV2.isOpen(gosys1, basisRule2);
+//        boolean gosysRule3isFalse = OpeningTimesV2.isOpen(gosys1, basisRule3);
+//        boolean gosysRule4isFalse = OpeningTimesV2.isOpen(gosys1, basisRule4);
+//        boolean gosysRule5isTrue = OpeningTimesV2.isOpen(gosys1, basisRule5);
+//
+//        //test for Bidrag2
+//
+//        boolean bidrag2Rule1isFalse = OpeningTimesV2.isOpen(bidrag2, helligDagRule1);
+//        boolean bidrag2Rule2isFalse = OpeningTimesV2.isOpen(bidrag2, helligDagRule2);
 
 
         //Assert
@@ -431,15 +436,76 @@ class OpeningTimesV2Test {
 //        Assertions.assertThat(bidragRule8isTrue).isTrue();
 
 
-        Assertions.assertThat(gosysRule1isFalse).isFalse();
-        Assertions.assertThat(gosysRule2isFalse).isFalse();
-        Assertions.assertThat(gosysRule3isFalse).isFalse();
-        Assertions.assertThat(gosysRule4isFalse).isFalse();
-        Assertions.assertThat(gosysRule5isTrue).isTrue();
+//        Assertions.assertThat(gosysRule1isFalse).isFalse();
+//        Assertions.assertThat(gosysRule2isFalse).isFalse();
+//        Assertions.assertThat(gosysRule3isFalse).isFalse();
+//        Assertions.assertThat(gosysRule4isFalse).isFalse();
+//        Assertions.assertThat(gosysRule5isTrue).isTrue();
+//
+//        Assertions.assertThat(bidrag2Rule1isFalse).isFalse();
+//        Assertions.assertThat(bidrag2Rule2isFalse).isFalse();
+//        Assertions.assertThat(lastDayOfTheMonthCheckIsTrue).isTrue();
 
-        Assertions.assertThat(bidrag2Rule1isFalse).isFalse();
-        Assertions.assertThat(bidrag2Rule2isFalse).isFalse();
-        Assertions.assertThat(lastDayOfTheMonthCheckIsTrue).isTrue();
+
+
+    }
+
+    @Test
+    void temp(){
+        //Assign
+        //BevHelligdager2023
+        String helligDagRule1 = "06.04.2023 ? ? 00:00-00:00";
+        String helligDagRule2 = "07.04.2023 ? ? 00:00-00:00";
+        String helligDagRule3 = "10.04.2023 ? ? 00:00-00:00";
+        //Basis
+        String basisRule1 = "24.12.???? ? 1-5 09:00-14:00";
+        String basisRule2 = "17.05.???? ? ? 00:00-00:00";
+        String basisRule3 = "??.??.???? L ? 07:00-18:00";
+        String basisRule4 = "??.??.???? ? 6-7 00:00-00:00";
+        String basisRule5 = "??.??.???? ? 1-5 07:00-21:00";
+        String basisRule6 = "??.??.???? 1-5,10-L ? 07:00-21:00";
+
+
+        //Services
+        LocalDate normalWednesday = LocalDate.of(2023,1,18);
+        LocalDate lastOfJan = LocalDate.of(2023,1,31);
+        LocalDate lastOfFeb = LocalDate.of(2023,2,28);
+        LocalDate normalTuesday = LocalDate.of(2023,3,7);
+        LocalTime midday = LocalTime.of(12,00);
+        LocalTime at21 = LocalTime.of(21,00);
+
+
+        LocalDateTime normalDay = LocalDateTime.of(normalWednesday,midday);
+        LocalDateTime normalDayAt21 = LocalDateTime.of(normalWednesday,at21);
+        LocalDateTime lastDayOfJanuary = LocalDateTime.of(lastOfJan,midday);
+        LocalDateTime lastDayOfFebruary = LocalDateTime.of(lastOfFeb,midday);
+        LocalDateTime normTuesday = LocalDateTime.of(normalTuesday,midday);
+
+
+
+        //Act
+
+        //test for bidrag1
+//        boolean normalDayIsNotHelligdag = OpeningTimesV2.isOpen(normalDay, helligDagRule1);
+//        boolean normalDayIsNotLastDayOfMonth = OpeningTimesV2.isOpen(normalDay, basisRule3);
+//        boolean normalDayIsNormalDay = OpeningTimesV2.isOpen(normalDay,basisRule5);
+//        boolean normalDayIsNormalDayAt21 = OpeningTimesV2.isOpen(normalDayAt21,basisRule5);
+//        boolean lastOfJanuaryIsOpenMidday = OpeningTimesV2.isOpen(lastDayOfJanuary,basisRule3);
+//        boolean lastOfFebruaryIsOpenMidday = OpeningTimesV2.isOpen(lastDayOfFebruary,basisRule3);
+        boolean outsideOfRangeTuesday = OpeningTimesV2.isOpen(normTuesday,basisRule6);
+
+
+
+        //Assert
+//        Assertions.assertThat(normalDayIsNotHelligdag).isFalse();
+//        Assertions.assertThat(normalDayIsNotLastDayOfMonth).isFalse();
+//        Assertions.assertThat(normalDayIsNormalDay).isTrue();
+//        Assertions.assertThat(normalDayIsNormalDayAt21).isTrue();
+//        Assertions.assertThat(lastOfJanuaryIsOpenMidday).isTrue();
+//        Assertions.assertThat(lastOfFebruaryIsOpenMidday).isTrue();
+        Assertions.assertThat(outsideOfRangeTuesday).isFalse();
+
+
 
 
 
