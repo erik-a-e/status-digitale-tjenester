@@ -11,6 +11,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoField;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 public class OpeningTimesV2 {
 
@@ -188,6 +189,7 @@ public class OpeningTimesV2 {
     }
 
     public static boolean isOpen(String dateEntry, String rule) {
+        //TODO jeg tror vi kan bruke localdateTime her for dateEntry
         if(!isValidEntryDateFormat(dateEntry)){
             return false;
         }
@@ -259,13 +261,11 @@ public class OpeningTimesV2 {
         if (dayInMonthRule.equals("?")) {
             return true;
         }
-
         //Checks for a singular day in the month or for last day in the month(L) entry
         String[] ruleParts = dayInMonthRule.split("[,-]");
         String[] dateEntryParts = dateEntry.split("[.]"); //entry date
-
         if (dayInMonthRule.contains("L")){
-            int dayNumbersBack = 1; //number of days back from the first day of the next month
+            int dayNumbersBack = -1; //number of days back from the first day of the next month
             Calendar cal = Calendar.getInstance();
             cal.add(Calendar.MONTH, 1);
             cal.set(Calendar.DATE, 1);
