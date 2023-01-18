@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoField;
 import java.util.Calendar;
@@ -188,34 +189,23 @@ public class OpeningTimesV2 {
         return true;
     }
 
-    public static boolean isOpen(String dateEntry, String rule) {
-        //TODO jeg tror vi kan bruke localdateTime her for dateEntry
-        if(!isValidEntryDateFormat(dateEntry)){
-            return false;
-        }
-        String date;
-        if (dateEntry.isEmpty()){
-            LocalDate localDate = LocalDate.now();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-            date = localDate.format(formatter);
-        }else{
-            date = dateEntry;
-        }
+    public static boolean isOpen(LocalDateTime dateTimeEntry, String rule) {
+
         String[] ruleParts = rule.split("[\s]");
 
-        if (!isValidForDate(date, ruleParts[0])){
+        if (!isValidForDate(dateTimeEntry, ruleParts[0])){
             return false;
         }
 
-        if(!isValidForDaysInMonth(date, ruleParts[1])){
+        if(!isValidForDaysInMonth(dateTimeEntry, ruleParts[1])){
             return false;
         }
 
-        if(!isValidForWeekDays(date, ruleParts[2])){
+        if(!isValidForWeekDays(dateTimeEntry, ruleParts[2])){
             return false;
         }
 
-        return isValidForOpeningTimes(ruleParts[3]);
+        return isValidForOpeningTimes(dateTimeEntry ,ruleParts[3]);
     }
 
     private static boolean isValidEntryDateFormat(String dateEntry) {
@@ -232,100 +222,69 @@ public class OpeningTimesV2 {
                 "|((29)([.])(02)([.])([0-9][0-9][2468][048]))|((29)([.])(02)([.])([0-9][0-9][13579][26])))");
     }
 
-    private static boolean isValidForDate(String dateEntry, String dateRule) {
+    private static boolean isValidForDate(LocalDateTime dateTimeEntry, String dateRule) {
         //Checks for ??.??.????
+
         if (dateRule.equals("??.??.????")) {
             return true;
         }
 
         String[] ruleParts = dateRule.split("[.]"); //Rule's date
-        String[] dateEntryParts = dateEntry.split("[.]"); //entry date
         //Checks formats ??.mm.???? and dd.mm.????
         if (ruleParts[2].equals("????")) {
             if (ruleParts[0].equals("??")) {
                 //Checks the date entry and rule date for a match of the month
-                return ruleParts[1].equals(dateEntryParts[0]);
+                return ruleParts[1].equals(dateTimeEntry.getMonthValue());
             }
             //Checks the date entry and rule date for a dd.mm match
             String ddmmRule = dateRule.substring(0,5);
-            String ddmmdateEntry = dateEntry.substring(0,5);
+            String ddmmdateEntry = String.valueOf(dateTimeEntry.getDayOfMonth())+dateTimeEntry.getMonthValue();
             return ddmmRule.equals(ddmmdateEntry);
         }
-
+        LocalDate ruleDate = LocalDate.of(Integer.parseInt(ruleParts[2]),Integer.parseInt(ruleParts[1]),Integer.parseInt(ruleParts[0]));
+        LocalDate dateEntry = dateTimeEntry.toLocalDate();
         //Checks the date entry and rule date for a match of the dd.mm.yyyy
-        return dateEntry.equals(dateRule);
+        return dateEntry.equals(ruleDate);
     }
 
-    private static boolean isValidForDaysInMonth(String dateEntry, String dayInMonthRule) {
+    private static boolean isValidForDaysInMonth(LocalDateTime dateTimeEntry, String dayInMonthRule) {
         //Checks for ?
         if (dayInMonthRule.equals("?")) {
             return true;
         }
-        //Checks for a singular day in the month or for last day in the month(L) entry
+
+        dayInMonthRule= dayInMonthRule.replaceAll("[L]",String.valueOf(dateTimeEntry.toLocalDate().lengthOfMonth()));
         String[] ruleParts = dayInMonthRule.split("[,-]");
-        String[] dateEntryParts = dateEntry.split("[.]"); //entry date
-        if (dayInMonthRule.contains("L")){
-            int dayNumbersBack = -1; //number of days back from the first day of the next month
-            Calendar cal = Calendar.getInstance();
-            cal.add(Calendar.MONTH, 1);
-            cal.set(Calendar.DATE, 1);
-            cal.add(Calendar.DATE, dayNumbersBack);
-            int daysFromEndOfMonth = cal.get(Calendar.DAY_OF_MONTH);//day of last day of month
-            String daysNumberFromEndOfMonthString = String.valueOf(daysFromEndOfMonth);
-            if (ruleParts.length == 1){
-                //Check for a match of the entry date days for a match of the end of the month day
-                return daysNumberFromEndOfMonthString.equals(dateEntryParts[0]);
-            }
-            //Match for last day of month that is within a range of numbers
-            if (ruleParts.length > 1 && (daysNumberFromEndOfMonthString.equals(dateEntryParts[0]))){
-                return true;
-            }
-        }
 
-        //checks the day in entry date matches non L day values in the day month rule
-        if (ruleParts.length == 1) {
-            return (dateEntryParts[0].equals(ruleParts[0]));
-        }
-
-        int length;
-        if (ruleParts.length > 0) {
-            if(dayInMonthRule.contains("L")){//if L found, remove exclude from the length
-                length = ruleParts.length - 1;
-            }else{       //use of the original length
-                length = ruleParts.length;
-            }
-            //Checks for a range of days in the month*/
-            int lowerRange = Integer.parseInt(ruleParts[0]);
-            for (int i = 1; i < length; i++) {
-                int upperRange = Integer.parseInt(ruleParts[i]);
-                //checks a range of values consecutively increasing for a match
-                //returns true for a match
-                if (ruleParts[i].equals(ruleParts[0])) {
+        int lowerRange;
+        int upperRange;
+        int dayOfTheMonth = dateTimeEntry.getDayOfMonth();
+        for (String rulePart : ruleParts) {
+            if (rulePart.contains("-")) {
+                String[]  splittedRulePart = rulePart.split("[-]");
+                lowerRange = Integer.parseInt(splittedRulePart[0]);
+                upperRange= Integer.parseInt(splittedRulePart[1]);
+                if (lowerRange <= dayOfTheMonth  && dayOfTheMonth <= upperRange)
+                    return true;
+            } else {
+                //checks weekday value matches a single weekday value
+                if (dayOfTheMonth == Integer.parseInt(rulePart)) {
                     return true;
                 }
-                lowerRange = upperRange;
             }
-            return true;
         }
-        System.out.println("dayInMonthRule : " + dayInMonthRule);
-        return true;
+        System.out.println("Did not match month rule: "+ dayInMonthRule+ " date: "+ dateTimeEntry.toLocalDate().toString() );
+        return false;
     }
 
-    private static boolean isValidForWeekDays(String dateEntry, String weekDayRule){
+
+    private static boolean isValidForWeekDays(LocalDateTime dateTimeEntry, String weekDayRule){
         //Checks for ?
         if (weekDayRule.equals("?")) {
             return true;
         }
 
-        //To derive the weekday number format the entryDate for use in the class
-        // DayOfWeek
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-        DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        String dataEntryYYYYMMDD = LocalDate.parse(dateEntry, formatter).format(formatter2);
-
-        /*utilises the dateEntry parameter to return a numeric value for the day in the week*/
-        DayOfWeek dayOfWeek = DayOfWeek.from(LocalDate.parse( dataEntryYYYYMMDD));
-        int dayOfWeekNumber = dayOfWeek.get(ChronoField.DAY_OF_WEEK);
+        int dayOfWeekNumber = dateTimeEntry.getDayOfWeek().getValue();
 
         //Checks for a singular day in the month or for last day in the month(L) entry
         String[] ruleParts = weekDayRule.split("[,]");
@@ -338,7 +297,7 @@ public class OpeningTimesV2 {
                 //checks weekday falls within a range
                 lowerRange = Integer.parseInt(rulePart.substring(0, 1));
                 upperRange = Integer.parseInt(rulePart.substring(2));
-                if (dayOfWeekNumber >= lowerRange && dayOfWeekNumber <= upperRange)
+                if (lowerRange <= dayOfWeekNumber  && dayOfWeekNumber <= upperRange)
                     return true;
             } else {
                 //checks weekday value matches a single weekday value
@@ -350,7 +309,7 @@ public class OpeningTimesV2 {
         return false;
     }
 
-    private static boolean isValidForOpeningTimes(String timeRule){
+    private static boolean isValidForOpeningTimes(LocalDateTime dateTimeEntry, String timeRule){
         //checks for hh:mm-hh:mm
         if (timeRule.equals ("00:00-00:00")){
             System.out.println("always closed");
@@ -365,18 +324,14 @@ public class OpeningTimesV2 {
         String[] ruleParts = timeRule.split("[-]");
 
         //Obtain the time in hh:mm format
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-        String strTime = sdf.format(new Date());
-        try {
-            Date currentTime = sdf.parse(strTime);
-            Date opening = sdf.parse(ruleParts[0]);
-            Date closing = sdf.parse(ruleParts[1]);
-            return ((opening.before(currentTime) || opening.equals(currentTime)) &&
-                    (closing.after(currentTime) || closing.equals(currentTime)));
-        } catch (ParseException e) {
-            System.out.println("Illegal time format, should be hh:mm-hh:mm");
-            return false;
-        }
+        LocalTime time = LocalTime.of(dateTimeEntry.getHour(),dateTimeEntry.getMinute());
+        String[] openingString = ruleParts[0].split("[:]");
+        String[] closingString = ruleParts[1].split("[:]");
+        LocalTime opening = LocalTime.of(Integer.parseInt(openingString[0]),Integer.parseInt(openingString[1])).minusMinutes(1);
+        LocalTime closing = LocalTime.of(Integer.parseInt(closingString[0]),Integer.parseInt(closingString[1])).plusMinutes(1);
+
+        return time.isAfter(opening) && time.isBefore(closing);
+
     }
 
 }
