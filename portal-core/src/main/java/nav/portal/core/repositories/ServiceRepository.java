@@ -29,20 +29,7 @@ public class ServiceRepository {
     }
 
 
-    public void saveOpeningHours(List<OpeningHoursEntity> openingHoursEntities){
-            openingHoursEntities.forEach(this::saveOpeningHours);
-    }
 
-    public void saveOpeningHours(OpeningHoursEntity openingHoursEntity){
-        service_openingHoursTable.newSaveBuilderWithUUID("id", openingHoursEntity.getId())
-                .setField("service_id", openingHoursEntity.getService_id())
-                .setField("day_of_the_week", openingHoursEntity.getDay_of_the_week())
-                .setField("opening_time", openingHoursEntity.getOpening_time())
-                .setField("closing_time", openingHoursEntity.getClosing_time())
-                .execute()
-                .getId();
-
-    }
 
 
     public UUID save(ServiceEntity service) {

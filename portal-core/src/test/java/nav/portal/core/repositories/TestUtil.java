@@ -56,6 +56,16 @@ public class TestUtil {
         DbContextTable dashboardTable = dbContext.table("dashboard");
         dashboardTable.whereExpression("id is NOT null").executeDelete();
 
+        DbContextTable openingHoursTable = dbContext.table("opening_rule");
+        openingHoursTable.whereExpression("id is NOT null").executeDelete();
+
+        DbContextTable openingHoursGroupTable = dbContext.table("opening_rule_group");
+        openingHoursGroupTable.whereExpression("id is NOT null").executeDelete();
+
+        DbContextTable openingHoursConnectionTable = dbContext.table("opening_hours_connection");
+        openingHoursConnectionTable.whereExpression("group_id is NOT null").executeDelete();
+
+
     }
 
 

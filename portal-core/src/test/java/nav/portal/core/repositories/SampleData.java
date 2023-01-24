@@ -5,10 +5,8 @@ import nav.portal.core.enums.OpsMessageSeverity;
 import nav.portal.core.enums.ServiceStatus;
 import nav.portal.core.enums.ServiceType;
 
-import java.sql.Time;
 import java.time.*;
 import java.util.*;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 
@@ -35,6 +33,9 @@ public class SampleData {
     static final ArrayList<String> infoTextForOpsMessages = new ArrayList<>(Arrays.asList("Noen har gjort noe alvorlig galt", "En ape har trengt seg inn på systemet. Det ligger bananer overalt", "WW3, oh no", "Facebook har sendt jorda inn i sola", "Elon Musk har kjøpt opp Nav"));
     static final ArrayList<OpsMessageSeverity> opsMessageSeverity = new ArrayList<>(Arrays.asList(OpsMessageSeverity.DOWN, OpsMessageSeverity.OK,OpsMessageSeverity.ISSUE,OpsMessageSeverity.NEUTRAL));
     static final ArrayList<String> maintenanceDescriptions = new ArrayList<>(Arrays.asList("Fixing the trøbbel i tårnet", "Supporting those som går gæli", "Mending the fuglekassa", "Taming memes", "Upkeep av nordavind fra alle kanter"));
+
+    static final ArrayList<String> rules = new ArrayList<>(Arrays.asList("06.04.2023 ? ? 00:00-00:00","??.??.???? 1-5,10-L ? 07:00-21:00","24.12.???? ? 1-5 09:00-14:00"));
+
 
     public static String getRandomizedDashboardName() {
         return getRandomFromArray(dashboardNames);
@@ -78,6 +79,12 @@ public class SampleData {
                 .setName(getRandomFromArray(possibleNames))
                 .setDescription(getRandomFromArray(descriptions))
                 .setIcon(getRandomFromArray(icons));
+    }
+
+    public static OpeningRuleEntity getRandomizedOpeningRule() {
+        return new OpeningRuleEntity()
+                .setName(getRandomFromArray(areaNames))
+                .setRule(getRandomFromArray(rules));
     }
 
     public static List<AreaEntity> getRandomLengthListOfAreaEntity() {
@@ -267,18 +274,7 @@ public class SampleData {
                 .setAggregation_date(LocalDate.now());
     }
 
-    public static OpeningHoursEntity getRandomizedOpeningTime()
-    {
-        ThreadLocalRandom random = ThreadLocalRandom.current();
-        LocalTime now1 = LocalTime.of(random.nextInt(0, 23), random.nextInt(0, 59), random.nextInt(0, 59));
-        LocalTime now2 = LocalTime.of(random.nextInt(0, 23), random.nextInt(0, 59), random.nextInt(0, 59));
-        Time time1 = Time.valueOf(now1);
-        Time time2 = Time.valueOf(now2);
-        return new OpeningHoursEntity()
-                .setDay_of_the_week(new Random().nextInt(7))
-                .setOpening_time((time1.compareTo(time2) < 0) ? time1: time2)//Sets opening time to the earliest time
-                .setClosing_time((time1.compareTo(time2) > 0) ? time1: time2);//Sets the closing time to the latest
-    }
+
 
     public static MaintenanceEntity getRandomizedMaintenanceEntity() {
         Random random = new Random();
