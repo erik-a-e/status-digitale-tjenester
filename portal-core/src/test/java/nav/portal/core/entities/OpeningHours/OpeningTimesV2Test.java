@@ -471,6 +471,7 @@ class OpeningTimesV2Test {
         LocalDate lastOfJan = LocalDate.of(2023,1,31);
         LocalDate lastOfFeb = LocalDate.of(2023,2,28);
         LocalDate normalTuesday = LocalDate.of(2023,3,7);
+        LocalDate easterFriday = LocalDate.of(2023,4,7);
         LocalTime midday = LocalTime.of(12,00);
         LocalTime at21 = LocalTime.of(21,00);
 
@@ -480,7 +481,7 @@ class OpeningTimesV2Test {
         LocalDateTime lastDayOfJanuary = LocalDateTime.of(lastOfJan,midday);
         LocalDateTime lastDayOfFebruary = LocalDateTime.of(lastOfFeb,midday);
         LocalDateTime normTuesday = LocalDateTime.of(normalTuesday,midday);
-
+        LocalDateTime easterFridayMidday = LocalDateTime.of(easterFriday,midday);
 
 
         //Act
@@ -492,9 +493,17 @@ class OpeningTimesV2Test {
 //        boolean normalDayIsNormalDayAt21 = OpeningTimesV2.isOpen(normalDayAt21,basisRule5);
 //        boolean lastOfJanuaryIsOpenMidday = OpeningTimesV2.isOpen(lastDayOfJanuary,basisRule3);
 //        boolean lastOfFebruaryIsOpenMidday = OpeningTimesV2.isOpen(lastDayOfFebruary,basisRule3);
-        boolean outsideOfRangeTuesday = OpeningTimesV2.isOpen(normTuesday,basisRule6);
+          boolean outsideOfRangeTuesday = OpeningTimesV2.isOpen(normTuesday,basisRule6);
 
-
+          boolean easterFridayMiddayHelligDagRule1  = OpeningTimesV2.isOpen(easterFridayMidday,helligDagRule1);
+          boolean easterFridayMiddayHelligDagRule2  = OpeningTimesV2.isOpen(easterFridayMidday,helligDagRule2);
+          boolean easterFridayMiddayHelligDagRule3 = OpeningTimesV2.isOpen(easterFridayMidday,helligDagRule3);
+          boolean easterFridayMiddayHelliBasisRule1 = OpeningTimesV2.isOpen(easterFridayMidday,basisRule1);
+          boolean easterFridayMiddayHelliBasisRule2 = OpeningTimesV2.isOpen(easterFridayMidday,basisRule2);
+          boolean easterFridayMiddayHelliBasisRule3 = OpeningTimesV2.isOpen(easterFridayMidday,basisRule3);
+          boolean easterFridayMiddayHelliBasisRule4 = OpeningTimesV2.isOpen(easterFridayMidday,basisRule4);
+          boolean easterFridayMiddayHelliBasisRule5 = OpeningTimesV2.isOpen(easterFridayMidday,basisRule5);
+          boolean easterFridayMiddayHelliBasisRule6 = OpeningTimesV2.isOpen(easterFridayMidday,basisRule6);
 
         //Assert
 //        Assertions.assertThat(normalDayIsNotHelligdag).isFalse();
@@ -503,7 +512,17 @@ class OpeningTimesV2Test {
 //        Assertions.assertThat(normalDayIsNormalDayAt21).isTrue();
 //        Assertions.assertThat(lastOfJanuaryIsOpenMidday).isTrue();
 //        Assertions.assertThat(lastOfFebruaryIsOpenMidday).isTrue();
-        Assertions.assertThat(outsideOfRangeTuesday).isFalse();
+          Assertions.assertThat(outsideOfRangeTuesday).isFalse();
+
+          Assertions.assertThat(easterFridayMiddayHelligDagRule1).isFalse();
+          Assertions.assertThat(easterFridayMiddayHelligDagRule2).isFalse();
+          Assertions.assertThat(easterFridayMiddayHelligDagRule3).isFalse();
+          Assertions.assertThat(easterFridayMiddayHelliBasisRule1).isFalse();
+          Assertions.assertThat(easterFridayMiddayHelliBasisRule2).isFalse();
+          Assertions.assertThat(easterFridayMiddayHelliBasisRule3).isFalse();
+          Assertions.assertThat(easterFridayMiddayHelliBasisRule4).isFalse();
+          Assertions.assertThat(easterFridayMiddayHelliBasisRule5).isTrue();
+          Assertions.assertThat(easterFridayMiddayHelliBasisRule6).isFalse();
 
 
 
