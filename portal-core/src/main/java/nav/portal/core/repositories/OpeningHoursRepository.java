@@ -45,7 +45,7 @@ public class OpeningHoursRepository {
         }
 
         public boolean deleteOpeninghours(UUID openingHoursId){
-            if(openingRuleTable.where("id",openingHoursId).singleObject(OpeningHoursRepository::toOpeningHours).isEmpty()){
+            if(openingRuleTable.where("id",openingHoursId).singleObject(OpeningHoursRepository::toOpeningRule).isEmpty()){
                 return false;
             }
             openingRuleTable.where("id", openingHoursId).executeDelete();
@@ -91,7 +91,7 @@ public class OpeningHoursRepository {
         );
     }
     public Optional<OpeningRuleEntity> retrieve(UUID id) {
-        return openingRuleTable.where("id", id).singleObject(OpeningHoursRepository::toOpeningHours);
+        return openingRuleTable.where("id", id).singleObject(OpeningHoursRepository::toOpeningRule);
     }
 
 
@@ -106,32 +106,55 @@ public class OpeningHoursRepository {
         return true;
     }
 
-    public OpeningHoursGroup retrieveOneGroup(UUID group_id) {
-        DbContextTableAlias group = openingHoursGroupTable.alias("group");
-        DbContextTableAlias g2r = openingHoursConnectedTable.alias("g2r");
-        DbContextTableAlias rule = openingRuleTable.alias("rule");
+        public Optional<OpeningHoursGroup> retrieveOneGroup(UUID group_id) {
+            Optional<OpeningHoursGroup> result = openingHoursGroupTable.where("id", group_id).singleObject(OpeningHoursRepository::toOpeningHoursGroup);
+            if( result.isEmpty()){
+                return result ;
+            }
 
-        Map<OpeningHoursGroup, List<OpeningRuleEntity>> result = new HashMap<>();
-        group
-                .where("id" , group_id)
-                .leftJoin(group.column("id"), g2r.column("group_id"))
-                .leftJoin(g2r.column("rule_id"), rule.column("id"))
-                .list(row -> {
-//                    List<OpeningRuleEntity> ruleList = result
-//                            .computeIfAbsent(toOpeningHoursGroup(row.table(group)), ignored -> new ArrayList<>());
-//
-//                    DatabaseRow ruleRow = row.table(rule);
-//                    Optional.ofNullable(row.getUUID("rule_id"))
-//                            .ifPresent(ruleId -> ruleList.add(OpeningHoursRepository.toOpeningHours(ruleRow)));
-                    return null;
-                });
-        OpeningHoursGroup resultGroup = result.keySet().stream()
-                .findFirst().orElseThrow(() -> new IllegalArgumentException("Not found: group with id " + group_id));
+            ArrayList<OpeningRuleEntity> rules = new ArrayList<>();
 
-        return resultGroup.setRules(result.get(resultGroup));
+            openingHoursConnectedTable.where("group_id", group_id).forEach(row -> {
+                   UUID ruleId = row.getUUID("rule_id");
+                    rules.add(openingRuleTable.where("id",ruleId ).singleObject(OpeningHoursRepository::toOpeningRule)
+                            .orElseThrow(() -> new IllegalArgumentException("Not found: rule with id " + ruleId)));
+
+                    }
+
+            );
+            result.get().setRules(rules);
+
+        return result;
     }
 
-    static OpeningRuleEntity toOpeningHours(DatabaseRow row){
+//    public OpeningHoursGroup retrieveOneGroup(UUID group_id) {
+//        DbContextTableAlias group = openingHoursGroupTable.alias("group");
+//        DbContextTableAlias g2r = openingHoursConnectedTable.alias("g2r");
+//        DbContextTableAlias rule = openingRuleTable.alias("rule");
+//
+//
+//
+//        Map<OpeningHoursGroup, List<OpeningRuleEntity>> result = new HashMap<>();
+//        group
+//                .where("id" , group_id)
+//                .leftJoin(group.column("id"), g2r.column("group_id"))
+//                .leftJoin(g2r.column("rule_id"), rule.column("id"))
+//                .list(row -> {
+////                    List<OpeningRuleEntity> ruleList = result
+////                            .computeIfAbsent(toOpeningHoursGroup(row.table(group)), ignored -> new ArrayList<>());
+////
+////                    DatabaseRow ruleRow = row.table(rule);
+////                    Optional.ofNullable(row.getUUID("rule_id"))
+////                            .ifPresent(ruleId -> ruleList.add(OpeningHoursRepository.toOpeningHours(ruleRow)));
+//                    return null;
+//                });
+//        OpeningHoursGroup resultGroup = result.keySet().stream()
+//                .findFirst().orElseThrow(() -> new IllegalArgumentException("Not found: group with id " + group_id));
+//
+//        return resultGroup.setRules(result.get(resultGroup));
+//    }
+
+    static OpeningRuleEntity toOpeningRule(DatabaseRow row){
         try {
             return new OpeningRuleEntity(row.getUUID("id"),
                     row.getString("name"),

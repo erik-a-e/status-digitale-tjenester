@@ -11,6 +11,7 @@ import org.assertj.core.api.Assertions;
 
 import javax.sql.DataSource;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 class OpeningHoursRepositoryTest {
@@ -78,10 +79,10 @@ class OpeningHoursRepositoryTest {
         OpeningHoursGroup group = new OpeningHoursGroup().setName("Ny gruppe").setRules(List.of(rule));
         UUID group_id = openingHoursRepository.saveGroup(group);
         //Act
-        OpeningHoursGroup retrievedGroup = openingHoursRepository.retrieveOneGroup(group_id);
+        Optional<OpeningHoursGroup> retrievedGroup = openingHoursRepository.retrieveOneGroup(group_id);
         //Assert
-        Assertions.assertThat(retrievedGroup).isNotNull();
-        Assertions.assertThat(retrievedGroup.getRules()).containsExactly(rule);
+        Assertions.assertThat(retrievedGroup).isPresent();
+        Assertions.assertThat(retrievedGroup.get().getRules()).containsExactly(rule);
 
     }
 }
