@@ -24,6 +24,7 @@ class ServiceRepositoryTest {
    private final DbContext dbContext = new DbContext();
    private DbContextConnection connection;
 
+
    @BeforeEach
    void startConnection() {
       connection = dbContext.startConnection(dataSource);
@@ -344,6 +345,7 @@ class ServiceRepositoryTest {
       Assertions.assertThat(retrievedServices.keySet().containsAll(serviceTypes)).isTrue();
       Assertions.assertThat(retrievedServices.keySet()).doesNotContainAnyElementsOf(komponentTypes);
    }
+
 
    @Test
    void getServicesDependantOnComponent() {

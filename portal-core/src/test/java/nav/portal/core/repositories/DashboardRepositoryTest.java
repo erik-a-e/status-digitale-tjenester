@@ -238,12 +238,40 @@ class DashboardRepositoryTest {
         areas.forEach(area -> {area.setId(areaRepository.save(area));
                                areaIds.add(area.getId());});
         dashboardRepository.settAreasOnDashboard(dashboardId, areaIds);
-
         //Act
         dashboardRepository.deleteAreasFromDashboard(dashboardId);
         Map.Entry<DashboardEntity, List<AreaWithServices>> result = dashboardRepository.retrieveOneFromName(dashboardname);
         //Assert
         Assertions.assertThat(result.getValue()).isEmpty();
     }
+
+    @Test
+    void deleteDashboard() {
+        //Arrange
+        String dashboardName = SampleData.getRandomizedDashboardName();
+        UUID dashboardId = dashboardRepository.save(dashboardName);
+
+        Map<DashboardEntity, List<AreaWithServices>> beforeDelete = dashboardRepository.retrieveAll();
+        Set<DashboardEntity> dashboardEntitiesSetBefore = beforeDelete.keySet();
+        List<DashboardEntity> dashboardEntitiesListBefore = new ArrayList<>(dashboardEntitiesSetBefore);
+        DashboardEntity dashboardEntity = dashboardEntitiesListBefore.get(0);
+
+        //Act
+        dashboardRepository.deleteDashboard(dashboardId);
+
+        Map<DashboardEntity, List<AreaWithServices>> afterDelete = dashboardRepository.retrieveAll();
+
+        //Assert
+        Assertions.assertThat(beforeDelete.size()).isEqualTo(1);
+        Assertions.assertThat(beforeDelete).containsKey(dashboardEntity);
+        Assertions.assertThat(beforeDelete.keySet().size()).isEqualTo(1);
+
+        Assertions.assertThat(afterDelete.size()).isEqualTo(0);
+        Assertions.assertThat(afterDelete).isEmpty();
+
+
+
+    }
+
 
 }
