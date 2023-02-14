@@ -1,9 +1,11 @@
 package nav.portal.core.entities;
 
+import nav.portal.core.enums.RuleType;
+
 import java.util.Objects;
 import java.util.UUID;
 
-public class OpeningRuleEntity {
+public class OpeningRuleEntity implements OpeningRule {
 
     private UUID id;
     private String name;
@@ -18,6 +20,13 @@ public class OpeningRuleEntity {
         this.rule = rule;
     }
 
+
+    @Override
+    public RuleType getRuleType() {
+        return RuleType.REGEL;
+    }
+
+    @Override
     public UUID getId() {
         return id;
     }
@@ -57,7 +66,6 @@ public class OpeningRuleEntity {
     public int hashCode() {
         return Objects.hash(getId(), getName(), getRule());
     }
-
 }
 
 

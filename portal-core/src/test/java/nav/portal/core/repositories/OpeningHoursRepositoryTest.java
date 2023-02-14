@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.assertj.core.api.Assertions;
 
 import javax.sql.DataSource;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -71,7 +72,7 @@ class OpeningHoursRepositoryTest {
     }
 
     @Test
-    void retrieveOneGroup() {
+    void retrieveOneGroupSimple() {
         //Arrange
         OpeningRuleEntity rule = SampleData.getRandomizedOpeningRule();
         UUID rule_id = openingHoursRepository.save(rule);
@@ -85,4 +86,27 @@ class OpeningHoursRepositoryTest {
         Assertions.assertThat(retrievedGroup.get().getRules()).containsExactly(rule);
 
     }
+
+    @Test
+    void retrieveOneGroupComplex() {
+        //Arrange
+        OpeningRuleEntity rule = SampleData.getRandomizedOpeningRule();
+        OpeningRuleEntity rule2 = SampleData.getRandomizedOpeningRule();
+        UUID rule_id = openingHoursRepository.save(rule);
+        UUID rule2_id = openingHoursRepository.save(rule2);
+        rule.setId(rule_id);
+        rule2.setId(rule2_id);
+        OpeningHoursGroup group = new OpeningHoursGroup().setName("Gruppe1").setRules(List.of(rule));
+        group.setId(openingHoursRepository.saveGroup(group));
+
+        OpeningHoursGroup group2 = new OpeningHoursGroup().setName("Gruppe2").setRules(List.of(rule2, group));
+        UUID group2_id = openingHoursRepository.saveGroup(group2);
+        //Act
+        Optional<OpeningHoursGroup> retrievedGroup = openingHoursRepository.retrieveOneGroup(group2_id);
+        //Assert
+        Assertions.assertThat(retrievedGroup).isPresent();
+        Assertions.assertThat(retrievedGroup.get().getRules()).containsExactly(rule);
+
+    }
+
 }

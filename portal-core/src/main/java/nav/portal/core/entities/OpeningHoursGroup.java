@@ -1,23 +1,30 @@
 package nav.portal.core.entities;
 
+import nav.portal.core.enums.RuleType;
+
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-public class OpeningHoursGroup {
+public class OpeningHoursGroup implements OpeningRule {
     private UUID id;
     private String name;
-    private List<OpeningRuleEntity> rules;
+    private List<OpeningRule> rules;
 
     public OpeningHoursGroup() {
     }
 
-    public OpeningHoursGroup(UUID id, String name, List<OpeningRuleEntity> rule) {
+    public OpeningHoursGroup(UUID id, String name, List<OpeningRule> rules) {
         this.id = id;
         this.name = name;
-        this.rules = rule;
+        this.rules = rules;
     }
 
+    @Override
+    public RuleType getRuleType() {
+        return RuleType.REGEL_GRUPPE;
+    }
+    @Override
     public UUID getId() {
         return id;
     }
@@ -36,11 +43,11 @@ public class OpeningHoursGroup {
         return this;
     }
 
-    public List<OpeningRuleEntity> getRules() {
+    public List<OpeningRule> getRules() {
         return rules;
     }
 
-    public OpeningHoursGroup setRules(List<OpeningRuleEntity> rules) {
+    public OpeningHoursGroup setRules(List<OpeningRule> rules) {
         this.rules = rules;
         return this;
     }
@@ -48,13 +55,13 @@ public class OpeningHoursGroup {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof OpeningHoursGroup)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         OpeningHoursGroup that = (OpeningHoursGroup) o;
-        return getId().equals(that.getId()) && getName().equals(that.getName()) && Objects.equals(getRules(), that.getRules());
+        return id.equals(that.id) && name.equals(that.name) && rules.equals(that.rules);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getName(), getRules());
+        return Objects.hash(id, name, rules);
     }
 }
