@@ -6,15 +6,15 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-public class OpeningHoursGroup implements OpeningRule {
+public class OpeningHoursGroup implements OpeningHoursRule {
     private UUID id;
     private String name;
-    private List<OpeningRule> rules;
+    private List<OpeningHoursRule> rules;
 
     public OpeningHoursGroup() {
     }
 
-    public OpeningHoursGroup(UUID id, String name, List<OpeningRule> rules) {
+    public OpeningHoursGroup(UUID id, String name, List<OpeningHoursRule> rules) {
         this.id = id;
         this.name = name;
         this.rules = rules;
@@ -22,7 +22,7 @@ public class OpeningHoursGroup implements OpeningRule {
 
     @Override
     public RuleType getRuleType() {
-        return RuleType.REGEL_GRUPPE;
+        return RuleType.RULE_GROUP;
     }
     @Override
     public UUID getId() {
@@ -43,11 +43,11 @@ public class OpeningHoursGroup implements OpeningRule {
         return this;
     }
 
-    public List<OpeningRule> getRules() {
+    public List<OpeningHoursRule> getRules() {
         return rules;
     }
 
-    public OpeningHoursGroup setRules(List<OpeningRule> rules) {
+    public OpeningHoursGroup setRules(List<OpeningHoursRule> rules) {
         this.rules = rules;
         return this;
     }

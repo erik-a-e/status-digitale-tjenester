@@ -4,7 +4,7 @@ import nav.portal.core.enums.RuleType;
 
 import java.util.UUID;
 
-public interface OpeningRule {
+public interface OpeningHoursRule {
 
      RuleType getRuleType();
 

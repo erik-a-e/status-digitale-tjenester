@@ -1,8 +1,8 @@
 package nav.portal.core.repositories;
 
 import nav.portal.core.entities.OpeningHoursGroupEntity;
-import nav.portal.core.entities.OpeningRule;
-import nav.portal.core.entities.OpeningRuleEntity;
+import nav.portal.core.entities.OpeningHoursRule;
+import nav.portal.core.entities.OpeningHoursRuleEntity;
 import nav.portal.core.entities.OpeningHoursGroup;
 import nav.portal.core.enums.RuleType;
 import nav.portal.core.exceptionHandling.ExceptionUtil;
@@ -18,19 +18,16 @@ public class OpeningHoursRepository {
 
         private final DbContextTable ohRuleTable;
         private final DbContextTable ohGroupTable;
-//        private final DbContextTable ohGroupRuleTable;
-//        private final DbContextTable ohGroupGroupTable;
+
 
 
 
         public OpeningHoursRepository(DbContext dbContext) {
             ohRuleTable = dbContext.table("oh_rule");
             ohGroupTable = dbContext.table("oh_group");
-//            ohGroupRuleTable = dbContext.table("oh_group_rule");
-//            ohGroupGroupTable = dbContext.table("oh_group_group");
         }
 
-        public UUID save(OpeningRuleEntity entity) {
+        public UUID save(OpeningHoursRuleEntity entity) {
             //Sjekk på navn
             if(ohRuleTable.where("name",entity.getName()).getCount()>0) {
                 throw new HttpRequestException("Åpningstid med navn: "+ entity.getName() +" finnes allerede");
@@ -42,7 +39,7 @@ public class OpeningHoursRepository {
             return result.getId();
         }
 
-        public void update(OpeningRuleEntity entity) {
+        public void update(OpeningHoursRuleEntity entity) {
            ohRuleTable.where("id", entity.getId())
                     .update()
                     .setField("name",entity.getName())
@@ -69,7 +66,7 @@ public class OpeningHoursRepository {
         DatabaseSaveResult<UUID> result = ohGroupTable
                 .newSaveBuilderWithUUID("id", group.getId())
                 .setField("name",group.getName())
-                .setField("rule_group_ids",group.getRules().stream().map(OpeningRule::getId).map(String::valueOf).collect(Collectors.toList()))
+                .setField("rule_group_ids",group.getRules().stream().map(OpeningHoursRule::getId).map(String::valueOf).collect(Collectors.toList()))
                 .execute();
 
 
@@ -94,7 +91,7 @@ public class OpeningHoursRepository {
     private ArrayList<OpeningHoursGroup> getAllSubGroups(OpeningHoursGroup group){
             ArrayList<OpeningHoursGroup> subgroupsDirectlyUnderGroup = (ArrayList<OpeningHoursGroup>) group.getRules()
                     .stream()
-                    .filter(rule -> rule.getRuleType().equals(RuleType.REGEL_GRUPPE))
+                    .filter(rule -> rule.getRuleType().equals(RuleType.RULE_GROUP))
                     .map(r -> (OpeningHoursGroup) r )
                     .collect(Collectors.toList());
             ArrayList<OpeningHoursGroup> result = new ArrayList<>(subgroupsDirectlyUnderGroup);
@@ -103,48 +100,7 @@ public class OpeningHoursRepository {
             return result;
 
     }
-//
-//
-//    public void updateGroup(OpeningHoursGroup group) {
-//        ohGroupTable.where("id", group.getId())
-//                .update()
-//                .setField("name",group.getName())
-//                .execute();
-//
-//        ohGroupRuleTable
-//                        .where("group_id", group.getId())
-//                        .executeDelete();
-//
-//        group.getRules().forEach(rule ->
-//                ohGroupRuleTable
-//                        .insert()
-//                        .setField("group_id", group.getId())
-//                        .setField("rule_id", rule.getId())
-//                        .execute()
-//        );
-//        group.getGroups().forEach(subGroup ->
-//                ohGroupGroupTable
-//                        .insert()
-//                        .setField("group_id", group.getId())
-//                        .setField("sub_group_id", subGroup.getId())
-//                        .execute()
-//        );
-//    }
-//    public Optional<OpeningRuleEntity> retrieve(UUID id) {
-//        return ohRuleTable.where("id", id).singleObject(OpeningHoursRepository::toOpeningRule);
-//    }
-//
-//
-//
-//
-//    public boolean deleteOpeninghoursGroup(UUID openinghoursGroupId){
-//        if(ohGroupTable.where("id",openinghoursGroupId).singleObject(OpeningHoursRepository::toOpeningHoursGroup).isEmpty()){
-//            return false;
-//        }
-//        ohGroupTable.where("id", openinghoursGroupId).executeDelete();
-//        ohGroupRuleTable.where("group_id", openinghoursGroupId).executeDelete();
-//        return true;
-//    }
+
 
 
     public Optional<OpeningHoursGroup> retrieveOneGroup(UUID group_id) {
@@ -154,7 +110,7 @@ public class OpeningHoursRepository {
         }
         OpeningHoursGroupEntity openingHoursGroup = optionalOfGroupEntity.get();
 
-        List<OpeningRule> rules = openingHoursGroup.getRules().stream()
+        List<OpeningHoursRule> rules = openingHoursGroup.getRules().stream()
                 .map(this::retriveGroupOrRule)
                 .filter(Optional::isPresent)
                 .map(Optional::get).collect(Collectors.toList());
@@ -169,8 +125,8 @@ public class OpeningHoursRepository {
     }
 
 
-    private Optional<OpeningRule> retriveGroupOrRule(UUID id) {
-        Optional<OpeningRuleEntity> ruleEntity = ohRuleTable.where("id", id).singleObject(OpeningHoursRepository::toOpeningRule);
+    private Optional<OpeningHoursRule> retriveGroupOrRule(UUID id) {
+        Optional<OpeningHoursRuleEntity> ruleEntity = ohRuleTable.where("id", id).singleObject(OpeningHoursRepository::toOpeningRule);
         if(ruleEntity.isPresent()){
             return Optional.of(ruleEntity.get());
         }
@@ -179,54 +135,9 @@ public class OpeningHoursRepository {
 
     }
 
-//    private OpeningHoursGroup getGroup(Optional<OpeningHoursGroupEntity> openingHoursGroupEntity){
-//
-//
-//    }
-
-
-
-
-
-
-
-
-
-
-
-
-//
-//    public Optional<OpeningHoursGroup> retrieveOneGroup(UUID group_id) {
-//        Optional<OpeningHoursGroup> result = ohGroupTable.where("id", group_id).singleObject(OpeningHoursRepository::toOpeningHoursGroup);
-//        if( result.isEmpty()){
-//            return result ;
-//        }
-//        ArrayList<OpeningRuleEntity> rules = new ArrayList<>();
-//
-//        ohGroupRuleTable.where("group_id", group_id).forEach(row -> {
-//               UUID ruleId = row.getStringList("rule_id");
-//                rules.add(ohRuleTable.where("id",ruleId ).singleObject(OpeningHoursRepository::toOpeningRule)
-//                        .orElseThrow(() -> new IllegalArgumentException("Not found: rule with id " + ruleId)));
-//
-//                }
-//
-//        );
-//        ArrayList<OpeningHoursGroup> subGroups = new ArrayList<>();
-//        ohGroupGroupTable.where("group_id", group_id).forEach(row -> {
-//            UUID subgroupId = row.getUUID("sub_group_id");
-//            Optional<OpeningHoursGroup> subgroup = retrieveOneGroup(subgroupId);
-//            subgroup.ifPresent(subGroups::add);
-//        });
-//        result.get().setRules(rules);
-//        result.get().setGroups(subGroups);
-//
-//    return result;
-//    }
-//
-//
-    static OpeningRuleEntity toOpeningRule(DatabaseRow row){
+    static OpeningHoursRuleEntity toOpeningRule(DatabaseRow row){
         try {
-            return new OpeningRuleEntity(row.getUUID("id"),
+            return new OpeningHoursRuleEntity(row.getUUID("id"),
                     row.getString("name"),
                     row.getString("rule"));
         } catch (SQLException e) {

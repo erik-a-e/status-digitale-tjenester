@@ -1,7 +1,7 @@
 package nav.portal.core.repositories;
 
 import nav.portal.core.entities.OpeningHoursGroup;
-import nav.portal.core.entities.OpeningRuleEntity;
+import nav.portal.core.entities.OpeningHoursRuleEntity;
 import org.fluentjdbc.DbContext;
 import org.fluentjdbc.DbContextConnection;
 import org.junit.jupiter.api.AfterEach;
@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.assertj.core.api.Assertions;
 
 import javax.sql.DataSource;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -39,7 +38,7 @@ class OpeningHoursRepositoryTest {
     @Test
     void save() {
         //Arrange
-        OpeningRuleEntity rule = SampleData.getRandomizedOpeningRule();
+        OpeningHoursRuleEntity rule = SampleData.getRandomizedOpeningRule();
         //Act
         UUID id = openingHoursRepository.save(rule);
         //Assert
@@ -74,7 +73,7 @@ class OpeningHoursRepositoryTest {
     @Test
     void retrieveOneGroupSimple() {
         //Arrange
-        OpeningRuleEntity rule = SampleData.getRandomizedOpeningRule();
+        OpeningHoursRuleEntity rule = SampleData.getRandomizedOpeningRule();
         UUID rule_id = openingHoursRepository.save(rule);
         rule.setId(rule_id);
         OpeningHoursGroup group = new OpeningHoursGroup().setName("Ny gruppe").setRules(List.of(rule));
@@ -84,14 +83,13 @@ class OpeningHoursRepositoryTest {
         //Assert
         Assertions.assertThat(retrievedGroup).isPresent();
         Assertions.assertThat(retrievedGroup.get().getRules()).containsExactly(rule);
-
     }
 
     @Test
     void retrieveOneGroupComplex() {
         //Arrange
-        OpeningRuleEntity rule = SampleData.getRandomizedOpeningRule();
-        OpeningRuleEntity rule2 = SampleData.getRandomizedOpeningRule();
+        OpeningHoursRuleEntity rule = SampleData.getRandomizedOpeningRule();
+        OpeningHoursRuleEntity rule2 = SampleData.getRandomizedOpeningRule();
         UUID rule_id = openingHoursRepository.save(rule);
         UUID rule2_id = openingHoursRepository.save(rule2);
         rule.setId(rule_id);
@@ -106,7 +104,6 @@ class OpeningHoursRepositoryTest {
         //Assert
         Assertions.assertThat(retrievedGroup).isPresent();
         Assertions.assertThat(retrievedGroup.get().getRules()).containsExactly(rule);
-
     }
 
 }
