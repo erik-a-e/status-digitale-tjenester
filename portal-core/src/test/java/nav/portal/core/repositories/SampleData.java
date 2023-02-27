@@ -81,8 +81,8 @@ public class SampleData {
                 .setIcon(getRandomFromArray(icons));
     }
 
-    public static OpeningRuleEntity getRandomizedOpeningRule() {
-        return new OpeningRuleEntity()
+    public static OpeningHoursRuleEntity getRandomizedOpeningRule() {
+        return new OpeningHoursRuleEntity()
                 .setName(getRandomFromArray(areaNames))
                 .setRule(getRandomFromArray(rules));
     }

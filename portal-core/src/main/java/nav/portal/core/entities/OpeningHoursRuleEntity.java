@@ -5,25 +5,24 @@ import nav.portal.core.enums.RuleType;
 import java.util.Objects;
 import java.util.UUID;
 
-public class OpeningRuleEntity implements OpeningRule {
+public class OpeningHoursRuleEntity implements OpeningHoursRule {
 
     private UUID id;
     private String name;
     private String rule;
 
-    public OpeningRuleEntity() {
+    public OpeningHoursRuleEntity() {
     }
 
-    public OpeningRuleEntity(UUID id, String name, String rule) {
+    public OpeningHoursRuleEntity(UUID id, String name, String rule) {
         this.id = id;
         this.name = name;
         this.rule = rule;
     }
 
-
     @Override
     public RuleType getRuleType() {
-        return RuleType.REGEL;
+        return RuleType.RULE;
     }
 
     @Override
@@ -31,7 +30,7 @@ public class OpeningRuleEntity implements OpeningRule {
         return id;
     }
 
-    public OpeningRuleEntity setId(UUID id) {
+    public OpeningHoursRuleEntity setId(UUID id) {
         this.id = id;
         return this;
     }
@@ -40,7 +39,7 @@ public class OpeningRuleEntity implements OpeningRule {
         return name;
     }
 
-    public OpeningRuleEntity setName(String name) {
+    public OpeningHoursRuleEntity setName(String name) {
         this.name = name;
         return this;
     }
@@ -49,7 +48,7 @@ public class OpeningRuleEntity implements OpeningRule {
         return rule;
     }
 
-    public OpeningRuleEntity setRule(String rule) {
+    public OpeningHoursRuleEntity setRule(String rule) {
         this.rule = rule;
         return this;
     }
@@ -57,8 +56,8 @@ public class OpeningRuleEntity implements OpeningRule {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof OpeningRuleEntity)) return false;
-        OpeningRuleEntity that = (OpeningRuleEntity) o;
+        if (!(o instanceof OpeningHoursRuleEntity)) return false;
+        OpeningHoursRuleEntity that = (OpeningHoursRuleEntity) o;
         return getId().equals(that.getId()) && getName().equals(that.getName()) && getRule().equals(that.getRule());
     }
 
