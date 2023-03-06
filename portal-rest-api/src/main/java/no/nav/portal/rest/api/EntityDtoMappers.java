@@ -275,4 +275,11 @@ public class EntityDtoMappers {
                 .startTime(maintenanceEntity.getStart_time().toOffsetDateTime())
                 .endTime(maintenanceEntity.getEnd_time().toOffsetDateTime());
     }
+
+    public static OpeningHoursRuleEntity toOpeningHoursRuleEntity(OpeningHoursRuleDto openingHoursRuleDto) {
+        return new OpeningHoursRuleEntity()
+                .setId(openingHoursRuleDto.getId())
+                .setRule(openingHoursRuleDto.getRule())
+                .setName(openingHoursRuleDto.getName());
+    }
 }
