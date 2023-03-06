@@ -56,7 +56,7 @@ public class OpeningHoursRepository {
         }
 
     public boolean deleteOpeninghourGroup(UUID openingHoursGroupId){
-        if(ohGroupTable.where("id",openingHoursGroupId).singleObject(OpeningHoursRepository::toOpeningRule).isEmpty()){
+        if(ohGroupTable.where("id",openingHoursGroupId).singleObject(OpeningHoursRepository::toOpeningHoursGroupEntity).isEmpty()){
             return false;
         }
         ohGroupTable.where("id", openingHoursGroupId).executeDelete();
@@ -133,7 +133,7 @@ public class OpeningHoursRepository {
     }
 
     public Optional<OpeningHoursRuleEntity> retriveRule(UUID id){
-            return ohGroupTable.where("id", id).singleObject(OpeningHoursRepository::toOpeningRule);
+            return ohRuleTable.where("id", id).singleObject(OpeningHoursRepository::toOpeningRule);
     }
 
 
