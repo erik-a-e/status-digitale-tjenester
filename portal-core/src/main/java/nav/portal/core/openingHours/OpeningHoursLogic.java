@@ -1,20 +1,13 @@
-package nav.portal.core.entities.OpeningHours;
+package nav.portal.core.openingHours;
 
-import java.sql.Timestamp;
-import java.text.Format;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoField;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 
-public class OpeningTimesV2 {
+public class OpeningHoursLogic {
 
 
     public static boolean isAValidRule(String rule) {

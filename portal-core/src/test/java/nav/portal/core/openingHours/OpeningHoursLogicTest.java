@@ -1,17 +1,13 @@
-package nav.portal.core.entities.OpeningHours;
+package nav.portal.core.openingHours;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-class OpeningTimesV2Test {
+class OpeningHoursLogicTest {
 
     @Test
     void validateDateformatPart(){
@@ -36,24 +32,24 @@ class OpeningTimesV2Test {
         String example18 = "??.??.???? ? ? 09:00-22:00"; //Gyldig format
 
         //Act
-        Boolean example1isFalse = OpeningTimesV2.isAValidRule(example1);
-        Boolean example2isFalse = OpeningTimesV2.isAValidRule(example2);
-        Boolean example3isTrue  = OpeningTimesV2.isAValidRule(example3);
-        Boolean example4isTrue  = OpeningTimesV2.isAValidRule(example4);
-        Boolean example5isFalse  = OpeningTimesV2.isAValidRule(example5);
-        Boolean example6isFalse  = OpeningTimesV2.isAValidRule(example6);
-        Boolean example7isFalse  = OpeningTimesV2.isAValidRule(example7);
-        Boolean example8isFalse  = OpeningTimesV2.isAValidRule(example8);
-        Boolean example9isTrue  = OpeningTimesV2.isAValidRule(example9);
-        Boolean example10isFalse  = OpeningTimesV2.isAValidRule(example10);
-        Boolean example11isTrue  = OpeningTimesV2.isAValidRule(example11);
-        Boolean example12isFalse  = OpeningTimesV2.isAValidRule(example12);
-        Boolean example13isTrue  = OpeningTimesV2.isAValidRule(example13);
-        Boolean example14isTrue  = OpeningTimesV2.isAValidRule(example14);
-        Boolean example15isFalse  = OpeningTimesV2.isAValidRule(example15);
-        Boolean example16isTrue  = OpeningTimesV2.isAValidRule(example16);
-        Boolean example17isFalse  = OpeningTimesV2.isAValidRule(example17);
-        Boolean example18isTrue  = OpeningTimesV2.isAValidRule(example18);
+        Boolean example1isFalse = OpeningHoursLogic.isAValidRule(example1);
+        Boolean example2isFalse = OpeningHoursLogic.isAValidRule(example2);
+        Boolean example3isTrue  = OpeningHoursLogic.isAValidRule(example3);
+        Boolean example4isTrue  = OpeningHoursLogic.isAValidRule(example4);
+        Boolean example5isFalse  = OpeningHoursLogic.isAValidRule(example5);
+        Boolean example6isFalse  = OpeningHoursLogic.isAValidRule(example6);
+        Boolean example7isFalse  = OpeningHoursLogic.isAValidRule(example7);
+        Boolean example8isFalse  = OpeningHoursLogic.isAValidRule(example8);
+        Boolean example9isTrue  = OpeningHoursLogic.isAValidRule(example9);
+        Boolean example10isFalse  = OpeningHoursLogic.isAValidRule(example10);
+        Boolean example11isTrue  = OpeningHoursLogic.isAValidRule(example11);
+        Boolean example12isFalse  = OpeningHoursLogic.isAValidRule(example12);
+        Boolean example13isTrue  = OpeningHoursLogic.isAValidRule(example13);
+        Boolean example14isTrue  = OpeningHoursLogic.isAValidRule(example14);
+        Boolean example15isFalse  = OpeningHoursLogic.isAValidRule(example15);
+        Boolean example16isTrue  = OpeningHoursLogic.isAValidRule(example16);
+        Boolean example17isFalse  = OpeningHoursLogic.isAValidRule(example17);
+        Boolean example18isTrue  = OpeningHoursLogic.isAValidRule(example18);
 
         //Assert
         Assertions.assertThat(example1isFalse).isFalse();    //Ugyldig format
@@ -96,21 +92,21 @@ class OpeningTimesV2Test {
         String example15 = "??.??.???? 5-4,1 ? 00:00-00:00";
 
         //Act
-        Boolean example1isTrue = OpeningTimesV2.isAValidRule(example1);
-        Boolean example2isTrue = OpeningTimesV2.isAValidRule(example2);
-        Boolean example3isTrue = OpeningTimesV2.isAValidRule(example3);
-        Boolean example4isTrue = OpeningTimesV2.isAValidRule(example4);
-        Boolean example5isFalse = OpeningTimesV2.isAValidRule(example5);
-        Boolean example6isFalse = OpeningTimesV2.isAValidRule(example6);
-        Boolean example7isTrue = OpeningTimesV2.isAValidRule(example7);
-        Boolean example8isFalse = OpeningTimesV2.isAValidRule(example8);
-        Boolean example9isTrue = OpeningTimesV2.isAValidRule(example9);
-        Boolean example10isFalse = OpeningTimesV2.isAValidRule(example10);
-        Boolean example11isTrue = OpeningTimesV2.isAValidRule(example11);
-        Boolean example12isTrue = OpeningTimesV2.isAValidRule(example12);
-        Boolean example13isTrue = OpeningTimesV2.isAValidRule(example13);
-        Boolean example14isFalse = OpeningTimesV2.isAValidRule(example14);
-        Boolean example15isFalse = OpeningTimesV2.isAValidRule(example15);
+        Boolean example1isTrue = OpeningHoursLogic.isAValidRule(example1);
+        Boolean example2isTrue = OpeningHoursLogic.isAValidRule(example2);
+        Boolean example3isTrue = OpeningHoursLogic.isAValidRule(example3);
+        Boolean example4isTrue = OpeningHoursLogic.isAValidRule(example4);
+        Boolean example5isFalse = OpeningHoursLogic.isAValidRule(example5);
+        Boolean example6isFalse = OpeningHoursLogic.isAValidRule(example6);
+        Boolean example7isTrue = OpeningHoursLogic.isAValidRule(example7);
+        Boolean example8isFalse = OpeningHoursLogic.isAValidRule(example8);
+        Boolean example9isTrue = OpeningHoursLogic.isAValidRule(example9);
+        Boolean example10isFalse = OpeningHoursLogic.isAValidRule(example10);
+        Boolean example11isTrue = OpeningHoursLogic.isAValidRule(example11);
+        Boolean example12isTrue = OpeningHoursLogic.isAValidRule(example12);
+        Boolean example13isTrue = OpeningHoursLogic.isAValidRule(example13);
+        Boolean example14isFalse = OpeningHoursLogic.isAValidRule(example14);
+        Boolean example15isFalse = OpeningHoursLogic.isAValidRule(example15);
 
         //Assert
         Assertions.assertThat(example1isTrue).isTrue();
@@ -147,18 +143,18 @@ class OpeningTimesV2Test {
         String example12 = "??.??.???? ? ? 07:00-21:00";  //Gyldig
 
         //Act
-        Boolean example1isTrue = OpeningTimesV2.isAValidRule(example1);
-        Boolean example2isTrue = OpeningTimesV2.isAValidRule(example2);
-        Boolean example3isTrue = OpeningTimesV2.isAValidRule(example3);
-        Boolean example4isTrue = OpeningTimesV2.isAValidRule(example4);
-        Boolean example5isTrue = OpeningTimesV2.isAValidRule(example5);
-        Boolean example6isTrue = OpeningTimesV2.isAValidRule(example6);
-        Boolean example7isTrue = OpeningTimesV2.isAValidRule(example7);
-        Boolean example8isFalse = OpeningTimesV2.isAValidRule(example8);
-        Boolean example9isFalse = OpeningTimesV2.isAValidRule(example9);
-        Boolean example10isFalse = OpeningTimesV2.isAValidRule(example10);
-        Boolean example11isTrue = OpeningTimesV2.isAValidRule(example11);
-        Boolean example12isTrue = OpeningTimesV2.isAValidRule(example12);
+        Boolean example1isTrue = OpeningHoursLogic.isAValidRule(example1);
+        Boolean example2isTrue = OpeningHoursLogic.isAValidRule(example2);
+        Boolean example3isTrue = OpeningHoursLogic.isAValidRule(example3);
+        Boolean example4isTrue = OpeningHoursLogic.isAValidRule(example4);
+        Boolean example5isTrue = OpeningHoursLogic.isAValidRule(example5);
+        Boolean example6isTrue = OpeningHoursLogic.isAValidRule(example6);
+        Boolean example7isTrue = OpeningHoursLogic.isAValidRule(example7);
+        Boolean example8isFalse = OpeningHoursLogic.isAValidRule(example8);
+        Boolean example9isFalse = OpeningHoursLogic.isAValidRule(example9);
+        Boolean example10isFalse = OpeningHoursLogic.isAValidRule(example10);
+        Boolean example11isTrue = OpeningHoursLogic.isAValidRule(example11);
+        Boolean example12isTrue = OpeningHoursLogic.isAValidRule(example12);
 
         //Assert
         Assertions.assertThat(example1isTrue).isTrue();
@@ -194,20 +190,20 @@ class OpeningTimesV2Test {
         String example14 = "??.??.???? ? ? 10:44-12:c1"; //Uglyldig tid format
 
         //Act
-        Boolean example1isTrue = OpeningTimesV2.isAValidRule(example1);
-        Boolean example2isTrue = OpeningTimesV2.isAValidRule(example2);
-        Boolean example3isTrue  = OpeningTimesV2.isAValidRule(example3);
-        Boolean example4isFalse  = OpeningTimesV2.isAValidRule(example4);
-        Boolean example5isFalse  = OpeningTimesV2.isAValidRule(example5);
-        Boolean example6isTrue  = OpeningTimesV2.isAValidRule(example6);
-        Boolean example7isTrue  = OpeningTimesV2.isAValidRule(example7);
-        Boolean example8isFalse  = OpeningTimesV2.isAValidRule(example8);
-        Boolean example9isFalse  = OpeningTimesV2.isAValidRule(example9);
-        Boolean example10isFalse  = OpeningTimesV2.isAValidRule(example10);
-        Boolean example11isFalse  = OpeningTimesV2.isAValidRule(example11);
-        Boolean example12isFalse  = OpeningTimesV2.isAValidRule(example12);
-        Boolean example13isFalse  = OpeningTimesV2.isAValidRule(example13);
-        Boolean example14isFalse  = OpeningTimesV2.isAValidRule(example14);
+        Boolean example1isTrue = OpeningHoursLogic.isAValidRule(example1);
+        Boolean example2isTrue = OpeningHoursLogic.isAValidRule(example2);
+        Boolean example3isTrue  = OpeningHoursLogic.isAValidRule(example3);
+        Boolean example4isFalse  = OpeningHoursLogic.isAValidRule(example4);
+        Boolean example5isFalse  = OpeningHoursLogic.isAValidRule(example5);
+        Boolean example6isTrue  = OpeningHoursLogic.isAValidRule(example6);
+        Boolean example7isTrue  = OpeningHoursLogic.isAValidRule(example7);
+        Boolean example8isFalse  = OpeningHoursLogic.isAValidRule(example8);
+        Boolean example9isFalse  = OpeningHoursLogic.isAValidRule(example9);
+        Boolean example10isFalse  = OpeningHoursLogic.isAValidRule(example10);
+        Boolean example11isFalse  = OpeningHoursLogic.isAValidRule(example11);
+        Boolean example12isFalse  = OpeningHoursLogic.isAValidRule(example12);
+        Boolean example13isFalse  = OpeningHoursLogic.isAValidRule(example13);
+        Boolean example14isFalse  = OpeningHoursLogic.isAValidRule(example14);
 
         //Assert
         Assertions.assertThat(example1isTrue).isTrue();
@@ -235,17 +231,17 @@ class OpeningTimesV2Test {
         String example11 = "15.10.???? 1,14-16,L 2 07:00-19:00";
 
         //Act
-        Boolean example1isTrue = OpeningTimesV2.isAValidRule(example1);
-        Boolean example2isTrue = OpeningTimesV2.isAValidRule(example2);
-        Boolean example3isTrue  = OpeningTimesV2.isAValidRule(example3);
-        Boolean example4isTrue = OpeningTimesV2.isAValidRule(example4);
-        Boolean example5isTrue = OpeningTimesV2.isAValidRule(example5);
-        Boolean example6isTrue  = OpeningTimesV2.isAValidRule(example6);
-        Boolean example7isTrue = OpeningTimesV2.isAValidRule(example7);
-        Boolean example8isTrue = OpeningTimesV2.isAValidRule(example8);
-        Boolean example9isTrue = OpeningTimesV2.isAValidRule(example9);
-        Boolean example10isTrue = OpeningTimesV2.isAValidRule(example10);
-        Boolean example11isTrue = OpeningTimesV2.isAValidRule(example11);
+        Boolean example1isTrue = OpeningHoursLogic.isAValidRule(example1);
+        Boolean example2isTrue = OpeningHoursLogic.isAValidRule(example2);
+        Boolean example3isTrue  = OpeningHoursLogic.isAValidRule(example3);
+        Boolean example4isTrue = OpeningHoursLogic.isAValidRule(example4);
+        Boolean example5isTrue = OpeningHoursLogic.isAValidRule(example5);
+        Boolean example6isTrue  = OpeningHoursLogic.isAValidRule(example6);
+        Boolean example7isTrue = OpeningHoursLogic.isAValidRule(example7);
+        Boolean example8isTrue = OpeningHoursLogic.isAValidRule(example8);
+        Boolean example9isTrue = OpeningHoursLogic.isAValidRule(example9);
+        Boolean example10isTrue = OpeningHoursLogic.isAValidRule(example10);
+        Boolean example11isTrue = OpeningHoursLogic.isAValidRule(example11);
 
         //Assert
         Assertions.assertThat(example1isTrue).isTrue();
@@ -493,17 +489,17 @@ class OpeningTimesV2Test {
 //        boolean normalDayIsNormalDayAt21 = OpeningTimesV2.isOpen(normalDayAt21,basisRule5);
 //        boolean lastOfJanuaryIsOpenMidday = OpeningTimesV2.isOpen(lastDayOfJanuary,basisRule3);
 //        boolean lastOfFebruaryIsOpenMidday = OpeningTimesV2.isOpen(lastDayOfFebruary,basisRule3);
-          boolean outsideOfRangeTuesday = OpeningTimesV2.isOpen(normTuesday,basisRule6);
+          boolean outsideOfRangeTuesday = OpeningHoursLogic.isOpen(normTuesday,basisRule6);
 
-          boolean easterFridayMiddayHelligDagRule1  = OpeningTimesV2.isOpen(easterFridayMidday,helligDagRule1);
-          boolean easterFridayMiddayHelligDagRule2  = OpeningTimesV2.isOpen(easterFridayMidday,helligDagRule2);
-          boolean easterFridayMiddayHelligDagRule3 = OpeningTimesV2.isOpen(easterFridayMidday,helligDagRule3);
-          boolean easterFridayMiddayHelliBasisRule1 = OpeningTimesV2.isOpen(easterFridayMidday,basisRule1);
-          boolean easterFridayMiddayHelliBasisRule2 = OpeningTimesV2.isOpen(easterFridayMidday,basisRule2);
-          boolean easterFridayMiddayHelliBasisRule3 = OpeningTimesV2.isOpen(easterFridayMidday,basisRule3);
-          boolean easterFridayMiddayHelliBasisRule4 = OpeningTimesV2.isOpen(easterFridayMidday,basisRule4);
-          boolean easterFridayMiddayHelliBasisRule5 = OpeningTimesV2.isOpen(easterFridayMidday,basisRule5);
-          boolean easterFridayMiddayHelliBasisRule6 = OpeningTimesV2.isOpen(easterFridayMidday,basisRule6);
+          boolean easterFridayMiddayHelligDagRule1  = OpeningHoursLogic.isOpen(easterFridayMidday,helligDagRule1);
+          boolean easterFridayMiddayHelligDagRule2  = OpeningHoursLogic.isOpen(easterFridayMidday,helligDagRule2);
+          boolean easterFridayMiddayHelligDagRule3 = OpeningHoursLogic.isOpen(easterFridayMidday,helligDagRule3);
+          boolean easterFridayMiddayHelliBasisRule1 = OpeningHoursLogic.isOpen(easterFridayMidday,basisRule1);
+          boolean easterFridayMiddayHelliBasisRule2 = OpeningHoursLogic.isOpen(easterFridayMidday,basisRule2);
+          boolean easterFridayMiddayHelliBasisRule3 = OpeningHoursLogic.isOpen(easterFridayMidday,basisRule3);
+          boolean easterFridayMiddayHelliBasisRule4 = OpeningHoursLogic.isOpen(easterFridayMidday,basisRule4);
+          boolean easterFridayMiddayHelliBasisRule5 = OpeningHoursLogic.isOpen(easterFridayMidday,basisRule5);
+          boolean easterFridayMiddayHelliBasisRule6 = OpeningHoursLogic.isOpen(easterFridayMidday,basisRule6);
 
         //Assert
 //        Assertions.assertThat(normalDayIsNotHelligdag).isFalse();
