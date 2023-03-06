@@ -491,6 +491,7 @@ paths:
           description: Not Found
           content: { }
       deprecated: false
+
   /Service:
     post:
       tags:
@@ -1177,6 +1178,55 @@ paths:
           description: Not Found
           content: { }
       deprecated: false
+  /OpeningHours/Rule:
+    post:
+      tags:
+        - OpeningHours
+      summary: Legg til regel
+      description: Opprett en ny tjeneste. Merk at type er predefinert og strengt, se endepunkt /Services/Types for en liste over mulige verdier.
+      requestBody:
+        description: Legg til en ny tjeneste
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpeningHoursRule'
+          text/plain:
+            schema:
+              type: string
+      responses:
+        '201':
+          description: Created
+        '403':
+          description: Forbidden
+          content: { }
+        '404':
+          description: Not Found
+          content: { }
+    put:
+      tags:
+        - OpeningHours
+      summary: Rediger tjeneste
+      description: Rediger tjenesteparametre
+      requestBody:
+        description: Oppdaterte verdier for tjeneste
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpeningHoursRule'
+          text/plain:
+            schema:
+              type: string
+      responses:
+        '201':
+          description: Updated
+        '403':
+          description: Forbidden
+          content: { }
+        '404':
+          description: Not Found
+          content: { }
 #--------------------------------------------------------------------------------------------------------------------------------------------------------
 #--------------------------------------------------------------------------------------------------------------------------------------------------------
 components:
@@ -1597,6 +1647,21 @@ components:
         name:
           type: string
           example: "Ola Norman"
+    OpeningHoursRule:
+      title: OpeningHoursRule
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          example: "Helligdag 17.mai"
+        rule:
+          type: string
+          example: "24.12.???? ? 1-5 09:00-14:00"
+
   securitySchemes:
     ApiKeyAuth: # arbitrary name for the security scheme
       type: apiKey
