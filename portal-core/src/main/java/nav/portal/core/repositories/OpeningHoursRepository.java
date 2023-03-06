@@ -54,7 +54,15 @@ public class OpeningHoursRepository {
             ohRuleTable.where("id", openingHoursId).executeDelete();
             return true;
         }
-//
+
+    public boolean deleteOpeninghourGroup(UUID openingHoursGroupId){
+        if(ohGroupTable.where("id",openingHoursGroupId).singleObject(OpeningHoursRepository::toOpeningRule).isEmpty()){
+            return false;
+        }
+        ohGroupTable.where("id", openingHoursGroupId).executeDelete();
+        return true;
+    }
+
     public UUID saveGroup(OpeningHoursGroup group) {
         //Sjekk på navn
         if(ohGroupTable.where("name",group.getName()).getCount()>0) {
