@@ -132,6 +132,10 @@ public class OpeningHoursRepository {
     return Optional.of(result);
     }
 
+    public Optional<OpeningHoursRuleEntity> retriveRule(UUID id){
+            return ohGroupTable.where("id", id).singleObject(OpeningHoursRepository::toOpeningRule);
+    }
+
 
     private Optional<OpeningHoursRule> retriveGroupOrRule(UUID id) {
         Optional<OpeningHoursRuleEntity> ruleEntity = ohRuleTable.where("id", id).singleObject(OpeningHoursRepository::toOpeningRule);
