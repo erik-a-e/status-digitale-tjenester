@@ -87,6 +87,25 @@ public class SampleData {
                 .setRule(getRandomFromArray(rules));
     }
 
+    public static List<OpeningHoursRuleEntity> getNonEmptyListOfOpeningRules(int length) {
+        int numberOfRules = length;
+        List<OpeningHoursRuleEntity> OpeningHoursRules = new ArrayList<>();
+        for (int i = 0; i < numberOfRules; i++) {
+            OpeningHoursRules.add(getRandomizedOpeningHoursRuleEntityWithNameNotInList(OpeningHoursRules));
+        }
+        return OpeningHoursRules;
+    }
+
+    public static OpeningHoursRuleEntity getRandomizedOpeningHoursRuleEntityWithNameNotInList(List<OpeningHoursRuleEntity> OpeningHoursRules) {
+        List<String> usedNames = OpeningHoursRules.stream().map(OpeningHoursRuleEntity::getName).collect(Collectors.toList());
+        ArrayList<String> possibleNames = new ArrayList<>(areaNames);
+        possibleNames.removeAll(usedNames);
+        return new OpeningHoursRuleEntity()
+                .setName(getRandomFromArray(possibleNames))
+                .setRule(getRandomFromArray(rules));
+    }
+
+
     public static List<AreaEntity> getRandomLengthListOfAreaEntity() {
         Random random = new Random();
         int numberOfAreas = 1 + random.nextInt(12);
