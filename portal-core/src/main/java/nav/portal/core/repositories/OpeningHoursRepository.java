@@ -68,7 +68,7 @@ public class OpeningHoursRepository {
         if(ohGroupTable.where("name",group.getName()).getCount()>0) {
             throw new HttpRequestException("Åpningstidsgruppe med navn: "+ group.getName() +" finnes allerede");
         }
-        if(cointainsCircularGroupDependency(group)){
+        if(containsCircularGroupDependency(group)){
             throw new HttpRequestException("Åpningsgruppe inneholder sirkuler avhengighet");
         }
         DatabaseSaveResult<UUID> result = ohGroupTable
@@ -81,7 +81,7 @@ public class OpeningHoursRepository {
         return result.getId();
     }
 
-    private boolean cointainsCircularGroupDependency(OpeningHoursGroup group){
+    private boolean containsCircularGroupDependency(OpeningHoursGroup group){
             UUID groupId = group.getId();
             List<OpeningHoursGroup> subGroups = getAllSubGroups(group);
             List<UUID> subGroupsIds = subGroups.stream().map(OpeningHoursGroup::getId).collect(Collectors.toList());
@@ -89,7 +89,7 @@ public class OpeningHoursRepository {
                 return true;
             }
             for(OpeningHoursGroup subGroup : subGroups){
-                if(cointainsCircularGroupDependency(subGroup)){
+                if(containsCircularGroupDependency(subGroup)){
                     return true;
                 }
             }
