@@ -38,7 +38,7 @@ public class OpeningHoursController {
         openingHoursHelper.updateRule(openingHoursRuleDto);
     }
 
-    @DELETE("/OpeningHours/:Rule/:Rule_id")
+    @DELETE("/OpeningHours/Rule/:Rule_id")
     @JsonBody
     public void deleteRule(@PathParam("Rule_id") UUID rule_id){
         openingHoursHelper.deleteRule(rule_id);
