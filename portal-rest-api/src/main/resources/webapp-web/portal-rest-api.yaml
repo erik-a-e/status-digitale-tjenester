@@ -1276,6 +1276,27 @@ paths:
         '404':
           description: Not Found
           content: { }
+  /OpeningHours/rule/{Rule_id}:
+    delete:
+      tags:
+        - OpeningHours
+      summary: Slett åpenstidsregel
+      description: Fjerner en åpenstidsregel
+      parameters:
+        - name: Rule_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '201':
+          description: Deleted
+        '403':
+          description: Forbidden
+          content: { }
+        '404':
+          description: Not Found
+          content: { }
 #--------------------------------------------------------------------------------------------------------------------------------------------------------
 #--------------------------------------------------------------------------------------------------------------------------------------------------------
 components:

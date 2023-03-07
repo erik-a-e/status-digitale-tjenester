@@ -30,4 +30,8 @@ public class OpeningHoursHelper {
     public void updateRule(OpeningHoursRuleDto openingHoursRuleDto) {
         openingHoursRepository.update(EntityDtoMappers.toOpeningHoursRuleEntity(openingHoursRuleDto));
     }
+
+    public void deleteRule(UUID rule_id) {
+        openingHoursRepository.deleteOpeninghours(rule_id);
+    }
 }
