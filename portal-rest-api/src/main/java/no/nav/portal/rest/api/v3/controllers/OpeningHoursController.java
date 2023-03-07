@@ -6,11 +6,11 @@ import no.nav.portal.rest.api.Helpers.ServiceControllerHelper;
 import no.nav.portal.rest.api.Helpers.Util;
 import no.portal.web.generated.api.OpeningHoursRuleDto;
 
-import org.actioncontroller.HttpRequestException;
-import org.actioncontroller.POST;
-import org.actioncontroller.PUT;
+import org.actioncontroller.*;
 import org.actioncontroller.json.JsonBody;
 import org.fluentjdbc.DbContext;
+
+import java.util.UUID;
 
 public class OpeningHoursController {
 
@@ -36,6 +36,12 @@ public class OpeningHoursController {
             throw new HttpRequestException("Rule not valid: "+ openingHoursRuleDto.getRule());
         }
         openingHoursHelper.updateRule(openingHoursRuleDto);
+    }
+
+    @DELETE("/OpeningHours/:Rule/:Rule_id")
+    @JsonBody
+    public void deleteRule(@PathParam("Rule_id") UUID rule_id){
+        openingHoursHelper.deleteRule(rule_id);
     }
 
 
