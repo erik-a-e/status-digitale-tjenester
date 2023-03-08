@@ -1,11 +1,14 @@
 package no.nav.portal.rest.api.Helpers;
 
+import nav.portal.core.entities.OpeningHoursRuleEntity;
 import nav.portal.core.openingHours.OpeningHoursLogic;
 import nav.portal.core.repositories.OpeningHoursRepository;
 import no.nav.portal.rest.api.EntityDtoMappers;
+import no.portal.web.generated.api.DashboardDto;
 import no.portal.web.generated.api.OpeningHoursRuleDto;
 import org.fluentjdbc.DbContext;
 
+import java.util.Optional;
 import java.util.UUID;
 
 public class OpeningHoursHelper {
@@ -34,4 +37,9 @@ public class OpeningHoursHelper {
     public void deleteRule(UUID rule_id) {
         openingHoursRepository.deleteOpeninghours(rule_id);
     }
+
+    public OpeningHoursRuleDto getRule(UUID rule_id) {
+        return EntityDtoMappers.toOpeningHoursRuleDto(openingHoursRepository.retriveRule(rule_id));
+    }
+
 }

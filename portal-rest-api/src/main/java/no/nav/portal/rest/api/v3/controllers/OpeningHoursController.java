@@ -4,6 +4,7 @@ import nav.portal.core.repositories.ServiceRepository;
 import no.nav.portal.rest.api.Helpers.OpeningHoursHelper;
 import no.nav.portal.rest.api.Helpers.ServiceControllerHelper;
 import no.nav.portal.rest.api.Helpers.Util;
+import no.portal.web.generated.api.DashboardDto;
 import no.portal.web.generated.api.OpeningHoursRuleDto;
 
 import org.actioncontroller.*;
@@ -43,6 +44,14 @@ public class OpeningHoursController {
     public void deleteRule(@PathParam("Rule_id") UUID rule_id){
         openingHoursHelper.deleteRule(rule_id);
     }
+
+    @GET("/OpeningHours/Rule/:Rule_id")
+    @JsonBody
+    public OpeningHoursRuleDto getRule(@PathParam("Rule_id") UUID rule_id) {
+        return openingHoursHelper.getRule(rule_id);
+    }
+
+
 
 
 }
