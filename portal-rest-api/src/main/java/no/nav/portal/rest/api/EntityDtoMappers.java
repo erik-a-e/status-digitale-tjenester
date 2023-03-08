@@ -282,4 +282,12 @@ public class EntityDtoMappers {
                 .setRule(openingHoursRuleDto.getRule())
                 .setName(openingHoursRuleDto.getName());
     }
+
+    public static OpeningHoursRuleDto toOpeningHoursRuleDto(Optional<OpeningHoursRuleEntity> rule) {
+        OpeningHoursRuleDto dto = new OpeningHoursRuleDto();
+        dto.setId(rule.get().getId());
+        dto.setRule(rule.get().getRule());
+        dto.setName(rule.get().getName());
+        return dto;
+    }
 }

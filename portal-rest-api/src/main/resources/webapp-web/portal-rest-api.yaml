@@ -1297,6 +1297,36 @@ paths:
         '404':
           description: Not Found
           content: { }
+    get:
+      tags:
+        - OpeningHours
+      summary: Hent åpenstidsregel.
+      description: henter et åpenstidsregel
+      operationId: getRule
+      parameters:
+        - name: Rule_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpeningHoursRule'
+        '401':
+          description: Unauthorized
+          content: {}
+        '403':
+          description: Forbidden
+          content: {}
+        '404':
+          description: Not Found
+          content: {}
+      deprecated: false
 #--------------------------------------------------------------------------------------------------------------------------------------------------------
 #--------------------------------------------------------------------------------------------------------------------------------------------------------
 components:
