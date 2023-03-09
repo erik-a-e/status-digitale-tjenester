@@ -1278,6 +1278,31 @@ paths:
           description: Not Found
           content: {}
       deprecated: false
+  /OpeningHours/Group:
+    post:
+      tags:
+        - OpeningHours
+      summary: Legg til regelgruppe
+      description: Opprett en ny tjeneste for innlegging av  åpenstidsregler
+      requestBody:
+        description: Legg til en ny tjeneste
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpeningHoursGroup'
+          text/plain:
+            schema:
+              type: string
+      responses:
+        '201':
+          description: Created
+        '403':
+          description: Forbidden
+          content: { }
+        '404':
+          description: Not Found
+          content: { }
 #--------------------------------------------------------------------------------------------------------------------------------------------------------
 #--------------------------------------------------------------------------------------------------------------------------------------------------------
 components:
@@ -1712,6 +1737,23 @@ components:
         rule:
           type: string
           example: "24.12.???? ? 1-5 09:00-14:00"
+    OpeningHoursGroup:
+      title: OpeningHoursGroup
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          example: "Helligdag 17.mai"
+        rules:
+          type: array
+          items:
+            type: string
+            format: uuid
+
 
   securitySchemes:
     ApiKeyAuth: # arbitrary name for the security scheme
