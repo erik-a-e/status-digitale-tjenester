@@ -58,4 +58,15 @@ public class OpeningHoursController {
         return openingHoursHelper.saveGroup(openingHoursGroupDto);
     }
 
+    @DELETE("/OpeningHours/Group/:Group_id")
+    @JsonBody
+    public void deleteGroup(@PathParam("Group_id") UUID group_id){
+        openingHoursHelper.deleteGroup(group_id);
+    }
+
+    @GET("/OpeningHours/Group/:Group_id")
+    @JsonBody
+    public OpeningHoursGroupDto getGroup(@PathParam("Group_id") UUID group_id) {
+        return openingHoursHelper.getGroup(group_id);
+    }
 }

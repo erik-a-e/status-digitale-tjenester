@@ -205,8 +205,6 @@ public class EntityDtoMappers {
         return dto;
     }
 
-
-
     public static DashboardDto toDashboardDtoDeep(Map.Entry<DashboardEntity,List<AreaWithServices>> dashboardEntry) {
         DashboardDto dto = new DashboardDto();
         dto.setName(dashboardEntry.getKey().getName());
@@ -298,9 +296,17 @@ public class EntityDtoMappers {
         openingHoursGroupDto.getRules().forEach(rule->{
             rules.add(openingHoursRepository.retriveRule(rule).get());
         });
-         OpeningHoursGroup group =
-                 new OpeningHoursGroup(openingHoursGroupDto.getId(),openingHoursGroupDto.getName(), rules);
-         return group;
+        return new OpeningHoursGroup(openingHoursGroupDto.getId(),openingHoursGroupDto.getName(), rules);
+    }
+
+    public static OpeningHoursGroupDto toOpeningHoursGroupDto(Optional<OpeningHoursGroup> group) {
+        List<UUID> rulesId = new ArrayList<>();
+        group.get().getRules().forEach(rule -> rulesId.add(rule.getId()));
+        OpeningHoursGroupDto dto = new OpeningHoursGroupDto();
+        dto.setId(group.get().getId());
+        dto.setName(group.get().getName());
+        dto.setRules(rulesId);
+        return dto;
     }
 
 }

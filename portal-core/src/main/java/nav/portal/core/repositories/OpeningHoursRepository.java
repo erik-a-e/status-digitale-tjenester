@@ -106,10 +106,7 @@ public class OpeningHoursRepository {
 
             subgroupsDirectlyUnderGroup.forEach(g -> result.addAll(getAllSubGroups(g)));
             return result;
-
     }
-
-
 
     public Optional<OpeningHoursGroup> retrieveOneGroup(UUID group_id) {
         Optional<OpeningHoursGroupEntity> optionalOfGroupEntity = ohGroupTable.where("id", group_id).singleObject(OpeningHoursRepository::toOpeningHoursGroupEntity);

@@ -49,4 +49,11 @@ public class OpeningHoursHelper {
         return openingHoursGroupDto;
     }
 
+    public void deleteGroup(UUID group_id) {
+        openingHoursRepository.deleteOpeninghourGroup(group_id);
+    }
+
+    public OpeningHoursGroupDto getGroup(UUID group_id) {
+        return EntityDtoMappers.toOpeningHoursGroupDto(openingHoursRepository.retrieveOneGroup(group_id));
+    }
 }
