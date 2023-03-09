@@ -5,6 +5,7 @@ import no.nav.portal.rest.api.Helpers.OpeningHoursHelper;
 import no.nav.portal.rest.api.Helpers.ServiceControllerHelper;
 import no.nav.portal.rest.api.Helpers.Util;
 import no.portal.web.generated.api.DashboardDto;
+import no.portal.web.generated.api.OpeningHoursGroupDto;
 import no.portal.web.generated.api.OpeningHoursRuleDto;
 
 import org.actioncontroller.*;
@@ -51,7 +52,10 @@ public class OpeningHoursController {
         return openingHoursHelper.getRule(rule_id);
     }
 
-
-
+    @POST("/OpeningHours/Group")
+    @JsonBody
+    public OpeningHoursGroupDto newGroup(@JsonBody OpeningHoursGroupDto openingHoursGroupDto) {
+        return openingHoursHelper.saveGroup(openingHoursGroupDto);
+    }
 
 }

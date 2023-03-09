@@ -5,6 +5,7 @@ import nav.portal.core.openingHours.OpeningHoursLogic;
 import nav.portal.core.repositories.OpeningHoursRepository;
 import no.nav.portal.rest.api.EntityDtoMappers;
 import no.portal.web.generated.api.DashboardDto;
+import no.portal.web.generated.api.OpeningHoursGroupDto;
 import no.portal.web.generated.api.OpeningHoursRuleDto;
 import org.fluentjdbc.DbContext;
 
@@ -40,6 +41,12 @@ public class OpeningHoursHelper {
 
     public OpeningHoursRuleDto getRule(UUID rule_id) {
         return EntityDtoMappers.toOpeningHoursRuleDto(openingHoursRepository.retriveRule(rule_id));
+    }
+
+    public OpeningHoursGroupDto saveGroup(OpeningHoursGroupDto openingHoursGroupDto) {
+        UUID id = openingHoursRepository.saveGroup(EntityDtoMappers.toOpeningHoursGroup(openingHoursGroupDto));
+        openingHoursGroupDto.setId(id);
+        return openingHoursGroupDto;
     }
 
 }

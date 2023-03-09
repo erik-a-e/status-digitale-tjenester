@@ -4,6 +4,7 @@ import nav.portal.core.entities.*;
 import nav.portal.core.enums.OpsMessageSeverity;
 import nav.portal.core.enums.ServiceStatus;
 import nav.portal.core.enums.ServiceType;
+import nav.portal.core.repositories.OpeningHoursRepository;
 import no.portal.web.generated.api.*;
 
 
@@ -13,9 +14,10 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
-
+import nav.portal.core.repositories.OpeningHoursRepository;
 
 public class EntityDtoMappers {
+    private static OpeningHoursRepository openingHoursRepository;
 
     public static StatusDto toStatusDto(RecordEntity recordEntity){
         return StatusDto.fromValue(recordEntity.getStatus().getDbRepresentation());
@@ -290,4 +292,15 @@ public class EntityDtoMappers {
         dto.setName(rule.get().getName());
         return dto;
     }
+
+    public static OpeningHoursGroup toOpeningHoursGroup(OpeningHoursGroupDto openingHoursGroupDto) {
+        List<OpeningHoursRule>rules = new ArrayList<>();
+        openingHoursGroupDto.getRules().forEach(rule->{
+            rules.add(openingHoursRepository.retriveRule(rule).get());
+        });
+         OpeningHoursGroup group =
+                 new OpeningHoursGroup(openingHoursGroupDto.getId(),openingHoursGroupDto.getName(), rules);
+         return group;
+    }
+
 }
