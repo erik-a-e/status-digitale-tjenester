@@ -1303,6 +1303,81 @@ paths:
         '404':
           description: Not Found
           content: { }
+    put:
+      tags:
+        - OpeningHours
+      summary: Rediger regelgruppe
+      description: Rediger regelgruppeparametre
+      requestBody:
+        description: Oppdaterte verdier for regelgruppe
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpeningHoursGroup'
+          text/plain:
+            schema:
+              type: string
+      responses:
+        '201':
+          description: Updated
+        '403':
+          description: Forbidden
+          content: { }
+        '404':
+          description: Not Found
+          content: { }
+  /OpeningHours/group/{Group_id}:
+    delete:
+      tags:
+        - OpeningHours
+      summary: Slett åpenstidsgruppe
+      description: Fjerner en åpenstidsgruppe
+      parameters:
+        - name: Group_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '201':
+          description: Deleted
+        '403':
+          description: Forbidden
+          content: { }
+        '404':
+          description: Not Found
+          content: { }
+    get:
+      tags:
+        - OpeningHours
+      summary: Hent åpenstidsgruppe.
+      description: henter et åpenstidsgruppe
+      operationId: getGroup
+      parameters:
+        - name: Group_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpeningHoursGroup'
+        '401':
+          description: Unauthorized
+          content: {}
+        '403':
+          description: Forbidden
+          content: {}
+        '404':
+          description: Not Found
+          content: {}
+      deprecated: false
 #--------------------------------------------------------------------------------------------------------------------------------------------------------
 #--------------------------------------------------------------------------------------------------------------------------------------------------------
 components:
