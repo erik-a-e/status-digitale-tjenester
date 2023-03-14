@@ -81,6 +81,14 @@ public class OpeningHoursRepository {
         return result.getId();
     }
 
+    public void updateGroup(OpeningHoursGroup group) {
+        ohGroupTable.where("id", group.getId())
+                .update()
+                .setField("name",group.getName())
+                .setField("rule_group_ids",group.getRules().stream().map(OpeningHoursRule::getId).map(String::valueOf).collect(Collectors.toList()))
+                .execute();
+    }
+
     private boolean containsCircularGroupDependency(OpeningHoursGroup group){
             UUID groupId = group.getId();
             List<OpeningHoursGroup> subGroups = getAllSubGroups(group);

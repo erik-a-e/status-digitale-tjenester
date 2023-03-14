@@ -308,4 +308,14 @@ public class EntityDtoMappers {
         return dto;
     }
 
+    public static OpeningHoursGroupDto toOpeningHoursGroupDtoDeep(OpeningHoursGroupEntity group){
+        List<UUID> rulesId = new ArrayList<>();
+        rulesId.addAll(group.getRules());
+        OpeningHoursGroupDto dto = new OpeningHoursGroupDto();
+        dto.setId(group.getId());
+        dto.setName(group.getName());
+        dto.setRules(rulesId);
+        return dto;
+    }
+
 }

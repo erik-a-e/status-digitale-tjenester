@@ -4,6 +4,7 @@ import nav.portal.core.repositories.ServiceRepository;
 import no.nav.portal.rest.api.Helpers.OpeningHoursHelper;
 import no.nav.portal.rest.api.Helpers.ServiceControllerHelper;
 import no.nav.portal.rest.api.Helpers.Util;
+import no.portal.web.generated.api.AreaDto;
 import no.portal.web.generated.api.DashboardDto;
 import no.portal.web.generated.api.OpeningHoursGroupDto;
 import no.portal.web.generated.api.OpeningHoursRuleDto;
@@ -56,6 +57,12 @@ public class OpeningHoursController {
     @JsonBody
     public OpeningHoursGroupDto newGroup(@JsonBody OpeningHoursGroupDto openingHoursGroupDto) {
         return openingHoursHelper.saveGroup(openingHoursGroupDto);
+    }
+
+    @PUT("/OpeningHours/Group")
+    @JsonBody
+    public void updateGroup(@PathParam("Group_id") UUID group_id, @JsonBody OpeningHoursGroupDto openingHoursGroupDto) {
+        openingHoursHelper.updateGroup(group_id, openingHoursGroupDto);
     }
 
     @DELETE("/OpeningHours/Group/:Group_id")
