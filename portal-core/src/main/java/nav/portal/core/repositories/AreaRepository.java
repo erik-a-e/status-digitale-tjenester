@@ -66,7 +66,6 @@ public class AreaRepository {
                 .execute();
     }
 
-
     public boolean deleteArea(UUID areaId){
         if(areaTable.where("id",areaId).singleObject(AreaRepository::toArea).isEmpty()){
             return false;

@@ -1,16 +1,20 @@
 package no.nav.portal.rest.api.Helpers;
 
+import nav.portal.core.entities.OpeningHoursGroup;
 import nav.portal.core.entities.OpeningHoursRuleEntity;
 import nav.portal.core.openingHours.OpeningHoursLogic;
 import nav.portal.core.repositories.OpeningHoursRepository;
 import no.nav.portal.rest.api.EntityDtoMappers;
 import no.portal.web.generated.api.DashboardDto;
+import no.portal.web.generated.api.DashboardUpdateDto;
 import no.portal.web.generated.api.OpeningHoursGroupDto;
 import no.portal.web.generated.api.OpeningHoursRuleDto;
 import org.fluentjdbc.DbContext;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class OpeningHoursHelper {
     private OpeningHoursRepository openingHoursRepository;
@@ -55,5 +59,10 @@ public class OpeningHoursHelper {
 
     public OpeningHoursGroupDto getGroup(UUID group_id) {
         return EntityDtoMappers.toOpeningHoursGroupDto(openingHoursRepository.retrieveOneGroup(group_id));
+    }
+
+    public void updateGroup(UUID group_id, OpeningHoursGroupDto openingHoursGroupDto) {
+        openingHoursGroupDto.setId(group_id);
+        openingHoursRepository.updateGroup(EntityDtoMappers.toOpeningHoursGroup(openingHoursGroupDto));
     }
 }
