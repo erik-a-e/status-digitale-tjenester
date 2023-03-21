@@ -61,8 +61,7 @@ public class OpeningHoursHelper {
         return EntityDtoMappers.toOpeningHoursGroupDto(openingHoursRepository.retrieveOneGroup(group_id));
     }
 
-    public void updateGroup(UUID group_id, OpeningHoursGroupDto openingHoursGroupDto) {
-        openingHoursGroupDto.setId(group_id);
+    public void updateGroup(OpeningHoursGroupDto openingHoursGroupDto) {
         openingHoursRepository.updateGroup(EntityDtoMappers.toOpeningHoursGroup(openingHoursGroupDto));
     }
 }
