@@ -61,8 +61,8 @@ public class OpeningHoursController {
 
     @PUT("/OpeningHours/Group")
     @JsonBody
-    public void updateGroup(@PathParam("Group_id") UUID group_id, @JsonBody OpeningHoursGroupDto openingHoursGroupDto) {
-        openingHoursHelper.updateGroup(group_id, openingHoursGroupDto);
+    public void updateGroup(@JsonBody OpeningHoursGroupDto openingHoursGroupDto) {
+        openingHoursHelper.updateGroup(openingHoursGroupDto);
     }
 
     @DELETE("/OpeningHours/Group/:Group_id")
