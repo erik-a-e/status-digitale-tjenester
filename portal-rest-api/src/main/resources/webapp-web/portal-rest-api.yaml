@@ -1190,7 +1190,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/OpeningHoursRule'
+              $ref: '#/components/schemas/OHRule'
           text/plain:
             schema:
               type: string
@@ -1214,7 +1214,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/OpeningHoursRule'
+              $ref: '#/components/schemas/OHRule'
           text/plain:
             schema:
               type: string
@@ -1267,7 +1267,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/OpeningHoursRule'
+                $ref: '#/components/schemas/OHRule'
         '401':
           description: Unauthorized
           content: {}
@@ -1290,7 +1290,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/OpeningHoursGroup'
+              $ref: '#/components/schemas/OHGroupThin'
           text/plain:
             schema:
               type: string
@@ -1314,7 +1314,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/OpeningHoursGroup'
+              $ref: '#/components/schemas/OHGroupThin'
           text/plain:
             schema:
               type: string
@@ -1367,7 +1367,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/OpeningHoursGroup'
+                $ref: '#/components/schemas/OHGroup'
         '401':
           description: Unauthorized
           content: {}
@@ -1798,8 +1798,8 @@ components:
         name:
           type: string
           example: "Ola Norman"
-    OpeningHoursRule:
-      title: OpeningHoursRule
+    OHGroupThin:
+      title: OHGroupThin
       type: object
       properties:
         id:
@@ -1808,26 +1808,47 @@ components:
           readOnly: true
         name:
           type: string
-          example: "Helligdag 17.mai"
-        rule:
-          type: string
-          example: "24.12.???? ? 1-5 09:00-14:00"
-    OpeningHoursGroup:
-      title: OpeningHoursGroup
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          readOnly: true
-        name:
-          type: string
-          example: "Helligdag 17.mai"
+          example: "[uuid,uuid, uuid]"
         rules:
           type: array
           items:
             type: string
             format: uuid
+
+    OHtype:
+      type: string
+      enum:
+        - RULE
+        - GROUP
+    OHBasic:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/OHtype'
+    OHGroup:
+      allOf:
+        - $ref: '#/components/schemas/OHBasic'
+        - type: object
+          properties:
+            rules:
+              type: array
+              items:
+                $ref: '#/components/schemas/OHBasic'
+    OHRule:
+      allOf:
+        - $ref: '#/components/schemas/OHBasic'
+        - type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+              readOnly: true
+            name:
+              type: string
+              example: "Helligdag 17.mai"
+            rule:
+              type: string
+              example: "24.12.???? ? 1-5 09:00-14:00"
 
 
   securitySchemes:
