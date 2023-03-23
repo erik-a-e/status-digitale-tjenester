@@ -6,8 +6,8 @@ import no.nav.portal.rest.api.Helpers.ServiceControllerHelper;
 import no.nav.portal.rest.api.Helpers.Util;
 import no.portal.web.generated.api.AreaDto;
 import no.portal.web.generated.api.DashboardDto;
-import no.portal.web.generated.api.OpeningHoursGroupDto;
-import no.portal.web.generated.api.OpeningHoursRuleDto;
+import no.portal.web.generated.api.OHGroupThinDto;
+import no.portal.web.generated.api.OHRuleDto;
 
 import org.actioncontroller.*;
 import org.actioncontroller.json.JsonBody;
@@ -25,20 +25,20 @@ public class OpeningHoursController {
 
     @POST("/OpeningHours/Rule")
     @JsonBody
-    public OpeningHoursRuleDto newRule(@JsonBody OpeningHoursRuleDto openingHoursRuleDto) {
-        if(!openingHoursHelper.isValidRule(openingHoursRuleDto)){
-            throw new HttpRequestException("Rule not valid: "+ openingHoursRuleDto.getRule());
+    public OHRuleDto newRule(@JsonBody OHRuleDto oHRuleDto) {
+        if(!openingHoursHelper.isValidRule(oHRuleDto)){
+            throw new HttpRequestException("Rule not valid: "+ oHRuleDto.getRule());
         }
-        return openingHoursHelper.saveNewRule(openingHoursRuleDto);
+        return openingHoursHelper.saveNewRule(oHRuleDto);
     }
 
     @PUT("/OpeningHours/Rule")
     @JsonBody
-    public void updateRule(@JsonBody OpeningHoursRuleDto openingHoursRuleDto) {
-        if(!openingHoursHelper.isValidRule(openingHoursRuleDto)){
-            throw new HttpRequestException("Rule not valid: "+ openingHoursRuleDto.getRule());
+    public void updateRule(@JsonBody OHRuleDto oHRuleDto) {
+        if(!openingHoursHelper.isValidRule(oHRuleDto)){
+            throw new HttpRequestException("Rule not valid: "+ oHRuleDto.getRule());
         }
-        openingHoursHelper.updateRule(openingHoursRuleDto);
+        openingHoursHelper.updateRule(oHRuleDto);
     }
 
     @DELETE("/OpeningHours/Rule/:Rule_id")
@@ -49,20 +49,20 @@ public class OpeningHoursController {
 
     @GET("/OpeningHours/Rule/:Rule_id")
     @JsonBody
-    public OpeningHoursRuleDto getRule(@PathParam("Rule_id") UUID rule_id) {
+    public OHRuleDto getRule(@PathParam("Rule_id") UUID rule_id) {
         return openingHoursHelper.getRule(rule_id);
     }
 
     @POST("/OpeningHours/Group")
     @JsonBody
-    public OpeningHoursGroupDto newGroup(@JsonBody OpeningHoursGroupDto openingHoursGroupDto) {
-        return openingHoursHelper.saveGroup(openingHoursGroupDto);
+    public OHGroupThinDto newGroup(@JsonBody OHGroupThinDto oHGroupThinDto) {
+        return openingHoursHelper.saveGroup(oHGroupThinDto);
     }
 
     @PUT("/OpeningHours/Group")
     @JsonBody
-    public void updateGroup(@JsonBody OpeningHoursGroupDto openingHoursGroupDto) {
-        openingHoursHelper.updateGroup(openingHoursGroupDto);
+    public void updateGroup(@JsonBody OHGroupThinDto oHGroupThinDto) {
+        openingHoursHelper.updateGroup(oHGroupThinDto);
     }
 
     @DELETE("/OpeningHours/Group/:Group_id")
@@ -73,7 +73,7 @@ public class OpeningHoursController {
 
     @GET("/OpeningHours/Group/:Group_id")
     @JsonBody
-    public OpeningHoursGroupDto getGroup(@PathParam("Group_id") UUID group_id) {
+    public OHGroupThinDto getGroup(@PathParam("Group_id") UUID group_id) {
         return openingHoursHelper.getGroup(group_id);
     }
 }

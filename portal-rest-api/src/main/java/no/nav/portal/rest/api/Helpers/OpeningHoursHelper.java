@@ -5,10 +5,7 @@ import nav.portal.core.entities.OpeningHoursRuleEntity;
 import nav.portal.core.openingHours.OpeningHoursLogic;
 import nav.portal.core.repositories.OpeningHoursRepository;
 import no.nav.portal.rest.api.EntityDtoMappers;
-import no.portal.web.generated.api.DashboardDto;
-import no.portal.web.generated.api.DashboardUpdateDto;
-import no.portal.web.generated.api.OpeningHoursGroupDto;
-import no.portal.web.generated.api.OpeningHoursRuleDto;
+import no.portal.web.generated.api.*;
 import org.fluentjdbc.DbContext;
 
 import java.util.List;
@@ -25,43 +22,43 @@ public class OpeningHoursHelper {
     }
 
 
-    public boolean isValidRule(OpeningHoursRuleDto openingHoursRuleDto) {
-        return OpeningHoursLogic.isAValidRule(openingHoursRuleDto.getRule());
+    public boolean isValidRule(OHRuleDto oHRuleDto) {
+        return OpeningHoursLogic.isAValidRule(oHRuleDto.getRule());
     }
 
-    public OpeningHoursRuleDto saveNewRule(OpeningHoursRuleDto openingHoursRuleDto) {
-       UUID id = openingHoursRepository.save(EntityDtoMappers.toOpeningHoursRuleEntity(openingHoursRuleDto));
-       openingHoursRuleDto.setId(id);
-       return openingHoursRuleDto;
+    public OHRuleDto saveNewRule(OHRuleDto oHRuleDto) {
+       UUID id = openingHoursRepository.save(EntityDtoMappers.toOpeningHoursRuleEntity(oHRuleDto));
+       oHRuleDto.setId(id);
+       return oHRuleDto;
     }
 
-    public void updateRule(OpeningHoursRuleDto openingHoursRuleDto) {
-        openingHoursRepository.update(EntityDtoMappers.toOpeningHoursRuleEntity(openingHoursRuleDto));
+    public void updateRule(OHRuleDto oHRuleDto) {
+        openingHoursRepository.update(EntityDtoMappers.toOpeningHoursRuleEntity(oHRuleDto));
     }
 
     public void deleteRule(UUID rule_id) {
         openingHoursRepository.deleteOpeninghours(rule_id);
     }
 
-    public OpeningHoursRuleDto getRule(UUID rule_id) {
+    public OHRuleDto getRule(UUID rule_id) {
         return EntityDtoMappers.toOpeningHoursRuleDto(openingHoursRepository.retriveRule(rule_id));
     }
 
-    public OpeningHoursGroupDto saveGroup(OpeningHoursGroupDto openingHoursGroupDto) {
-        UUID id = openingHoursRepository.saveGroup(EntityDtoMappers.toOpeningHoursGroup(openingHoursGroupDto));
-        openingHoursGroupDto.setId(id);
-        return openingHoursGroupDto;
+    public OHGroupThinDto saveGroup(OHGroupThinDto oHGroupThinDto) {
+        UUID id = openingHoursRepository.saveGroup(EntityDtoMappers.toOpeningHoursGroup(oHGroupThinDto));
+        oHGroupThinDto.setId(id);
+        return oHGroupThinDto;
     }
 
     public void deleteGroup(UUID group_id) {
         openingHoursRepository.deleteOpeninghourGroup(group_id);
     }
 
-    public OpeningHoursGroupDto getGroup(UUID group_id) {
+    public OHGroupThinDto getGroup(UUID group_id) {
         return EntityDtoMappers.toOpeningHoursGroupDto(openingHoursRepository.retrieveOneGroup(group_id));
     }
 
-    public void updateGroup(OpeningHoursGroupDto openingHoursGroupDto) {
-        openingHoursRepository.updateGroup(EntityDtoMappers.toOpeningHoursGroup(openingHoursGroupDto));
+    public void updateGroup(OHGroupThinDto oHGroupThinDto) {
+        openingHoursRepository.updateGroup(EntityDtoMappers.toOpeningHoursGroup(oHGroupThinDto));
     }
 }
