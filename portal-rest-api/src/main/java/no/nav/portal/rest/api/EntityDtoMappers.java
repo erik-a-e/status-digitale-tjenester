@@ -275,43 +275,43 @@ public class EntityDtoMappers {
                 .endTime(maintenanceEntity.getEnd_time().toOffsetDateTime());
     }
 
-    public static OpeningHoursRuleEntity toOpeningHoursRuleEntity(OpeningHoursRuleDto openingHoursRuleDto) {
+    public static OpeningHoursRuleEntity toOpeningHoursRuleEntity(OHRuleDto oHRuleDto) {
         return new OpeningHoursRuleEntity()
-                .setId(openingHoursRuleDto.getId())
-                .setRule(openingHoursRuleDto.getRule())
-                .setName(openingHoursRuleDto.getName());
+                .setId(oHRuleDto.getId())
+                .setRule(oHRuleDto.getRule())
+                .setName(oHRuleDto.getName());
     }
 
-    public static OpeningHoursRuleDto toOpeningHoursRuleDto(Optional<OpeningHoursRuleEntity> rule) {
-        OpeningHoursRuleDto dto = new OpeningHoursRuleDto();
+    public static OHRuleDto toOpeningHoursRuleDto(Optional<OpeningHoursRuleEntity> rule) {
+        OHRuleDto dto = new OHRuleDto();
         dto.setId(rule.get().getId());
         dto.setRule(rule.get().getRule());
         dto.setName(rule.get().getName());
         return dto;
     }
 
-    public static OpeningHoursGroup toOpeningHoursGroup(OpeningHoursGroupDto openingHoursGroupDto) {
+    public static OpeningHoursGroup toOpeningHoursGroup(OHGroupThinDto oHGroupThinDto) {
         List<OpeningHoursRule>rules = new ArrayList<>();
-        openingHoursGroupDto.getRules().forEach(rule->{
+        oHGroupThinDto.getRules().forEach(rule->{
             rules.add(openingHoursRepository.retriveRule(rule).get());
         });
-        return new OpeningHoursGroup(openingHoursGroupDto.getId(),openingHoursGroupDto.getName(), rules);
+        return new OpeningHoursGroup(oHGroupThinDto.getId(),oHGroupThinDto.getName(), rules);
     }
 
-    public static OpeningHoursGroupDto toOpeningHoursGroupDto(Optional<OpeningHoursGroup> group) {
+    public static OHGroupThinDto toOpeningHoursGroupDto(Optional<OpeningHoursGroup> group) {
         List<UUID> rulesId = new ArrayList<>();
         group.get().getRules().forEach(rule -> rulesId.add(rule.getId()));
-        OpeningHoursGroupDto dto = new OpeningHoursGroupDto();
+        OHGroupThinDto dto = new OHGroupThinDto();
         dto.setId(group.get().getId());
         dto.setName(group.get().getName());
         dto.setRules(rulesId);
         return dto;
     }
 
-    public static OpeningHoursGroupDto toOpeningHoursGroupDtoDeep(OpeningHoursGroupEntity group){
+    public static OHGroupThinDto toOpeningHoursGroupDtoShallow(OpeningHoursGroupEntity group){
         List<UUID> rulesId = new ArrayList<>();
         rulesId.addAll(group.getRules());
-        OpeningHoursGroupDto dto = new OpeningHoursGroupDto();
+        OHGroupThinDto dto = new OHGroupThinDto();
         dto.setId(group.getId());
         dto.setName(group.getName());
         dto.setRules(rulesId);
