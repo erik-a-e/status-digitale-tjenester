@@ -2,6 +2,7 @@ package no.nav.portal.rest.api;
 
 import nav.portal.core.entities.*;
 import nav.portal.core.enums.OpsMessageSeverity;
+import nav.portal.core.enums.RuleType;
 import nav.portal.core.enums.ServiceStatus;
 import nav.portal.core.enums.ServiceType;
 import nav.portal.core.repositories.OpeningHoursRepository;
@@ -283,11 +284,11 @@ public class EntityDtoMappers {
                 .setName(oHRuleDto.getName());
     }
 
-    public static OHRuleDto toOpeningHoursRuleDto(Optional<OpeningHoursRuleEntity> rule) {
+    public static OHRuleDto toOpeningHoursRuleDto(OpeningHoursRuleEntity rule) {
         OHRuleDto dto = new OHRuleDto();
-        dto.setId(rule.get().getId());
-        dto.setRule(rule.get().getRule());
-        dto.setName(rule.get().getName());
+        dto.setId(rule.getId());
+        dto.setRule(rule.getRule());
+        dto.setName(rule.getName());
         return dto;
     }
 
@@ -299,13 +300,45 @@ public class EntityDtoMappers {
         return new OpeningHoursGroup(oHGroupThinDto.getId(),oHGroupThinDto.getName(), rules);
     }
 
-    public static OHGroupThinDto toOpeningHoursGroupDto(Optional<OpeningHoursGroup> group) {
+    public static OHGroupThinDto toOpeningHoursGroupThinDto(Optional<OpeningHoursGroup> group) {
         List<UUID> rulesId = new ArrayList<>();
         group.get().getRules().forEach(rule -> rulesId.add(rule.getId()));
         OHGroupThinDto dto = new OHGroupThinDto();
         dto.setId(group.get().getId());
         dto.setName(group.get().getName());
         dto.setRules(rulesId);
+        return dto;
+    }
+
+    public static OHGroupDto toOpeningHoursGroupDto(OpeningHoursGroup group) {
+        OHGroupDto dto = new OHGroupDto();
+        dto.setType(OHtypeDto.fromValue(group.getRuleType().toString()));
+        dto.setName(group.getName());
+
+
+
+        ArrayList<OHBasicDto> rules = new ArrayList<>();
+        group.getRules().forEach(rule ->{
+            if(rule.getRuleType().equals(RuleType.RULE_GROUP)){
+                rules.add(toOpeningHoursGroupDto((OpeningHoursGroup)rule));
+            }
+            else {
+                rules.add(toOpeningHoursRuleDto((OpeningHoursRuleEntity)rule));
+            }
+        });
+        dto.setRules(rules);
+
+//      Stream version under
+//        dto.setRules(group.getRules().stream().map(rule ->{
+//            if(rule.getRuleType().equals(RuleType.RULE_GROUP)){
+//                return  toOpeningHoursGroupDto((OpeningHoursGroup)rule);
+//            }
+//            else {
+//                return toOpeningHoursRuleDto((OpeningHoursRuleEntity)rule);
+//            }
+//        }).collect(Collectors.toList()));
+
+
         return dto;
     }
 
