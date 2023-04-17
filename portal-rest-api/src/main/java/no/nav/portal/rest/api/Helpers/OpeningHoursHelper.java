@@ -6,6 +6,7 @@ import nav.portal.core.openingHours.OpeningHoursLogic;
 import nav.portal.core.repositories.OpeningHoursRepository;
 import no.nav.portal.rest.api.EntityDtoMappers;
 import no.portal.web.generated.api.*;
+import org.actioncontroller.HttpNotFoundException;
 import org.fluentjdbc.DbContext;
 
 import java.util.List;
@@ -41,7 +42,8 @@ public class OpeningHoursHelper {
     }
 
     public OHRuleDto getRule(UUID rule_id) {
-        return EntityDtoMappers.toOpeningHoursRuleDto(openingHoursRepository.retriveRule(rule_id));
+        OpeningHoursRuleEntity oHRule = (openingHoursRepository.retriveRule(rule_id)).stream().findFirst().orElseThrow(HttpNotFoundException);
+        return EntityDtoMappers.toOpeningHoursRuleDto(oHRule);
     }
 
     public OHGroupThinDto saveGroup(OHGroupThinDto oHGroupThinDto) {
@@ -54,9 +56,9 @@ public class OpeningHoursHelper {
         openingHoursRepository.deleteOpeninghourGroup(group_id);
     }
 
-    public OHGroupThinDto getGroup(UUID group_id) {
-        return EntityDtoMappers.toOpeningHoursGroupDto(openingHoursRepository.retrieveOneGroup(group_id));
-    }
+//    public OHGroupDto getGroup(UUID group_id) {
+//        return EntityDtoMappers.toOpeningHoursGroupDto(openingHoursRepository.retrieveOneGroup(group_id));
+//    }
 
     public void updateGroup(OHGroupThinDto oHGroupThinDto) {
         openingHoursRepository.updateGroup(EntityDtoMappers.toOpeningHoursGroup(oHGroupThinDto));
