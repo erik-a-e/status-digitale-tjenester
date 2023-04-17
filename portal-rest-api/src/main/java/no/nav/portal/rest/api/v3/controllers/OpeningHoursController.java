@@ -4,10 +4,7 @@ import nav.portal.core.repositories.ServiceRepository;
 import no.nav.portal.rest.api.Helpers.OpeningHoursHelper;
 import no.nav.portal.rest.api.Helpers.ServiceControllerHelper;
 import no.nav.portal.rest.api.Helpers.Util;
-import no.portal.web.generated.api.AreaDto;
-import no.portal.web.generated.api.DashboardDto;
-import no.portal.web.generated.api.OHGroupThinDto;
-import no.portal.web.generated.api.OHRuleDto;
+import no.portal.web.generated.api.*;
 
 import org.actioncontroller.*;
 import org.actioncontroller.json.JsonBody;
@@ -71,9 +68,9 @@ public class OpeningHoursController {
         openingHoursHelper.deleteGroup(group_id);
     }
 
-//    @GET("/OpeningHours/Group/:Group_id")
-//    @JsonBody
-//    public OHGroupDto getGroup(@PathParam("Group_id") UUID group_id) {
-//        return openingHoursHelper.getGroup(group_id);
-//    }
+    @GET("/OpeningHours/Group/:Group_id")
+    @JsonBody
+    public OHGroupDto getGroup(@PathParam("Group_id") UUID group_id) {
+        return openingHoursHelper.getGroup(group_id);
+    }
 }

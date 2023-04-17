@@ -42,7 +42,8 @@ public class OpeningHoursHelper {
     }
 
     public OHRuleDto getRule(UUID rule_id) {
-        OpeningHoursRuleEntity oHRule = (openingHoursRepository.retriveRule(rule_id)).stream().findFirst().orElseThrow(HttpNotFoundException);
+        OpeningHoursRuleEntity oHRule = (openingHoursRepository.retriveRule(rule_id)).stream().findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Not found: Rule with id "+ rule_id));
         return EntityDtoMappers.toOpeningHoursRuleDto(oHRule);
     }
 
@@ -56,9 +57,10 @@ public class OpeningHoursHelper {
         openingHoursRepository.deleteOpeninghourGroup(group_id);
     }
 
-//    public OHGroupDto getGroup(UUID group_id) {
-//        return EntityDtoMappers.toOpeningHoursGroupDto(openingHoursRepository.retrieveOneGroup(group_id));
-//    }
+    public OHGroupDto getGroup(UUID group_id) {
+        return EntityDtoMappers.toOpeningHoursGroupDto(openingHoursRepository.retrieveOneGroup(group_id)
+                .orElseThrow(() -> new IllegalArgumentException("Not found: Group with id "+ group_id)));
+    }
 
     public void updateGroup(OHGroupThinDto oHGroupThinDto) {
         openingHoursRepository.updateGroup(EntityDtoMappers.toOpeningHoursGroup(oHGroupThinDto));
