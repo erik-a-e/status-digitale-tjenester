@@ -1823,6 +1823,13 @@ components:
     OHBasic:
       type: object
       properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          example: "Helligdag 17.mai"
         type:
           $ref: '#/components/schemas/OHtype'
     OHGroup:
@@ -1839,13 +1846,6 @@ components:
         - $ref: '#/components/schemas/OHBasic'
         - type: object
           properties:
-            id:
-              type: string
-              format: uuid
-              readOnly: true
-            name:
-              type: string
-              example: "Helligdag 17.mai"
             rule:
               type: string
               example: "24.12.???? ? 1-5 09:00-14:00"
