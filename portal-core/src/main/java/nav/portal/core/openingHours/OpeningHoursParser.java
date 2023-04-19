@@ -12,6 +12,8 @@ import java.util.List;
 
 public class OpeningHoursParser {
 
+    private static String CLOSED_HOURS = "00:00-00:00";
+
 
     public static String getOpeninghours(LocalDate dateEntry, OpeningHoursGroup group) {
         return getOpeninghours(dateEntry,group.getRules());
@@ -24,13 +26,13 @@ public class OpeningHoursParser {
         OpeningHoursRule firstRGentry = rules.get(0);
         if(firstRGentry.getRuleType().equals(RuleType.RULE)){
             String firstruleOpeningHours = getOpeninghours(dateEntry,((OpeningHoursRuleEntity)firstRGentry).getRule());
-            if(!firstruleOpeningHours.equals("00:00") || rules.size()==1){
+            if(!firstruleOpeningHours.equals(CLOSED_HOURS) || rules.size()==1){
                 return firstruleOpeningHours;
             }
         }
         else {
             String firstruleOpeningHours = getOpeninghours(dateEntry,((OpeningHoursGroup) firstRGentry).getRules());
-            if(!firstruleOpeningHours.equals("00:00") || rules.size()==1){
+            if(!firstruleOpeningHours.equals(CLOSED_HOURS) || rules.size()==1){
                 return firstruleOpeningHours;
             }
         }

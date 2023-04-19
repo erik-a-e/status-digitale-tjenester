@@ -2,7 +2,7 @@ package no.nav.portal.rest.api.Helpers;
 
 import nav.portal.core.entities.OpeningHoursGroup;
 import nav.portal.core.entities.OpeningHoursRuleEntity;
-import nav.portal.core.openingHours.OpeningHoursLogic;
+import nav.portal.core.openingHours.OpeningHoursValidator;
 import nav.portal.core.repositories.OpeningHoursRepository;
 import no.nav.portal.rest.api.EntityDtoMappers;
 import no.portal.web.generated.api.*;
@@ -24,7 +24,7 @@ public class OpeningHoursHelper {
 
 
     public boolean isValidRule(OHRuleDto oHRuleDto) {
-        return OpeningHoursLogic.isAValidRule(oHRuleDto.getRule());
+        return OpeningHoursValidator.isAValidRule(oHRuleDto.getRule());
     }
 
     public OHRuleDto saveNewRule(OHRuleDto oHRuleDto) {
