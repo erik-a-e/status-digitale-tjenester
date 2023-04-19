@@ -14,18 +14,27 @@ public class OpeningHoursParser {
 
 
     public static String getOpeninghours(LocalDate dateEntry, OpeningHoursGroup group) {
-        List<OpeningHoursRule> subRules = group.getRules();
-        subRules.forEach();
-        if(subRules.get(0).getRuleType().equals(RuleType.RULE)){
-            String firstruleOpeningHours = getOpeninghours(dateEntry,((OpeningHoursRuleEntity)subRules.get(0)).getRule());
-            if(!firstruleOpeningHours.equals("00:00") || subRules.size()==1){
+        return getOpeninghours(dateEntry,group.getRules());
+    }
+
+    private static String getOpeninghours(LocalDate dateEntry, List<OpeningHoursRule> rules){
+        if(rules.size() == 0){
+            return "00:00";
+        }
+        OpeningHoursRule firstRGentry = rules.get(0);
+        if(firstRGentry.getRuleType().equals(RuleType.RULE)){
+            String firstruleOpeningHours = getOpeninghours(dateEntry,((OpeningHoursRuleEntity)firstRGentry).getRule());
+            if(!firstruleOpeningHours.equals("00:00") || rules.size()==1){
                 return firstruleOpeningHours;
             }
         }
         else {
-            return getOpeninghours(dateEntry,subRules)
+            String firstruleOpeningHours = getOpeninghours(dateEntry,((OpeningHoursGroup) firstRGentry).getRules());
+            if(!firstruleOpeningHours.equals("00:00") || rules.size()==1){
+                return firstruleOpeningHours;
+            }
         }
-        return "Denne";
+        return getOpeninghours(dateEntry,rules.subList(1, rules.size()));
     }
 
 
