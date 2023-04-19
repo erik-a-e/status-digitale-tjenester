@@ -1,11 +1,17 @@
 package nav.portal.core.openingHours;
 
+import nav.portal.core.entities.OpeningHoursGroup;
+import nav.portal.core.entities.OpeningHoursRuleEntity;
+import nav.portal.core.repositories.SampleData;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -139,6 +145,34 @@ class OpeningHoursParserTest {
         //Assertions.assertThat(invalidLastDayOfMonth).isEqualTo("00:00-00:00");
         Assertions.assertThat(invalidTimeTodaysDate).isEqualTo("15:00-22:00");
 
+    }
+
+    @Test
+    void getOpeninghoursGroup(){
+            //Arrange
+            OpeningHoursRuleEntity rule1 = new OpeningHoursRuleEntity().setRule("24.12.1999 ? 1-5 09:00-14:00");
+            OpeningHoursRuleEntity rule2 = new OpeningHoursRuleEntity().setRule("24.12.1999 ? 1-5 09:00-14:00");
+            OpeningHoursRuleEntity rule3 = new OpeningHoursRuleEntity().setRule("24.12.1999 ? 1-5 09:00-14:00");
+            OpeningHoursRuleEntity rule4 = new OpeningHoursRuleEntity().setRule("24.12.1999 ? 1-5 09:00-14:00");
+            OpeningHoursRuleEntity rule5 = new OpeningHoursRuleEntity().setRule("24.12.1999 ? 1-5 09:00-14:00");
+            OpeningHoursRuleEntity rule6 = new OpeningHoursRuleEntity().setRule("24.12.???? ? 1-5 09:00-15:00");
+
+            //g4
+            OpeningHoursGroup group4 = new OpeningHoursGroup().setName("Gruppe4").setRules(List.of(rule4,rule5));
+
+            //g3
+            OpeningHoursGroup group3 = new OpeningHoursGroup().setName("Gruppe3").setRules(List.of(rule2,rule3));
+            //g2
+            OpeningHoursGroup group2 = new OpeningHoursGroup().setName("Gruppe2").setRules(List.of(group3,group4));
+
+            //g1
+            OpeningHoursGroup group1 = new OpeningHoursGroup().setName("Gruppe1").setRules(List.of(rule1,group2,rule6));
+
+            //Act
+            //Assert
+            String openingHoursResult = OpeningHoursParser.getOpeninghours(LocalDate.of(2023,12,24), group1);
+
+            Assertions.assertThat(openingHoursResult).isEqualTo("09:00-15:00");
     }
 
 }
