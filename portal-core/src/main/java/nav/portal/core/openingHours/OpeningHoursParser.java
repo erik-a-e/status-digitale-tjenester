@@ -109,7 +109,8 @@ public class OpeningHoursParser {
             }
             //Checks the date entry and rule date for a dd.mm match
             String ddmmRule = dateRule.substring(0,5);
-            String ddmmdateEntry = String.valueOf(dateTimeEntry.getDayOfMonth())+"."+dateTimeEntry.getMonthValue();
+            //String ddmmdateEntry = String.valueOf(dateTimeEntry.getDayOfMonth())+"."+dateTimeEntry.getMonthValue();
+            String ddmmdateEntry = String.valueOf(dateTimeEntry.getDayOfMonth())+"."+ String.format("%02d",dateTimeEntry.getMonthValue());
             return ddmmRule.equals(ddmmdateEntry);
         }
         LocalDate ruleDate = LocalDate.of(Integer.parseInt(ruleParts[2]),Integer.parseInt(ruleParts[1]),Integer.parseInt(ruleParts[0]));
