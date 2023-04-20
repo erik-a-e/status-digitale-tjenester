@@ -150,12 +150,13 @@ class OpeningHoursParserTest {
     @Test
     void getOpeninghoursGroup(){
             //Arrange
-            OpeningHoursRuleEntity rule1 = new OpeningHoursRuleEntity().setRule("24.12.1999 ? 1-5 09:00-14:00");
-            OpeningHoursRuleEntity rule2 = new OpeningHoursRuleEntity().setRule("24.12.1999 ? 1-5 09:00-14:00");
-            OpeningHoursRuleEntity rule3 = new OpeningHoursRuleEntity().setRule("24.12.1999 ? 1-5 09:00-14:00");
-            OpeningHoursRuleEntity rule4 = new OpeningHoursRuleEntity().setRule("24.12.1999 ? 1-5 09:00-14:00");
+            OpeningHoursRuleEntity rule1 = new OpeningHoursRuleEntity().setRule("17.05.???? ? ? 00:00-00:00"); //National holiday
+            OpeningHoursRuleEntity rule2 = new OpeningHoursRuleEntity().setRule("??.??.???? L ? 07:00-18:00"); //Last day in Month
+            OpeningHoursRuleEntity rule3 = new OpeningHoursRuleEntity().setRule("??.??.???? 1-5,25-30 ? 07:00-21:00");// Valid for days 1 to 5 or 25 to 30;
+            OpeningHoursRuleEntity rule4 = new OpeningHoursRuleEntity().setRule("19.04.2023 ? 1-5 15:00-22:00"); //TodaysDate
             OpeningHoursRuleEntity rule5 = new OpeningHoursRuleEntity().setRule("24.12.1999 ? 1-5 09:00-14:00");
             OpeningHoursRuleEntity rule6 = new OpeningHoursRuleEntity().setRule("24.12.???? ? 1-5 09:00-15:00");
+            OpeningHoursRuleEntity rule7 = new OpeningHoursRuleEntity().setRule("??.??.???? ? 1-5 08:00-16:00");
 
             //g4
             OpeningHoursGroup group4 = new OpeningHoursGroup().setName("Gruppe4").setRules(List.of(rule4,rule5));
@@ -166,13 +167,18 @@ class OpeningHoursParserTest {
             OpeningHoursGroup group2 = new OpeningHoursGroup().setName("Gruppe2").setRules(List.of(group3,group4));
 
             //g1
-            OpeningHoursGroup group1 = new OpeningHoursGroup().setName("Gruppe1").setRules(List.of(rule1,group2,rule6));
-
+            //OpeningHoursGroup group1 = new OpeningHoursGroup().setName("Gruppe1").setRules(List.of(rule1,group2,rule6));
+            OpeningHoursGroup group1 = new OpeningHoursGroup().setName("Gruppe1").setRules(List.of(rule1,group2,rule6,rule7));
             //Act
             //Assert
-            String openingHoursResult = OpeningHoursParser.getOpeninghours(LocalDate.of(2023,12,24), group1);
+            //String openingHoursResult1 = OpeningHoursParser.getOpeninghours(LocalDate.of(2023,12,24), group1);
+            //String openingHoursResult2 = OpeningHoursParser.getOpeninghours(LocalDate.of(2024,12,24), group1);
+            String openingHoursResult3 = OpeningHoursParser.getOpeninghours(LocalDate.of(2023,05,17), group1);
 
-            Assertions.assertThat(openingHoursResult).isEqualTo("09:00-15:00");
+
+            //Assertions.assertThat(openingHoursResult1).isEqualTo("00:00-00:00");
+            //Assertions.assertThat(openingHoursResult2).isEqualTo("09:00-15:00");
+            Assertions.assertThat(openingHoursResult3).isEqualTo("00:00-00:00");
     }
 
 }
