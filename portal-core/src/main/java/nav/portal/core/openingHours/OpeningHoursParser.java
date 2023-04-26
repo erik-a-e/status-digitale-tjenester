@@ -12,31 +12,34 @@ import java.util.List;
 
 public class OpeningHoursParser {
 
-    private static String CLOSED_HOURS = "00:00-00:00";
+    private static String RULE_NOT_APPLIES = "rule_not_applies";
 
 
     public static String getOpeninghours(LocalDate dateEntry, OpeningHoursGroup group) {
-        return getOpeninghours(dateEntry,group.getRules());
+        return getOpeninghours(dateEntry,group.getRules(),false);
     }
 
-    private static String getOpeninghours(LocalDate dateEntry, List<OpeningHoursRule> rules){
+    private static String getOpeninghours(LocalDate dateEntry, List<OpeningHoursRule> rules, Boolean isSubGroup){
         if(rules.size() == 0){
-            return "00:00";
+            if(isSubGroup){
+                return RULE_NOT_APPLIES;
+            }
+            return "00:00-00:00";
         }
         OpeningHoursRule firstRGentry = rules.get(0);
         if(firstRGentry.getRuleType().equals(RuleType.RULE)){
             String firstruleOpeningHours = getOpeninghours(dateEntry,((OpeningHoursRuleEntity)firstRGentry).getRule());
-            if(!firstruleOpeningHours.equals(CLOSED_HOURS) || rules.size()==1){
+            if(!firstruleOpeningHours.equals(RULE_NOT_APPLIES)){
                 return firstruleOpeningHours;
             }
         }
         else {
-            String firstruleOpeningHours = getOpeninghours(dateEntry,((OpeningHoursGroup) firstRGentry).getRules());
-            if(!firstruleOpeningHours.equals(CLOSED_HOURS) || rules.size()==1){
+            String firstruleOpeningHours = getOpeninghours(dateEntry,((OpeningHoursGroup) firstRGentry).getRules(),true);
+            if(!firstruleOpeningHours.equals(RULE_NOT_APPLIES)){
                 return firstruleOpeningHours;
             }
         }
-        return getOpeninghours(dateEntry,rules.subList(1, rules.size()));
+        return getOpeninghours(dateEntry,rules.subList(1, rules.size()),isSubGroup);
     }
 
 
@@ -46,15 +49,15 @@ public class OpeningHoursParser {
         String[] ruleParts = rule.split("[\s]");
 
         if (!isRuleApplicableForDate(dateTimeEntry, ruleParts[0])){
-            return "00:00-00:00";
+            return RULE_NOT_APPLIES;
         }
 
         if(!isRuleApplicableForDaysInMonth(dateTimeEntry, ruleParts[1])){
-            return "00:00-00:00";
+            return RULE_NOT_APPLIES;
         }
 
         if(!isRuleApplicableForWeekDays(dateTimeEntry, ruleParts[2])){
-            return "00:00-00:00";
+            return RULE_NOT_APPLIES;
         }
 
         return ruleParts[3];
@@ -105,12 +108,12 @@ public class OpeningHoursParser {
         if (ruleParts[2].equals("????")) {
             if (ruleParts[0].equals("??")) {
                 //Checks the date entry and rule date for a match of the month
-                return ruleParts[1].equals(dateTimeEntry.getMonthValue());
+                String mmdateEntry = String.format("%02d",dateTimeEntry.getMonthValue());
+                return ruleParts[1].equals(mmdateEntry);
             }
             //Checks the date entry and rule date for a dd.mm match
             String ddmmRule = dateRule.substring(0,5);
-            //String ddmmdateEntry = String.valueOf(dateTimeEntry.getDayOfMonth())+"."+dateTimeEntry.getMonthValue();
-            String ddmmdateEntry = String.valueOf(dateTimeEntry.getDayOfMonth())+"."+ String.format("%02d",dateTimeEntry.getMonthValue());
+            String ddmmdateEntry = String.format("%02d",dateTimeEntry.getDayOfMonth()) +"."+ String.format("%02d",dateTimeEntry.getMonthValue());
             return ddmmRule.equals(ddmmdateEntry);
         }
         LocalDate ruleDate = LocalDate.of(Integer.parseInt(ruleParts[2]),Integer.parseInt(ruleParts[1]),Integer.parseInt(ruleParts[0]));
