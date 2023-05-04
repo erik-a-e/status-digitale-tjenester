@@ -15,11 +15,14 @@ import java.util.UUID;
 public class OpeningHoursController {
 
     private OpeningHoursHelper openingHoursHelper;
+    private final ServiceRepository serviceRepository;
 
     public OpeningHoursController(DbContext dbContext) {
         this.openingHoursHelper = new OpeningHoursHelper(dbContext);
+        this.serviceRepository = new ServiceRepository(dbContext);
     }
 
+    /*Delen av AreaController for Rule*/
     @POST("/OpeningHours/Rule")
     @JsonBody
     public OHRuleDto newRule(@JsonBody OHRuleDto oHRuleDto) {
@@ -50,11 +53,13 @@ public class OpeningHoursController {
         return openingHoursHelper.getRule(rule_id);
     }
 
+    /*Delen av AreaController for Group*/
     @POST("/OpeningHours/Group")
     @JsonBody
     public OHGroupThinDto newGroup(@JsonBody OHGroupThinDto oHGroupThinDto) {
         return openingHoursHelper.saveGroup(oHGroupThinDto);
     }
+
 
     @PUT("/OpeningHours/Group")
     @JsonBody
@@ -73,4 +78,11 @@ public class OpeningHoursController {
     public OHGroupDto getGroup(@PathParam("Group_id") UUID group_id) {
         return openingHoursHelper.getGroup(group_id);
     }
+
+    @PUT("/OpeningHours/Group_id/:Service_id")
+    @JsonBody
+    public void addOpeningHoursToService(@PathParam("Service_id") UUID service_id, @PathParam("Group_id") UUID group_id) {
+        serviceRepository.addOpeningHoursToService(service_id, group_id);
+    }
+
 }
