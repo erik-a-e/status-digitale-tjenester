@@ -18,6 +18,7 @@ public class ServiceRepository {
     private final DbContextTable service_maintenanceTable;
     private final DbContextTable serviceHistoryTable;
     private final DbContextTable service_openingHoursTable;
+    private final DbContextTable serviceOHgroupTable;
 
 
     public ServiceRepository(DbContext dbContext) {
@@ -26,6 +27,7 @@ public class ServiceRepository {
         service_serviceTable = dbContext.table("service_service");
         service_maintenanceTable = dbContext.table("service_maintenance");
         service_openingHoursTable = dbContext.table("service_opening_hours");
+        serviceOHgroupTable = dbContext.table("service_oh_group");
     }
 
 
@@ -263,6 +265,13 @@ public class ServiceRepository {
         serviceTable.where("id", id)
                 .update()
                 .setField("deleted", Boolean.TRUE)
+                .execute();
+    }
+
+    public void addOpeningHoursToService(UUID serviceId, UUID groupId) {
+        serviceOHgroupTable.insert()
+                .setField("service_id", serviceId)
+                .setField("oh_group_id", groupId)
                 .execute();
     }
 
