@@ -1190,7 +1190,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/OHRule'
+              $ref: '#/components/schemas/OpeningHoursRule'
           text/plain:
             schema:
               type: string
@@ -1214,7 +1214,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/OHRule'
+              $ref: '#/components/schemas/OpeningHoursRule'
           text/plain:
             schema:
               type: string
@@ -1267,7 +1267,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/OHRule'
+                $ref: '#/components/schemas/OpeningHoursRule'
         '401':
           description: Unauthorized
           content: {}
@@ -1290,7 +1290,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/OHGroupThin'
+              $ref: '#/components/schemas/OpeningHoursGroup'
           text/plain:
             schema:
               type: string
@@ -1314,7 +1314,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/OHGroupThin'
+              $ref: '#/components/schemas/OpeningHoursGroup'
           text/plain:
             schema:
               type: string
@@ -1367,7 +1367,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/OHGroup'
+                $ref: '#/components/schemas/OpeningHoursGroup'
         '401':
           description: Unauthorized
           content: {}
@@ -1378,6 +1378,44 @@ paths:
           description: Not Found
           content: {}
       deprecated: false
+
+  /OpeningHours/{Group_id}/{Service_id}:
+    put:
+      tags:
+        - OpeningHours
+      summary: Legg en tjeneste til en åpenstidsgruppe
+      description: Legg inn uid for åpenstidsgruppe og tjenesten som skal legges til det.
+      parameters:
+        - name: Group_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: Service_id
+          in: path
+          required: true
+          schema:
+            type: string
+
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpeningHoursGroup'
+        '401':
+          description: Unauthorized
+          content: {}
+        '403':
+          description: Forbidden
+          content: {}
+        '404':
+          description: Not Found
+          content: {}
+      deprecated: false
+
 #--------------------------------------------------------------------------------------------------------------------------------------------------------
 #--------------------------------------------------------------------------------------------------------------------------------------------------------
 components:
@@ -1798,29 +1836,8 @@ components:
         name:
           type: string
           example: "Ola Norman"
-    OHGroupThin:
-      title: OHGroupThin
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          readOnly: true
-        name:
-          type: string
-          example: "[uuid,uuid, uuid]"
-        rules:
-          type: array
-          items:
-            type: string
-            format: uuid
-
-    OHtype:
-      type: string
-      enum:
-        - RULE
-        - GROUP
-    OHBasic:
+    OpeningHoursRule:
+      title: OpeningHoursRule
       type: object
       properties:
         id:
@@ -1830,25 +1847,25 @@ components:
         name:
           type: string
           example: "Helligdag 17.mai"
-        type:
-          $ref: '#/components/schemas/OHtype'
-    OHGroup:
-      allOf:
-        - $ref: '#/components/schemas/OHBasic'
-        - type: object
-          properties:
-            rules:
-              type: array
-              items:
-                $ref: '#/components/schemas/OHBasic'
-    OHRule:
-      allOf:
-        - $ref: '#/components/schemas/OHBasic'
-        - type: object
-          properties:
-            rule:
-              type: string
-              example: "24.12.???? ? 1-5 09:00-14:00"
+        rule:
+          type: string
+          example: "24.12.???? ? 1-5 09:00-14:00"
+    OpeningHoursGroup:
+      title: OpeningHoursGroup
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        name:
+          type: string
+          example: "Helligdag 17.mai"
+        rules:
+          type: array
+          items:
+            type: string
+            format: uuid
 
 
   securitySchemes:
