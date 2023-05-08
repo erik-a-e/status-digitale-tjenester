@@ -85,4 +85,10 @@ public class OpeningHoursController {
         serviceRepository.addOpeningHoursToService(service_id, group_id);
     }
 
+    @DELETE("/OpeningHours/Group_id/:Service_id")
+    @JsonBody
+    public void removeOpeningHoursFromService(@PathParam("Service_id") UUID service_id, @PathParam("Group_id") UUID group_id) {
+        serviceRepository.removeOpeningHoursFromService(service_id, group_id);
+    }
+
 }
