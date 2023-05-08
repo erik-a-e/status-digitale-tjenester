@@ -1383,7 +1383,7 @@ paths:
     put:
       tags:
         - OpeningHours
-      summary: Legg en tjeneste til en åpenstidsgruppe
+      summary: Legg  åpenstidsgruppe til en tjeneste
       description: Legg inn uid for åpenstidsgruppe og tjenesten som skal legges til det.
       parameters:
         - name: Group_id
@@ -1415,6 +1415,33 @@ paths:
           description: Not Found
           content: {}
       deprecated: false
+    delete:
+      tags:
+        - OpeningHours
+      summary: Fjern åpenstidsgruppe fra tjeneste fra område
+      description: Legg inn uid for åpenstidsgruppe og tjenesten som skal fjernes.
+      parameters:
+        - name: Group_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: Service_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '201':
+          description: Deleted
+        '403':
+          description: Forbidden
+          content: { }
+        '404':
+          description: Not Found
+          content: { }
 
 #--------------------------------------------------------------------------------------------------------------------------------------------------------
 #--------------------------------------------------------------------------------------------------------------------------------------------------------

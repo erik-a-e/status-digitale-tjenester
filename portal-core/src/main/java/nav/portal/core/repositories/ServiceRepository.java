@@ -4,6 +4,7 @@ import nav.portal.core.entities.*;
 import nav.portal.core.enums.ServiceType;
 import nav.portal.core.exceptionHandling.ExceptionUtil;
 import org.actioncontroller.HttpRequestException;
+import org.actioncontroller.PathParam;
 import org.fluentjdbc.*;
 
 import java.sql.SQLException;
@@ -251,6 +252,12 @@ public class ServiceRepository {
                 .setField("service_id", serviceId)
                 .setField("oh_group_id", groupId)
                 .execute();
+    }
+
+    public void removeOpeningHoursFromService(UUID serviceId, UUID groupId) {
+        serviceOHgroupTable.where("service_id", serviceId)
+                .where("oh_group_id", groupId)
+                .executeDelete();
     }
 
     static DailyStatusAggregationForServiceEntity toDailyStatusAggregationForServiceEntity(DatabaseRow row) {
