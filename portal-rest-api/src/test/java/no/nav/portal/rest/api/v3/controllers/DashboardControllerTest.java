@@ -118,7 +118,6 @@ class DashboardControllerTest {
         //Assert
         Assertions.assertThat(retrievedName).isEqualTo(newName);
         Assertions.assertThat(retrievedName).isNotEqualTo(oldName);
-
     }
 
     @Test

@@ -1,10 +1,8 @@
 package nav.portal.core.repositories;
 
-import nav.portal.core.entities.OpeningHoursGroupEntity;
-import nav.portal.core.entities.OpeningHoursRule;
-import nav.portal.core.entities.OpeningHoursRuleEntity;
-import nav.portal.core.entities.OpeningHoursGroup;
+import nav.portal.core.entities.*;
 import nav.portal.core.enums.RuleType;
+import nav.portal.core.enums.ServiceType;
 import nav.portal.core.exceptionHandling.ExceptionUtil;
 import org.actioncontroller.HttpRequestException;
 import org.fluentjdbc.*;
@@ -18,9 +16,6 @@ public class OpeningHoursRepository {
 
         private final DbContextTable ohRuleTable;
         private final DbContextTable ohGroupTable;
-
-
-
 
         public OpeningHoursRepository(DbContext dbContext) {
             ohRuleTable = dbContext.table("oh_rule");
@@ -148,9 +143,12 @@ public class OpeningHoursRepository {
             return Optional.of(ruleEntity.get());
         }
         return  Optional.of(retrieveOneGroup(id).get());
-
-
     }
+
+    public List<OpeningHoursRuleEntity> getAllOpeningHoursRules(){
+        return ohGroupTable.orderedBy("name").stream(OpeningHoursRepository::toOpeningRule).collect(Collectors.toList());
+    }
+
 
     static OpeningHoursRuleEntity toOpeningRule(DatabaseRow row){
         try {
