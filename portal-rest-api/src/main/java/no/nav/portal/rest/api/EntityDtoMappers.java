@@ -291,6 +291,10 @@ public class EntityDtoMappers {
         return dto;
     }
 
+    public static List<OHRuleDto>toOpeningHoursRuleDto(List<OpeningHoursRuleEntity> entities){
+        return entities.stream().map(EntityDtoMappers::toOpeningHoursRuleDto).collect(Collectors.toList());
+    }
+
     public static OpeningHoursGroup toOpeningHoursGroup(OHGroupThinDto oHGroupThinDto) {
         List<OpeningHoursRule>rules = new ArrayList<>();
         oHGroupThinDto.getRules().forEach(rule->{

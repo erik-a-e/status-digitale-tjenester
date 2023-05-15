@@ -1,6 +1,8 @@
 package no.nav.portal.rest.api.v3.controllers;
 
+import nav.portal.core.repositories.OpeningHoursRepository;
 import nav.portal.core.repositories.ServiceRepository;
+import no.nav.portal.rest.api.EntityDtoMappers;
 import no.nav.portal.rest.api.Helpers.OpeningHoursHelper;
 import no.nav.portal.rest.api.Helpers.ServiceControllerHelper;
 import no.nav.portal.rest.api.Helpers.Util;
@@ -10,16 +12,19 @@ import org.actioncontroller.*;
 import org.actioncontroller.json.JsonBody;
 import org.fluentjdbc.DbContext;
 
+import java.util.List;
 import java.util.UUID;
 
 public class OpeningHoursController {
 
     private OpeningHoursHelper openingHoursHelper;
     private final ServiceRepository serviceRepository;
+    private final OpeningHoursRepository openingHoursRepository;
 
     public OpeningHoursController(DbContext dbContext) {
         this.openingHoursHelper = new OpeningHoursHelper(dbContext);
         this.serviceRepository = new ServiceRepository(dbContext);
+        this.openingHoursRepository = new OpeningHoursRepository(dbContext);
     }
 
     /*Delen av AreaController for Rule*/
@@ -53,13 +58,18 @@ public class OpeningHoursController {
         return openingHoursHelper.getRule(rule_id);
     }
 
+    @GET("/OpeningHours/Rules")
+    @JsonBody
+    public List<OHRuleDto> getRules() {
+        return EntityDtoMappers.toOpeningHoursRuleDto(openingHoursRepository.getAllOpeningHoursRules());
+    }
+
     /*Delen av AreaController for Group*/
     @POST("/OpeningHours/Group")
     @JsonBody
     public OHGroupThinDto newGroup(@JsonBody OHGroupThinDto oHGroupThinDto) {
         return openingHoursHelper.saveGroup(oHGroupThinDto);
     }
-
 
     @PUT("/OpeningHours/Group")
     @JsonBody

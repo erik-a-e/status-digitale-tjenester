@@ -32,9 +32,6 @@ public class ServiceRepository {
     }
 
 
-
-
-
     public UUID save(ServiceEntity service) {
         //Sjekk på navn+type kombinasjon
         if(serviceTable.where("name",service.getName())
