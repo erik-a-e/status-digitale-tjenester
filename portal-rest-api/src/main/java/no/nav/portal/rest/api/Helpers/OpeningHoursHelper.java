@@ -2,6 +2,7 @@ package no.nav.portal.rest.api.Helpers;
 
 import nav.portal.core.entities.OpeningHoursGroup;
 import nav.portal.core.entities.OpeningHoursRuleEntity;
+import nav.portal.core.entities.ServiceEntity;
 import nav.portal.core.openingHours.OpeningHoursValidator;
 import nav.portal.core.repositories.OpeningHoursRepository;
 import no.nav.portal.rest.api.EntityDtoMappers;
@@ -65,4 +66,14 @@ public class OpeningHoursHelper {
     public void updateGroup(OHGroupThinDto oHGroupThinDto) {
         openingHoursRepository.updateGroup(EntityDtoMappers.toOpeningHoursGroup(oHGroupThinDto));
     }
+
+    public OHGroupThinDto getOHGroupForService(UUID service_id){
+        return EntityDtoMappers.toOpeningHoursGroupThinDto(openingHoursRepository.getOHGroupForService(service_id)
+                .orElseThrow(() -> new IllegalArgumentException("Not found: The Group's Service with id "+ service_id)));
+    }
+
+    /*public OHGroupDto getOHGroupForService(UUID service_id){
+        return openingHoursRepository.getOHGroupForService(service_id).stream().
+                map(EntityDtoMappers::toAreaDtoShallow).collect(Collectors.toList());
+    }*/
 }

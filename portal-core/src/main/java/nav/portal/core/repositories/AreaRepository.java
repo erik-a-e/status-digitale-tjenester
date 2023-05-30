@@ -203,8 +203,6 @@ public class AreaRepository {
 
     }
 
-
-
     static AreaEntity toArea(DatabaseRow row){
         try {
             return new AreaEntity(row.getUUID("id"),

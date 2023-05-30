@@ -4,7 +4,11 @@ import nav.portal.core.entities.*;
 import nav.portal.core.enums.RuleType;
 import nav.portal.core.enums.ServiceType;
 import nav.portal.core.exceptionHandling.ExceptionUtil;
+import org.actioncontroller.DELETE;
 import org.actioncontroller.HttpRequestException;
+import org.actioncontroller.PUT;
+import org.actioncontroller.PathParam;
+import org.actioncontroller.json.JsonBody;
 import org.fluentjdbc.*;
 
 import java.sql.SQLException;
@@ -16,10 +20,14 @@ public class OpeningHoursRepository {
 
         private final DbContextTable ohRuleTable;
         private final DbContextTable ohGroupTable;
+        private final DbContextTable service_openingHoursTable;
+        private final DbContextTable serviceOHgroupTable;
 
         public OpeningHoursRepository(DbContext dbContext) {
             ohRuleTable = dbContext.table("oh_rule");
             ohGroupTable = dbContext.table("oh_group");
+            service_openingHoursTable = dbContext.table("service_opening_hours");
+            serviceOHgroupTable = dbContext.table("service_oh_group");
         }
 
         public UUID save(OpeningHoursRuleEntity entity) {
@@ -146,7 +154,40 @@ public class OpeningHoursRepository {
     }
 
     public List<OpeningHoursRuleEntity> getAllOpeningHoursRules(){
-        return ohGroupTable.orderedBy("name").stream(OpeningHoursRepository::toOpeningRule).collect(Collectors.toList());
+        return ohRuleTable.orderedBy("name").stream(OpeningHoursRepository::toOpeningRule).collect(Collectors.toList());
+    }
+
+    public void addOpeningHoursToService(UUID groupId, UUID serviceId) {
+        serviceOHgroupTable.insert()
+                .setField("service_id", serviceId)
+                .setField("oh_group_id", groupId)
+                .execute();
+    }
+
+    public void removeOpeningHoursFromService(UUID groupId, UUID serviceId) {
+        serviceOHgroupTable.where("service_id", serviceId)
+                .where("oh_group_id", groupId)
+                .executeDelete();
+    }
+
+    /*public List<OpeningHoursGroupEntity> getOHGroupForService(UUID service_id) {
+        DbContextTableAlias groupAlias = ohGroupTable.alias("group");
+        DbContextTableAlias s2g = serviceOHgroupTable.alias("s2g");
+        return  groupAlias
+                .leftJoin(groupAlias.column("id"), s2g.column("group_id"))
+                .orderBy(groupAlias.column("name"))
+                .where("s2g.service_id",service_id)
+                .stream(OpeningHoursRepository::toOpeningHoursGroupEntity).collect(Collectors.toList());
+    }*/
+
+    public Optional<OpeningHoursGroupEntity> getOHGroupForService(UUID service_id) {
+        DbContextTableAlias groupAlias = ohGroupTable.alias("group");
+        DbContextTableAlias s2g = serviceOHgroupTable.alias("s2g");
+        return  groupAlias
+                .leftJoin(groupAlias.column("id"), s2g.column("group_id"))
+                .orderBy(groupAlias.column("name"))
+                .where("s2g.service_id",service_id)
+                .singleObject(OpeningHoursRepository::toOpeningHoursGroupEntity);
     }
 
 

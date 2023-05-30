@@ -491,56 +491,7 @@ paths:
           description: Not Found
           content: { }
       deprecated: false
-  /Services/Minimal:
-    get:
-      tags:
-        - Service
-      summary: Hent alle tjenester uten avhengigheter
-      operationId: getServicesMinimal
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Service'
-        '401':
-          description: Unauthorized
-          content: { }
-        '403':
-          description: Forbidden
-          content: { }
-        '404':
-          description: Not Found
-          content: { }
-      deprecated: false
-  /Components/Minimal:
-    get:
-      tags:
-        - Service
-      summary: Hent alle tjenester uten avhengigheter
-      operationId: getComponentsMinimal
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Service'
-        '401':
-          description: Unauthorized
-          content: { }
-        '403':
-          description: Forbidden
-          content: { }
-        '404':
-          description: Not Found
-          content: { }
-      deprecated: false
+
   /Service:
     post:
       tags:
@@ -1276,6 +1227,32 @@ paths:
         '404':
           description: Not Found
           content: { }
+  /OpeningHours/Rules:
+    get:
+      tags:
+        - OpeningHours
+      summary: Hent åpenstidsregler.
+      description: henter alle åpenstidsregler
+      operationId: getRules
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OpeningHoursRule'
+        '401':
+          description: Unauthorized
+          content: { }
+        '403':
+          description: Forbidden
+          content: { }
+        '404':
+          description: Not Found
+          content: { }
+      deprecated: false
   /OpeningHours/rule/{Rule_id}:
     delete:
       tags:
@@ -1376,6 +1353,37 @@ paths:
         '404':
           description: Not Found
           content: { }
+  /OpeningHours/Group/{Service_id}:
+    get:
+      tags:
+        - OpeningHours
+      summary: Hent åpenstidsgruppe som har tjeneste med id
+      description: Hent åpenstidsgruppe som har tjeneste med id
+      operationId: GetOHGroupContainingService
+      parameters:
+        - name: Service_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpeningHoursGroup'
+        '401':
+          description: Unauthorized
+          content: {}
+        '403':
+          description: Forbidden
+          content: {}
+        '404':
+          description: Not Found
+          content: {}
+      deprecated: false
   /OpeningHours/group/{Group_id}:
     delete:
       tags:
@@ -1491,6 +1499,7 @@ paths:
         '404':
           description: Not Found
           content: { }
+
 
 #--------------------------------------------------------------------------------------------------------------------------------------------------------
 #--------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1626,10 +1635,6 @@ components:
           type: string
         pollingUrl:
           type: string
-        polling_on_prem:
-          type: boolean
-          readOnly: true
-
         record:
           readOnly: true
           $ref: '#/components/schemas/Record'
