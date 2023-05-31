@@ -89,19 +89,19 @@ public class OpeningHoursController {
         return openingHoursHelper.getGroup(group_id);
     }
 
-    @PUT("/OpeningHours/Group_id/:Service_id")
+    @PUT("/OpeningHours/:Group_id/:Service_id")
     @JsonBody
     public void addOpeningHoursToService(@PathParam("Group_id") UUID group_id, @PathParam("Service_id") UUID service_id) {
         openingHoursRepository.addOpeningHoursToService(group_id, service_id);
     }
 
-    @DELETE("/OpeningHours/Group_id/:Service_id")
+    @DELETE("/OpeningHours/:Group_id/:Service_id")
     @JsonBody
     public void removeOpeningHoursFromService(@PathParam("Group_id") UUID group_id, @PathParam("Service_id") UUID service_id) {
         openingHoursRepository.removeOpeningHoursFromService(group_id, service_id);
     }
 
-    @GET("/OpeningHours/Group/:Service_id")
+    @GET("/OpeningHours/:Service_id")
     @JsonBody
     public OHGroupDto getOHGroupForService(@PathParam("Service_id") UUID service_id) {
         return openingHoursHelper.getOHGroupForService(service_id);

@@ -45,7 +45,7 @@ class ServiceControllerTest {
     private DbContextConnection connection;
     private final DashboardController dashboardController = new DashboardController(dbContext);
     private final AreaController areaController = new AreaController(dbContext);
-    private final ServiceController serviceController = new ServiceController(dbContext);
+    private final ServiceController serviceController = new ServiceController(dbContext,true);
     private final RecordController recordController = new RecordController(dbContext);
     private final AreaRepository areaRepository = new AreaRepository(dbContext);
     private final ServiceRepository serviceRepository = new ServiceRepository(dbContext);
