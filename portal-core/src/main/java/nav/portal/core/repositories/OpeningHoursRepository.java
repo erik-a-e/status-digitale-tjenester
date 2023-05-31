@@ -136,7 +136,6 @@ public class OpeningHoursRepository {
                 .setName(openingHoursGroup.getName())
                 .setRules(rules);
 
-
     return Optional.of(result);
     }
 
@@ -170,26 +169,17 @@ public class OpeningHoursRepository {
                 .executeDelete();
     }
 
-    /*public List<OpeningHoursGroupEntity> getOHGroupForService(UUID service_id) {
+    public Optional<OpeningHoursGroup> getOHGroupForService(UUID service_id) {
         DbContextTableAlias groupAlias = ohGroupTable.alias("group");
         DbContextTableAlias s2g = serviceOHgroupTable.alias("s2g");
-        return  groupAlias
-                .leftJoin(groupAlias.column("id"), s2g.column("group_id"))
-                .orderBy(groupAlias.column("name"))
-                .where("s2g.service_id",service_id)
-                .stream(OpeningHoursRepository::toOpeningHoursGroupEntity).collect(Collectors.toList());
-    }*/
-
-    public Optional<OpeningHoursGroupEntity> getOHGroupForService(UUID service_id) {
-        DbContextTableAlias groupAlias = ohGroupTable.alias("group");
-        DbContextTableAlias s2g = serviceOHgroupTable.alias("s2g");
-        return  groupAlias
-                .leftJoin(groupAlias.column("id"), s2g.column("group_id"))
+        Optional<OpeningHoursGroupEntity>openingHoursGroupEntity = groupAlias.
+                leftJoin(groupAlias.column("id"), s2g.column("group_id"))
                 .orderBy(groupAlias.column("name"))
                 .where("s2g.service_id",service_id)
                 .singleObject(OpeningHoursRepository::toOpeningHoursGroupEntity);
-    }
 
+        return retrieveOneGroup(openingHoursGroupEntity.get().getId());
+    }
 
     static OpeningHoursRuleEntity toOpeningRule(DatabaseRow row){
         try {

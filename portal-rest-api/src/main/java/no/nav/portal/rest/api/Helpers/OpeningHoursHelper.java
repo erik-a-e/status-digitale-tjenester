@@ -67,8 +67,8 @@ public class OpeningHoursHelper {
         openingHoursRepository.updateGroup(EntityDtoMappers.toOpeningHoursGroup(oHGroupThinDto));
     }
 
-    public OHGroupThinDto getOHGroupForService(UUID service_id){
-        return EntityDtoMappers.toOpeningHoursGroupThinDto(openingHoursRepository.getOHGroupForService(service_id)
+    public OHGroupDto getOHGroupForService(UUID service_id){
+        return EntityDtoMappers.toOpeningHoursGroupDto(openingHoursRepository.getOHGroupForService(service_id)
                 .orElseThrow(() -> new IllegalArgumentException("Not found: The Group's Service with id "+ service_id)));
     }
 

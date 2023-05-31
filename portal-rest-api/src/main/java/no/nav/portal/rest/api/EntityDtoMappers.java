@@ -37,7 +37,7 @@ public class EntityDtoMappers {
         else {
             entity.setPolling_url(dto.getPollingUrl());
         }
-        entity.setPollingOnPrem(dto.getPollingOnPrem());
+        //entity.setPollingOnPrem(dto.getPollingOnPrem());
         entity.setStatusNotFromTeam(dto.getStatusNotFromTeam());
         return entity;
     }
