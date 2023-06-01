@@ -170,13 +170,15 @@ class OpeningHoursRepositoryTest {
 
     @Test
     void retrieveOneGroupComplex() {
+
+        List<OpeningHoursRuleEntity> rules = SampleData.getNonEmptyListOfOpeningRules(6);
         //Arrange
-        OpeningHoursRuleEntity rule1 = SampleData.getRandomizedOpeningRule();
-        OpeningHoursRuleEntity rule2 = SampleData.getRandomizedOpeningRule();
-        OpeningHoursRuleEntity rule3 = SampleData.getRandomizedOpeningRule();
-        OpeningHoursRuleEntity rule4 = SampleData.getRandomizedOpeningRule();
-        OpeningHoursRuleEntity rule5 = SampleData.getRandomizedOpeningRule();
-        OpeningHoursRuleEntity rule6 = SampleData.getRandomizedOpeningRule();
+        OpeningHoursRuleEntity rule1 = rules.get(0);
+        OpeningHoursRuleEntity rule2 = rules.get(1);
+        OpeningHoursRuleEntity rule3 = rules.get(2);
+        OpeningHoursRuleEntity rule4 = rules.get(3);
+        OpeningHoursRuleEntity rule5 = rules.get(4);
+        OpeningHoursRuleEntity rule6 = rules.get(5);
     //TODO SampleData.getRandomizedOpeningRule() må  gi unikt navn hver gang
         UUID rule1_id = openingHoursRepository.save(rule1);
         UUID rule2_id = openingHoursRepository.save(rule2);

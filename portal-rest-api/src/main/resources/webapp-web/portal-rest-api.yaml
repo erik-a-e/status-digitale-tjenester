@@ -1876,6 +1876,7 @@ components:
         - OK
         - ISSUE
         - DOWN
+        - UNKNOWN
     ServiceType:
       type: string
       enum:
