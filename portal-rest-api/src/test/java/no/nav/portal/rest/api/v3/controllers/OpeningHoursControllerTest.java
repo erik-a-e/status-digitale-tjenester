@@ -1,11 +1,11 @@
 package no.nav.portal.rest.api.v3.controllers;
 
+import nav.portal.core.entities.ServiceEntity;
+import nav.portal.core.repositories.SampleData;
 import nav.portal.core.repositories.TestDataSource;
 import nav.portal.core.repositories.TestUtil;
-import no.portal.web.generated.api.AreaDto;
-import no.portal.web.generated.api.DashboardDto;
-import no.portal.web.generated.api.OHGroupDto;
-import no.portal.web.generated.api.OHRuleDto;
+import no.nav.portal.rest.api.EntityDtoMappers;
+import no.portal.web.generated.api.*;
 import org.actioncontroller.PathParam;
 import org.actioncontroller.json.JsonBody;
 import org.assertj.core.api.Assertions;
@@ -26,6 +26,7 @@ public class OpeningHoursControllerTest {
     private DbContextConnection connection;
 
     private final OpeningHoursController openingHoursController = new OpeningHoursController(dbContext);
+    private final ServiceController serviceController = new ServiceController(dbContext,true);
 
     @BeforeEach
     void startConnection() {
@@ -66,15 +67,7 @@ public class OpeningHoursControllerTest {
         Assertions.assertThat(retrievedOHRuleDto.getId()).isEqualTo(oHRuleDto.getId());
     }
 
-    /*@Test
-    void updateRule(){
-        //Arrange
-        List<OHRuleDto> ohRules = SampleDataDto.getNonEmptyListOfOHRuleDto(2);
-        ohRules.forEach(ohRule -> {
-            ohRule.setId(ohRule.getId());
-        });
-        //Act
-        //Assert
 
-    }*/
+
+
 }
