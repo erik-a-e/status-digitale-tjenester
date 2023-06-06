@@ -298,7 +298,7 @@ public class EntityDtoMappers {
 
     public static OpeningHoursGroup toOpeningHoursGroup(OHGroupThinDto oHGroupThinDto) {
         List<OpeningHoursRule>rules = new ArrayList<>();
-        oHGroupThinDto.getRules().forEach(rule->{
+        oHGroupThinDto.getRules().stream().forEach(rule->{
             rules.add(openingHoursRepository.retriveRule(rule).get());
         });
         return new OpeningHoursGroup(oHGroupThinDto.getId(),oHGroupThinDto.getName(), rules);
