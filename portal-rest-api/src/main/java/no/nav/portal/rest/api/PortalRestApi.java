@@ -33,6 +33,7 @@ public class PortalRestApi extends ClasspathWebAppContext {
                 new OpsController(dbContext),
                 new OpeningHoursController(dbContext),
                 new HealthCheck(dbContext),
+                new OBMtestController(),
                 new UserController(),
                 new WcagController()
         ))), "/*");

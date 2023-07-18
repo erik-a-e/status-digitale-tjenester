@@ -1719,6 +1719,31 @@ paths:
           description: Not Found
           content: {}
       deprecated: false
+  /OBM:
+    get:
+      tags:
+        - OBM
+      summary: Obm testendepunkt
+      description: Obm testendepunkt
+      operationId: OBM
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: OK
+        '401':
+          description: Unauthorized
+          content: {}
+        '403':
+          description: Forbidden
+          content: {}
+        '404':
+          description: Not Found
+          content: {}
+      deprecated: false
 
 
 #--------------------------------------------------------------------------------------------------------------------------------------------------------
